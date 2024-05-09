@@ -8,3 +8,4 @@ typedef enum GradeHuecoModifier {
 GradeHueco GradeHueco_new(unsigned int, GradeHuecoModifier);
 void GradeHueco_free(GradeHueco);
 GradeHueco GradeHueco_dup(const GradeHueco);
+int GradeHueco_cmp(const GradeHueco, const GradeHueco);

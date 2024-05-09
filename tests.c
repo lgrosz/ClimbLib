@@ -33,5 +33,31 @@ int main()
 	VERIFY(b == NULL);
 	VERIFY(errno == EINVAL);
 
+	// Test numerical comparisons
+	a = GradeHueco_new(0, GRADE_HUECO_MODIFIER_NONE);
+	b = GradeHueco_new(1, GRADE_HUECO_MODIFIER_NONE);
+	VERIFY(GradeHueco_cmp(a, b) < 0);
+	GradeHueco_free(a);
+	GradeHueco_free(b);
+
+	// Test modifier comparisons
+	a = GradeHueco_new(0, GRADE_HUECO_MODIFIER_NONE);
+	b = GradeHueco_new(0, GRADE_HUECO_MODIFIER_NONE);
+	VERIFY(GradeHueco_cmp(a, b) == 0);
+	GradeHueco_free(b);
+
+	b = GradeHueco_new(0, GRADE_HUECO_MODIFIER_MINUS);
+	VERIFY(GradeHueco_cmp(a, b) > 0);
+	GradeHueco_free(b);
+
+	b = GradeHueco_new(0, GRADE_HUECO_MODIFIER_PLUS);
+	VERIFY(GradeHueco_cmp(a, b) < 0);
+	GradeHueco_free(a);
+
+	a = GradeHueco_new(0, GRADE_HUECO_MODIFIER_MINUS);
+	VERIFY(GradeHueco_cmp(a, b) < 0);
+	GradeHueco_free(a);
+	GradeHueco_free(b);
+
 	return 0;
 }
