@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <string.h>
 #include "grades.h"
 
 #define VERIFY(expr) \
@@ -58,6 +59,19 @@ int main()
 	VERIFY(GradeHueco_cmp(a, b) < 0);
 	GradeHueco_free(a);
 	GradeHueco_free(b);
+
+	// Test grade strings
+	a = GradeHueco_new(0, GRADE_HUECO_MODIFIER_NONE);
+	VERIFY(strcmp(GradeHueco_str(a), "V0") == 0);
+	GradeHueco_free(a);
+
+	a = GradeHueco_new(0, GRADE_HUECO_MODIFIER_MINUS);
+	VERIFY(strcmp(GradeHueco_str(a), "V0-") == 0);
+	GradeHueco_free(a);
+
+	a = GradeHueco_new(0, GRADE_HUECO_MODIFIER_PLUS);
+	VERIFY(strcmp(GradeHueco_str(a), "V0+") == 0);
+	GradeHueco_free(a);
 
 	return 0;
 }

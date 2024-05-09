@@ -1,4 +1,6 @@
 #include "grades.h"
+#include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <errno.h>
 
@@ -6,7 +8,26 @@ struct GradeHueco_
 {
 	unsigned int grade;
 	GradeHuecoModifier modifier;
+	char str[5];
 };
+
+static void update_str(GradeHueco grade)
+{
+	char mod_str;
+	switch (grade->modifier) {
+		case GRADE_HUECO_MODIFIER_MINUS:
+			mod_str = '-';
+			break;
+		case GRADE_HUECO_MODIFIER_NONE:
+			mod_str = '\0';
+			break;
+		case GRADE_HUECO_MODIFIER_PLUS:
+			mod_str = '+';
+			break;
+	}
+
+	snprintf(grade->str, sizeof(grade->str), "V%d%c", grade->grade, mod_str);
+}
 
 GradeHueco GradeHueco_new(unsigned int grade, GradeHuecoModifier modifier)
 {
@@ -17,8 +38,15 @@ GradeHueco GradeHueco_new(unsigned int grade, GradeHuecoModifier modifier)
 		return NULL;
 	}
 
+	if (grade > 99) {
+		/* Three digit numbers could overflow the string */
+		errno = EINVAL;
+		return NULL;
+	}
+
 	ret->grade = grade;
 	ret->modifier = modifier;
+	update_str(ret);
 
 	return ret;
 }
@@ -67,4 +95,9 @@ int GradeHueco_cmp(const GradeHueco a, const GradeHueco b)
 	} else {
 		return 1;
 	}
+}
+
+char *GradeHueco_str(const GradeHueco grade)
+{
+	return grade->str;
 }
