@@ -35,22 +35,12 @@ void GradeHueco_free(GradeHueco grade)
 
 GradeHueco GradeHueco_dup(const GradeHueco grade)
 {
-	GradeHueco ret;
-
 	if (grade == NULL) {
 		errno = EINVAL;
 		return NULL;
 	}
 
-	if (NULL == (ret = malloc(sizeof(struct GradeHueco_)))) {
-		errno = ENOMEM;
-		return NULL;
-	}
-
-	ret->grade = grade->grade;
-	ret->modifier = grade->modifier;
-
-	return ret;
+	return GradeHueco_new(grade->grade, grade->modifier);
 }
 
 int normalize(int a)
