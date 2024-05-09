@@ -25,8 +25,10 @@ int main()
 	GradeHueco_free(a);
 
 	// Test duplicate function
+	a = GradeHueco_new(0, GRADE_HUECO_MODIFIER_NONE);
 	GradeHueco b = GradeHueco_dup(a);
 	VERIFY(b != NULL);
+	GradeHueco_free(a);
 	GradeHueco_free(b);
 
 	errno = 0;
