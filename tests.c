@@ -9,6 +9,5 @@ int main()
 
 	free(a);
 
-	assert(foo() == 1);
 	return 0;
 }

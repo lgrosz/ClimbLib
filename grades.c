@@ -33,7 +33,3 @@ void GradeHueco_free(GradeHueco grade)
 	free(grade);
 }
 
-int foo()
-{
-	return 1;
-}
