@@ -71,7 +71,7 @@ GradeHueco GradeHueco_dup(const GradeHueco grade)
 	return GradeHueco_new(grade->grade, grade->modifier);
 }
 
-int normalize(int a)
+static int normalize(int a)
 {
 	if (a < 0) {
 		return -1;
