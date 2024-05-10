@@ -78,5 +78,17 @@ int main()
 	VERIFY(strcmp(GradeFontainebleau_str(a_f), "F7A+") == 0);
 	GradeFontainebleau_free(a_f);
 
+	a_f = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
+	b_f = GradeFontainebleau_fromstr("F7A");
+	VERIFY(errno == 0);
+	VERIFY(GradeFontainebleau_cmp(a_f, b_f) == 0);
+	GradeFontainebleau_free(a_f);
+	GradeFontainebleau_free(b_f);
+
+	a_f = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS);
+	b_f = GradeFontainebleau_fromstr("F7A+");
+	VERIFY(errno == 0);
+	VERIFY(GradeFontainebleau_cmp(a_f, b_f) == 0);
+
 	return 0;
 }

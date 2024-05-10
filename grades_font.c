@@ -126,3 +126,48 @@ char *GradeFontainebleau_str(const GradeFontainebleau grade)
 {
 	return grade->str;
 }
+
+GradeFontainebleau GradeFontainebleau_fromstr(const char *str)
+{
+	if (strlen(str) == 0 || str[0] != 'F') {
+		errno = EINVAL;
+		return NULL;
+	}
+
+	char *the_rest;
+	unsigned int grade = strtoul(str + 1, &the_rest, 10);
+
+	if (strlen(the_rest) < 1) {
+		errno = EINVAL;
+		return NULL;
+	}
+
+	GradeFontainebleauDivision division;
+
+	if (*the_rest == 'A') {
+		division = GRADE_FONT_DIVISION_A;
+	} else if (*the_rest == 'B') {
+		division = GRADE_FONT_DIVISION_B;
+	} else if (*the_rest == 'C') {
+		division = GRADE_FONT_DIVISION_C;
+	} else {
+		errno = EINVAL;
+		return NULL;
+	}
+
+	the_rest = the_rest + 1;
+
+	GradeFontainebleauModifier modifier;
+
+	if (strcmp(the_rest, "") == 0) {
+		modifier = GRADE_FONT_MODIFIER_NONE;
+	} else if (strcmp(the_rest, "+") == 0) {
+		modifier = GRADE_FONT_MODIFIER_PLUS;
+	} else {
+		errno = EINVAL;
+		return NULL;
+	}
+
+	errno = 0;
+	return GradeFontainebleau_new(grade, division, modifier);
+}
