@@ -84,6 +84,13 @@ static int normalize(int a)
 
 int GradeHueco_cmp(const GradeHueco a, const GradeHueco b)
 {
+	if (a == NULL || b == NULL) {
+		errno = EINVAL;
+		return 0;
+	} else {
+		errno = 0;
+	}
+
 	if (a->grade != b->grade) {
 		return normalize(a->grade - b->grade);
 	}

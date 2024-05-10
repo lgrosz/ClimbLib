@@ -96,6 +96,13 @@ static int normalize(int a)
 
 int GradeFontainebleau_cmp(const GradeFontainebleau a, const GradeFontainebleau b)
 {
+	if (a == NULL || b == NULL) {
+		errno = EINVAL;
+		return 0;
+	} else {
+		errno = 0;
+	}
+
 	if (a->grade != b->grade) {
 		return normalize(a->grade - b->grade);
 	}
