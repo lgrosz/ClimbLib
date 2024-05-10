@@ -10,6 +10,7 @@ void GradeHueco_free(GradeHueco);
 GradeHueco GradeHueco_dup(const GradeHueco);
 int GradeHueco_cmp(const GradeHueco, const GradeHueco);
 char *GradeHueco_str(const GradeHueco);
+GradeHueco GradeHueco_fromstr(const char *);
 
 typedef struct GradeFontainebleau_* GradeFontainebleau;
 typedef enum GradeFontainebleauDivision {

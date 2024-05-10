@@ -75,5 +75,33 @@ int main()
 	VERIFY(strcmp(GradeHueco_str(a), "V0+") == 0);
 	GradeHueco_free(a);
 
+	a = GradeHueco_new(0, GRADE_HUECO_MODIFIER_NONE);
+	b = GradeHueco_fromstr("V0");
+	VERIFY(errno == 0);
+	VERIFY(GradeHueco_cmp(a, b) == 0);
+	GradeHueco_free(a);
+	GradeHueco_free(b);
+
+	a = GradeHueco_new(0, GRADE_HUECO_MODIFIER_PLUS);
+	b = GradeHueco_fromstr("V0+");
+	VERIFY(errno == 0);
+	VERIFY(GradeHueco_cmp(a, b) == 0);
+	GradeHueco_free(a);
+	GradeHueco_free(b);
+
+	a = GradeHueco_new(12, GRADE_HUECO_MODIFIER_NONE);
+	b = GradeHueco_fromstr("V12");
+	VERIFY(errno == 0);
+	VERIFY(GradeHueco_cmp(a, b) == 0);
+	GradeHueco_free(a);
+	GradeHueco_free(b);
+
+	a = GradeHueco_new(12, GRADE_HUECO_MODIFIER_MINUS);
+	b = GradeHueco_fromstr("V12-");
+	VERIFY(errno == 0);
+	VERIFY(GradeHueco_cmp(a, b) == 0);
+	GradeHueco_free(a);
+	GradeHueco_free(b);
+
 	return 0;
 }

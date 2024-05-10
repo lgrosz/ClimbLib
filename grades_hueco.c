@@ -101,3 +101,32 @@ char *GradeHueco_str(const GradeHueco grade)
 {
 	return grade->str;
 }
+
+GradeHueco GradeHueco_fromstr(const char *str)
+{
+	int length = strlen(str);
+
+	if (length == 0 || str[0] != 'V') {
+		errno = EINVAL;
+		return NULL;
+	}
+
+	char *potential_mod;
+	unsigned int grade = strtoul(str + 1, &potential_mod, 10);
+
+	GradeHuecoModifier modifier;
+
+	if (strcmp(potential_mod, "") == 0) {
+		modifier = GRADE_HUECO_MODIFIER_NONE;
+	} else if (strcmp(potential_mod, "-") == 0) {
+		modifier = GRADE_HUECO_MODIFIER_MINUS;
+	} else if (strcmp(potential_mod, "+") == 0) {
+		modifier = GRADE_HUECO_MODIFIER_PLUS;
+	} else {
+		errno = EINVAL;
+		return NULL;
+	}
+
+	errno = 0;
+	return GradeHueco_new(grade, modifier);
+}
