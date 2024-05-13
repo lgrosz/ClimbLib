@@ -37,7 +37,11 @@ static void update_str(GradeFontainebleau grade)
 			break;
 	}
 
-	snprintf(grade->str, sizeof(grade->str), "F%d%c%c", grade->grade, div_str, mod_str);
+	if (grade->grade < 6) {
+		snprintf(grade->str, sizeof(grade->str), "F%d%c", grade->grade, mod_str);
+	} else {
+		snprintf(grade->str, sizeof(grade->str), "F%d%c%c", grade->grade, div_str, mod_str);
+	}
 }
 
 GradeFontainebleau GradeFontainebleau_new(unsigned int grade, GradeFontainebleauDivision division, GradeFontainebleauModifier modifier)
@@ -107,10 +111,13 @@ int GradeFontainebleau_cmp(const GradeFontainebleau a, const GradeFontainebleau 
 		return normalize(a->grade - b->grade);
 	}
 
-	if (a->division < b->division) {
-		return -1;
-	} else if (a->division > b->division){
-		return 1;
+	// Divisions only matter in F6 or higher
+	if (a->grade > 5) {
+		if (a->division < b->division) {
+			return -1;
+		} else if (a->division > b->division){
+			return 1;
+		}
 	}
 
 	if (a->modifier == b->modifier) {
@@ -129,6 +136,7 @@ char *GradeFontainebleau_str(const GradeFontainebleau grade)
 
 GradeFontainebleau GradeFontainebleau_fromstr(const char *str)
 {
+	// TODO /^Fb/ is also a valid
 	if (strlen(str) == 0 || str[0] != 'F') {
 		errno = EINVAL;
 		return NULL;
@@ -142,20 +150,23 @@ GradeFontainebleau GradeFontainebleau_fromstr(const char *str)
 		return NULL;
 	}
 
-	GradeFontainebleauDivision division;
+	GradeFontainebleauDivision division = GRADE_FONT_DIVISION_A;
 
-	if (*the_rest == 'A') {
-		division = GRADE_FONT_DIVISION_A;
-	} else if (*the_rest == 'B') {
-		division = GRADE_FONT_DIVISION_B;
-	} else if (*the_rest == 'C') {
-		division = GRADE_FONT_DIVISION_C;
-	} else {
-		errno = EINVAL;
-		return NULL;
+	// Divisions are only valid for grades > F5
+	if (grade > 5) {
+		if (*the_rest == 'A') {
+			division = GRADE_FONT_DIVISION_A;
+		} else if (*the_rest == 'B') {
+			division = GRADE_FONT_DIVISION_B;
+		} else if (*the_rest == 'C') {
+			division = GRADE_FONT_DIVISION_C;
+		} else {
+			errno = EINVAL;
+			return NULL;
+		}
+
+		the_rest = the_rest + 1;
 	}
-
-	the_rest = the_rest + 1;
 
 	GradeFontainebleauModifier modifier;
 

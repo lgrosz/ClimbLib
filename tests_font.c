@@ -44,16 +44,16 @@ int main()
 	GradeFontainebleau_free(b_f);
 
 	// Test division comparisons
-	a_f = GradeFontainebleau_new(0, GRADE_FONT_DIVISION_B, GRADE_FONT_MODIFIER_NONE);
-	b_f = GradeFontainebleau_new(0, GRADE_FONT_DIVISION_B, GRADE_FONT_MODIFIER_NONE);
+	a_f = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_B, GRADE_FONT_MODIFIER_NONE);
+	b_f = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_B, GRADE_FONT_MODIFIER_NONE);
 	VERIFY(GradeFontainebleau_cmp(a_f, b_f) == 0);
 	GradeFontainebleau_free(b_f);
 
-	b_f = GradeFontainebleau_new(0, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
+	b_f = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
 	VERIFY(GradeFontainebleau_cmp(a_f, b_f) > 0);
 	GradeFontainebleau_free(b_f);
 
-	b_f = GradeFontainebleau_new(0, GRADE_FONT_DIVISION_C, GRADE_FONT_MODIFIER_NONE);
+	b_f = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_C, GRADE_FONT_MODIFIER_NONE);
 	VERIFY(GradeFontainebleau_cmp(a_f, b_f) < 0);
 	GradeFontainebleau_free(a_f);
 	GradeFontainebleau_free(b_f);
@@ -76,6 +76,14 @@ int main()
 
 	a_f = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS);
 	VERIFY(strcmp(GradeFontainebleau_str(a_f), "F7A+") == 0);
+	GradeFontainebleau_free(a_f);
+
+	a_f = GradeFontainebleau_new(5, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
+	VERIFY(strcmp(GradeFontainebleau_str(a_f), "F5") == 0);
+	GradeFontainebleau_free(a_f);
+
+	a_f = GradeFontainebleau_new(5, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS);
+	VERIFY(strcmp(GradeFontainebleau_str(a_f), "F5+") == 0);
 	GradeFontainebleau_free(a_f);
 
 	a_f = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
