@@ -2,7 +2,8 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
-#include "grades.h"
+
+#include <grades.h>
 
 #define VERIFY(expr) \
     do { \
