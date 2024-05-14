@@ -1,3 +1,6 @@
+#ifndef _CLIMBLIB_GRADES_H_
+#define _CLIMBLIB_GRADES_H_
+
 typedef struct GradeHueco_* GradeHueco;
 typedef enum GradeHuecoModifier {
 	GRADE_HUECO_MODIFIER_MINUS,
@@ -29,3 +32,5 @@ GradeFontainebleau GradeFontainebleau_dup(const GradeFontainebleau);
 int GradeFontainebleau_cmp(const GradeFontainebleau, const GradeFontainebleau);
 char *GradeFontainebleau_str(const GradeFontainebleau);
 GradeFontainebleau GradeFontainebleau_fromstr(const char *);
+
+#endif
