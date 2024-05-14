@@ -111,7 +111,7 @@ char *GradeHueco_str(const GradeHueco grade)
 
 GradeHueco GradeHueco_fromstr(const char *str)
 {
-	int length = strlen(str);
+	size_t length = strlen(str);
 
 	if (length == 0 || str[0] != 'V') {
 		errno = EINVAL;
