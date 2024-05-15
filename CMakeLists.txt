@@ -12,6 +12,7 @@ endif()
 add_library(grades
     grades_hueco.c
     grades_font.c
+    climb.c
 )
 
 # Compiler warning flags
