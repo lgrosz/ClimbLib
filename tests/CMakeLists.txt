@@ -1,6 +1,7 @@
 set(TestSources
     font.c
     hueco.c
+    climb.c
 )
 
 create_test_sourcelist(Tests UnitTests.c ${TestSources})
