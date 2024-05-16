@@ -6,4 +6,7 @@ typedef struct Climb_* Climb;
 Climb Climb_new();
 void Climb_free(Climb);
 
+void Climb_set_name(Climb, const char *);
+const char *Climb_name(const Climb);
+
 #endif
