@@ -28,3 +28,8 @@ jobs:
         run: ctest --output-on-failure --test-dir build
       - name: Run memory check
         run: ctest -T MemCheck --test-dir build
+      - name: Archive memory check report
+        uses: actions/upload-artifact@v4
+        with:
+          name: memory-check-report
+          path: build/Testing/Temporary/MemoryChecker.*.log
