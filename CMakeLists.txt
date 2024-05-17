@@ -1,11 +1,13 @@
 cmake_minimum_required(VERSION 3.10)
 project(ClimbLib C)
 
-enable_testing()
+include(CTest)
 
 set(CMAKE_C_STANDARD 11)
 
-add_subdirectory(tests)
+if(BUILD_TESTING)
+    add_subdirectory(tests)
+endif()
 
 add_library(grades grades_hueco.c grades_font.c)
 
