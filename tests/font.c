@@ -3,15 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <grades.h>
+#include "verify.h"
 
-#define VERIFY(expr) \
-    do { \
-        if (!(expr)) { \
-            fprintf(stderr, "Verification failed at %s:%d - %s\n", __FILE__, __LINE__, #expr); \
-            exit(EXIT_FAILURE); \
-        } \
-    } while (0)
+#include <grades.h>
 
 void font()
 {
