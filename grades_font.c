@@ -148,7 +148,7 @@ GradeFontainebleau GradeFontainebleau_fromstr(const char *str)
 	char *the_rest;
 	unsigned int grade = strtoul(str + 1, &the_rest, 10);
 
-	if (strlen(the_rest) < 1) {
+	if (grade > 5 && strlen(the_rest) < 1) {
 		errno = EINVAL;
 		return NULL;
 	}
