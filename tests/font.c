@@ -13,7 +13,7 @@
         } \
     } while (0)
 
-int main()
+void font()
 {
 	// Test free function
 	errno = 0;
@@ -98,6 +98,4 @@ int main()
 	b_f = GradeFontainebleau_fromstr("F7A+");
 	VERIFY(errno == 0);
 	VERIFY(GradeFontainebleau_cmp(a_f, b_f) == 0);
-
-	return 0;
 }
