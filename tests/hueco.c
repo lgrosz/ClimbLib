@@ -13,7 +13,7 @@
         } \
     } while (0)
 
-int main()
+void hueco()
 {
 	// Test free function
 	errno = 0;
@@ -103,6 +103,4 @@ int main()
 	VERIFY(GradeHueco_cmp(a, b) == 0);
 	GradeHueco_free(a);
 	GradeHueco_free(b);
-
-	return 0;
 }
