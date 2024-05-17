@@ -48,6 +48,7 @@ GradeHueco GradeHueco_new(unsigned int grade, GradeHuecoModifier modifier)
 	ret->modifier = modifier;
 	update_str(ret);
 
+	errno = 0;
 	return ret;
 }
 
@@ -58,6 +59,7 @@ void GradeHueco_free(GradeHueco grade)
 		return;
 	}
 
+	errno = 0;
 	free(grade);
 }
 

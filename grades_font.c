@@ -64,6 +64,7 @@ GradeFontainebleau GradeFontainebleau_new(unsigned int grade, GradeFontainebleau
 	ret->modifier = modifier;
 	update_str(ret);
 
+	errno = 0;
 	return ret;
 }
 
@@ -74,6 +75,7 @@ void GradeFontainebleau_free(GradeFontainebleau grade)
 		return;
 	}
 
+	errno = 0;
 	free(grade);
 }
 
@@ -84,6 +86,7 @@ GradeFontainebleau GradeFontainebleau_dup(const GradeFontainebleau grade)
 		return NULL;
 	}
 
+	errno = 0;
 	return GradeFontainebleau_new(grade->grade, grade->division, grade->modifier);
 }
 
