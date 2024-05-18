@@ -48,14 +48,14 @@ GradeFontainebleau GradeFontainebleau_new(unsigned int grade, GradeFontainebleau
 {
 	GradeFontainebleau ret;
 
-	if (NULL == (ret = malloc(sizeof(struct GradeFontainebleau_)))) {
-		errno = ENOMEM;
-		return NULL;
-	}
-
 	if (grade > 9) {
 		/* Two digit numbers could overflow the string */
 		errno = EINVAL;
+		return NULL;
+	}
+
+	if (NULL == (ret = malloc(sizeof(struct GradeFontainebleau_)))) {
+		errno = ENOMEM;
 		return NULL;
 	}
 
