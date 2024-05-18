@@ -7,94 +7,244 @@
 
 #include <grades.h>
 
-void hueco()
+static void test_free_null()
 {
-	// Test free function
-	errno = 0;
 	GradeHueco_free(NULL);
 	VERIFY(errno == EINVAL);
+}
 
-	// Test new function
-	GradeHueco a = GradeHueco_new(0, GRADE_HUECO_MODIFIER_NONE);
-	VERIFY(a != NULL);
-	GradeHueco_free(a);
+static void test_new()
+{
+	GradeHueco g = GradeHueco_new(0, GRADE_HUECO_MODIFIER_NONE);
+	VERIFY(errno == 0);
+	VERIFY(g != NULL);
 
-	// Test duplicate function
-	a = GradeHueco_new(0, GRADE_HUECO_MODIFIER_NONE);
-	GradeHueco b = GradeHueco_dup(a);
-	VERIFY(b != NULL);
-	GradeHueco_free(a);
-	GradeHueco_free(b);
+	GradeHueco_free(g);
+	VERIFY(errno == 0);
+}
 
-	errno = 0;
-	b = GradeHueco_dup(NULL);
-	VERIFY(b == NULL);
+static void test_new_grade_out_of_range()
+{
+	GradeHueco g = GradeHueco_new(100, GRADE_HUECO_MODIFIER_NONE);
 	VERIFY(errno == EINVAL);
+	VERIFY(g == NULL);
+}
 
-	// Test numerical comparisons
-	a = GradeHueco_new(0, GRADE_HUECO_MODIFIER_NONE);
-	b = GradeHueco_new(1, GRADE_HUECO_MODIFIER_NONE);
-	VERIFY(GradeHueco_cmp(a, b) < 0);
-	GradeHueco_free(a);
-	GradeHueco_free(b);
+static void test_dup_null()
+{
+	GradeHueco g = GradeHueco_dup(NULL);
+	VERIFY(errno == EINVAL);
+	VERIFY(g == NULL);
+}
 
-	// Test modifier comparisons
-	a = GradeHueco_new(0, GRADE_HUECO_MODIFIER_NONE);
-	b = GradeHueco_new(0, GRADE_HUECO_MODIFIER_NONE);
-	VERIFY(GradeHueco_cmp(a, b) == 0);
-	GradeHueco_free(b);
-
-	b = GradeHueco_new(0, GRADE_HUECO_MODIFIER_MINUS);
-	VERIFY(GradeHueco_cmp(a, b) > 0);
-	GradeHueco_free(b);
-
-	b = GradeHueco_new(0, GRADE_HUECO_MODIFIER_PLUS);
-	VERIFY(GradeHueco_cmp(a, b) < 0);
-	GradeHueco_free(a);
-
-	a = GradeHueco_new(0, GRADE_HUECO_MODIFIER_MINUS);
-	VERIFY(GradeHueco_cmp(a, b) < 0);
-	GradeHueco_free(a);
-	GradeHueco_free(b);
-
-	// Test grade strings
-	a = GradeHueco_new(0, GRADE_HUECO_MODIFIER_NONE);
-	VERIFY(strcmp(GradeHueco_str(a), "V0") == 0);
-	GradeHueco_free(a);
-
-	a = GradeHueco_new(0, GRADE_HUECO_MODIFIER_MINUS);
-	VERIFY(strcmp(GradeHueco_str(a), "V0-") == 0);
-	GradeHueco_free(a);
-
-	a = GradeHueco_new(0, GRADE_HUECO_MODIFIER_PLUS);
-	VERIFY(strcmp(GradeHueco_str(a), "V0+") == 0);
-	GradeHueco_free(a);
-
-	a = GradeHueco_new(0, GRADE_HUECO_MODIFIER_NONE);
-	b = GradeHueco_fromstr("V0");
+static void test_dup()
+{
+	GradeHueco g = GradeHueco_new(5, GRADE_HUECO_MODIFIER_PLUS);
 	VERIFY(errno == 0);
-	VERIFY(GradeHueco_cmp(a, b) == 0);
-	GradeHueco_free(a);
-	GradeHueco_free(b);
+	VERIFY(g != NULL);
 
-	a = GradeHueco_new(0, GRADE_HUECO_MODIFIER_PLUS);
-	b = GradeHueco_fromstr("V0+");
+	GradeHueco h = GradeHueco_dup(g);
 	VERIFY(errno == 0);
-	VERIFY(GradeHueco_cmp(a, b) == 0);
-	GradeHueco_free(a);
-	GradeHueco_free(b);
+	VERIFY(h != NULL);
 
-	a = GradeHueco_new(12, GRADE_HUECO_MODIFIER_NONE);
-	b = GradeHueco_fromstr("V12");
-	VERIFY(errno == 0);
-	VERIFY(GradeHueco_cmp(a, b) == 0);
-	GradeHueco_free(a);
-	GradeHueco_free(b);
+	VERIFY(GradeHueco_cmp(g, h) == 0);
 
-	a = GradeHueco_new(12, GRADE_HUECO_MODIFIER_MINUS);
-	b = GradeHueco_fromstr("V12-");
+	GradeHueco_free(g);
 	VERIFY(errno == 0);
-	VERIFY(GradeHueco_cmp(a, b) == 0);
-	GradeHueco_free(a);
-	GradeHueco_free(b);
+
+	GradeHueco_free(h);
+	VERIFY(errno == 0);
+}
+
+static void test_cmp_grade_eq()
+{
+	GradeHueco g = GradeHueco_new(3, GRADE_HUECO_MODIFIER_NONE);
+	VERIFY(errno == 0);
+	VERIFY(g != NULL);
+
+	GradeHueco h = GradeHueco_new(3, GRADE_HUECO_MODIFIER_NONE);
+	VERIFY(errno == 0);
+	VERIFY(g != NULL);
+
+	VERIFY(GradeHueco_cmp(g, h) == 0);
+
+	GradeHueco_free(g);
+	VERIFY(errno == 0);
+
+	GradeHueco_free(h);
+	VERIFY(errno == 0);
+}
+
+static void test_cmp_grade_lt()
+{
+	GradeHueco g = GradeHueco_new(3, GRADE_HUECO_MODIFIER_NONE);
+	VERIFY(errno == 0);
+	VERIFY(g != NULL);
+
+	GradeHueco h = GradeHueco_new(6, GRADE_HUECO_MODIFIER_NONE);
+	VERIFY(errno == 0);
+	VERIFY(g != NULL);
+
+	VERIFY(GradeHueco_cmp(g, h) < 0);
+
+	GradeHueco_free(g);
+	VERIFY(errno == 0);
+
+	GradeHueco_free(h);
+	VERIFY(errno == 0);
+}
+
+static void test_cmp_mod_eq()
+{
+	GradeHueco g = GradeHueco_new(4, GRADE_HUECO_MODIFIER_PLUS);
+	VERIFY(errno == 0);
+	VERIFY(g != NULL);
+
+	GradeHueco h = GradeHueco_new(4, GRADE_HUECO_MODIFIER_PLUS);
+	VERIFY(errno == 0);
+	VERIFY(g != NULL);
+
+	VERIFY(GradeHueco_cmp(g, h) == 0);
+
+	GradeHueco_free(g);
+	VERIFY(errno == 0);
+
+	GradeHueco_free(h);
+	VERIFY(errno == 0);
+}
+
+static void test_cmp_mod_lt()
+{
+	GradeHueco g = GradeHueco_new(4, GRADE_HUECO_MODIFIER_NONE);
+	VERIFY(errno == 0);
+	VERIFY(g != NULL);
+
+	GradeHueco h = GradeHueco_new(4, GRADE_HUECO_MODIFIER_PLUS);
+	VERIFY(errno == 0);
+	VERIFY(g != NULL);
+
+	VERIFY(GradeHueco_cmp(g, h) < 0);
+
+	GradeHueco_free(g);
+	VERIFY(errno == 0);
+
+	GradeHueco_free(h);
+	VERIFY(errno == 0);
+}
+
+static void test_cmp_grade_presc()
+{
+	GradeHueco g = GradeHueco_new(4, GRADE_HUECO_MODIFIER_PLUS);
+	VERIFY(errno == 0);
+	VERIFY(g != NULL);
+
+	GradeHueco h = GradeHueco_new(5, GRADE_HUECO_MODIFIER_NONE);
+	VERIFY(errno == 0);
+	VERIFY(g != NULL);
+
+	VERIFY(GradeHueco_cmp(g, h) < 0);
+
+	GradeHueco_free(g);
+	VERIFY(errno == 0);
+
+	GradeHueco_free(h);
+	VERIFY(errno == 0);
+}
+
+static void test_str()
+{
+	GradeHueco g = GradeHueco_new(4, GRADE_HUECO_MODIFIER_NONE);
+	VERIFY(errno == 0);
+	VERIFY(g != NULL);
+
+	VERIFY(strcmp(GradeHueco_str(g), "V4") == 0);
+
+	GradeHueco_free(g);
+	VERIFY(errno == 0);
+}
+
+static void test_str_mod()
+{
+	GradeHueco g = GradeHueco_new(10, GRADE_HUECO_MODIFIER_PLUS);
+	VERIFY(errno == 0);
+	VERIFY(g != NULL);
+
+	VERIFY(strcmp(GradeHueco_str(g), "V10+") == 0);
+
+	GradeHueco_free(g);
+	VERIFY(errno == 0);
+}
+
+static void test_fromstr_empty()
+{
+	GradeHueco g = GradeHueco_fromstr("");
+	VERIFY(errno == EINVAL);
+	VERIFY(g == NULL);
+}
+
+static void test_fromstr_mess()
+{
+	GradeHueco g = GradeHueco_fromstr("adsfeg");
+	VERIFY(errno == EINVAL);
+	VERIFY(g == NULL);
+}
+
+static void test_fromstr()
+{
+	GradeHueco g = GradeHueco_fromstr("V5");
+	VERIFY(errno == 0);
+	VERIFY(g != NULL);
+
+	GradeHueco h = GradeHueco_new(5, GRADE_HUECO_MODIFIER_NONE);
+	VERIFY(errno == 0);
+	VERIFY(h != NULL);
+
+	VERIFY(GradeHueco_cmp(g, h) == 0);
+
+	GradeHueco_free(g);
+	VERIFY(errno == 0);
+
+	GradeHueco_free(h);
+	VERIFY(errno == 0);
+}
+
+static void test_fromstr_mod()
+{
+	GradeHueco g = GradeHueco_fromstr("V5+");
+	VERIFY(errno == 0);
+	VERIFY(g != NULL);
+
+	GradeHueco h = GradeHueco_new(5, GRADE_HUECO_MODIFIER_PLUS);
+	VERIFY(errno == 0);
+	VERIFY(h != NULL);
+
+	VERIFY(GradeHueco_cmp(g, h) == 0);
+
+	GradeHueco_free(g);
+	VERIFY(errno == 0);
+
+	GradeHueco_free(h);
+	VERIFY(errno == 0);
+}
+
+void hueco()
+{
+	test_free_null();
+	test_new();
+	test_new_grade_out_of_range();
+	test_dup_null();
+	test_dup();
+	test_cmp_grade_eq();
+	test_cmp_grade_lt();
+	test_cmp_mod_eq();
+	test_cmp_mod_lt();
+	test_cmp_grade_presc();
+	test_str();
+	test_str_mod();
+	test_fromstr_empty();
+	test_fromstr_mess();
+	test_fromstr();
+	test_fromstr_mod();
+
+	exit(EXIT_SUCCESS);
 }
