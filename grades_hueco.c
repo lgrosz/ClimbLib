@@ -33,14 +33,14 @@ GradeHueco GradeHueco_new(unsigned int grade, GradeHuecoModifier modifier)
 {
 	GradeHueco ret;
 
-	if (NULL == (ret = malloc(sizeof(struct GradeHueco_)))) {
-		errno = ENOMEM;
-		return NULL;
-	}
-
 	if (grade > 99) {
 		/* Three digit numbers could overflow the string */
 		errno = EINVAL;
+		return NULL;
+	}
+
+	if (NULL == (ret = malloc(sizeof(struct GradeHueco_)))) {
+		errno = ENOMEM;
 		return NULL;
 	}
 
