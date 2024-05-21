@@ -11,13 +11,25 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
+          - windows-latest
           - macos-latest
+        include:
+          - os: windows-latest
+            cfg: release
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Configure
         run: cmake -S . -B build
-      - name: Build
+      - if: ${{ ! matrix.cfg }}
+        name: Build
         run: cmake --build build
-      - name: Run unit tests
+      - if: ${{ matrix.cfg }}
+        name: Build for multi-configuration generators
+        run: cmake --build build --config ${{ matrix.cfg }}
+      - if: ${{ ! matrix.cfg }}
+        name: Run unit tests
         run: ctest --output-on-failure --test-dir build
+      - if: ${{ matrix.cfg }}
+        name: Run unit tests for multi-configuration generators
+        run: ctest --output-on-failure -C ${{ matrix.cfg }} --test-dir build
