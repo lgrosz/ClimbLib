@@ -6,6 +6,7 @@
 struct Climb_
 {
 	const char *name;
+	const char *description;
 };
 
 Climb Climb_new()
@@ -27,6 +28,17 @@ Climb Climb_new()
 	strcpy(name, "");
 	ret->name = name;
 
+	char *description;
+	if (NULL == (description = malloc(strlen("")+1))) {
+		errno = ENOMEM;
+		free(ret);
+		free(name);
+		return NULL;
+	}
+
+	strcpy(description, "");
+	ret->description = description;
+
 	errno = 0;
 	return ret;
 }
@@ -40,6 +52,7 @@ void Climb_free(Climb climb)
 
 	errno = 0;
 	free((void*)climb->name);
+	free((void*)climb->description);
 	free(climb);
 }
 
@@ -63,4 +76,26 @@ void Climb_set_name(Climb climb, const char *name)
 const char *Climb_name(Climb climb)
 {
 	return climb->name;
+}
+
+void Climb_set_description(Climb climb, const char *description)
+{
+	errno = 0;
+	if (climb->description) {
+		free((void*)climb->description);
+	}
+
+	char *result;
+	if (NULL == (result = malloc(strlen(description)+1))) {
+		errno = ENOMEM;
+		return;
+	}
+
+	strcpy(result, description);
+	climb->description = result;
+}
+
+const char *Climb_description(Climb climb)
+{
+	return climb->description;
 }
