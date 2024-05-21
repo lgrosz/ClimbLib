@@ -9,4 +9,7 @@ void Climb_free(Climb);
 void Climb_set_name(Climb, const char *);
 const char *Climb_name(const Climb);
 
+void Climb_set_description(Climb, const char *);
+const char *Climb_description(const Climb);
+
 #endif
