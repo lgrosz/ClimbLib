@@ -1,0 +1,5 @@
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+	set(MEMORYCHECK_TYPE "Valgrind")
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+	set(MEMORYCHECK_TYPE "MemorySanitizer")
+endif()
