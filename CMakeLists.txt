@@ -9,7 +9,10 @@ if(BUILD_TESTING)
     add_subdirectory(tests)
 endif()
 
-add_library(grades grades_hueco.c grades_font.c)
+add_library(grades
+    grades_hueco.c
+    grades_font.c
+)
 
 # Compiler warning flags
 target_compile_options(grades PRIVATE
@@ -17,4 +20,7 @@ target_compile_options(grades PRIVATE
     $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
 )
 
-target_include_directories(grades INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+target_include_directories(grades
+    INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+)
