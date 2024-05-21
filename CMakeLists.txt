@@ -16,8 +16,8 @@ add_library(grades
 
 # Compiler warning flags
 target_compile_options(grades PRIVATE
-    $<$<CXX_COMPILER_ID:GNU,Clang>:-Wall -Werror>
-    $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
+    $<$<C_COMPILER_ID:GNU,Clang>:-Wall -Werror>
+    $<$<C_COMPILER_ID:MSVC>:/W4 /WX>
 )
 
 target_include_directories(grades
