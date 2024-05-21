@@ -21,23 +21,22 @@ Climb Climb_new()
 	char *name;
 	if (NULL == (name = malloc(strlen("")+1))) {
 		errno = ENOMEM;
-		free(ret);
+		Climb_free(ret);
 		return NULL;
+	} else {
+		strcpy(name, "");
+		ret->name = name;
 	}
-
-	strcpy(name, "");
-	ret->name = name;
 
 	char *description;
 	if (NULL == (description = malloc(strlen("")+1))) {
 		errno = ENOMEM;
-		free(ret);
-		free(name);
+		Climb_free(ret);
 		return NULL;
+	} else {
+		strcpy(description, "");
+		ret->description = description;
 	}
-
-	strcpy(description, "");
-	ret->description = description;
 
 	errno = 0;
 	return ret;
@@ -51,8 +50,8 @@ void Climb_free(Climb climb)
 	}
 
 	errno = 0;
-	free((void*)climb->name);
-	free((void*)climb->description);
+	if (climb->name)	free((void*)climb->name);
+	if (climb->description)	free((void*)climb->description);
 	free(climb);
 }
 
