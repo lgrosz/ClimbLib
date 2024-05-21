@@ -9,6 +9,25 @@ struct Climb_
 	const char *description;
 };
 
+// Frees str_addr contents and replaces them with str. Sets errno accordingly
+static void free_allocate_and_assign_str(char const **str_addr, const char *str)
+{
+	errno = 0;
+
+	if (*str_addr) {
+		free((void*)*str_addr);
+	}
+
+	char *result;
+	if (NULL == (result = malloc(strlen(str)+1))) {
+		errno = ENOMEM;
+		return;
+	}
+
+	strcpy(result, str);
+	*str_addr = result;
+}
+
 Climb Climb_new()
 {
 	Climb ret;
@@ -57,19 +76,7 @@ void Climb_free(Climb climb)
 
 void Climb_set_name(Climb climb, const char *name)
 {
-	errno = 0;
-	if (climb->name) {
-		free((void*)climb->name);
-	}
-
-	char *result;
-	if (NULL == (result = malloc(strlen(name)+1))) {
-		errno = ENOMEM;
-		return;
-	}
-
-	strcpy(result, name);
-	climb->name = result;
+	free_allocate_and_assign_str(&climb->name, name);
 }
 
 const char *Climb_name(Climb climb)
@@ -79,19 +86,7 @@ const char *Climb_name(Climb climb)
 
 void Climb_set_description(Climb climb, const char *description)
 {
-	errno = 0;
-	if (climb->description) {
-		free((void*)climb->description);
-	}
-
-	char *result;
-	if (NULL == (result = malloc(strlen(description)+1))) {
-		errno = ENOMEM;
-		return;
-	}
-
-	strcpy(result, description);
-	climb->description = result;
+	free_allocate_and_assign_str(&climb->description, description);
 }
 
 const char *Climb_description(Climb climb)
