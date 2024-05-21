@@ -65,12 +65,34 @@ static void test_description()
 	VERIFY(errno == 0);
 }
 
+static void test_brief()
+{
+	Climb c = Climb_new();
+	VERIFY(errno == 0);
+	VERIFY(c != NULL);
+
+	VERIFY(strcmp(Climb_brief(c), "") == 0);
+
+	char brief[] = "A problem brief...";
+	Climb_set_brief(c, brief);
+	VERIFY(errno == 0);
+	VERIFY(strcmp(Climb_brief(c), brief) == 0);
+
+	Climb_set_brief(c, "");
+	VERIFY(errno == 0);
+	VERIFY(strcmp(Climb_brief(c), "") == 0);
+
+	Climb_free(c);
+	VERIFY(errno == 0);
+}
+
 int climb()
 {
 	test_free_null();
 	test_new();
 	test_name();
 	test_description();
+	test_brief();
 
 	exit(EXIT_SUCCESS);
 }

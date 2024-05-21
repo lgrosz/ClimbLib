@@ -12,4 +12,7 @@ const char *Climb_name(const Climb);
 void Climb_set_description(Climb, const char *);
 const char *Climb_description(const Climb);
 
+void Climb_set_brief(Climb, const char *);
+const char *Climb_brief(const Climb);
+
 #endif
