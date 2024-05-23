@@ -86,6 +86,58 @@ static void test_brief()
 	VERIFY(errno == 0);
 }
 
+static int string_array_contains(const char **arr, unsigned int len, const char *str)
+{
+	for (int i = 0; i < len; i++) {
+		if (strcmp(arr[i], str) == 0) {
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
+static void test_aliases()
+{
+	Climb c = Climb_new();
+	VERIFY(errno == 0);
+	VERIFY(c != NULL);
+
+	char alias1[] = "An alias";
+	char alias2[] = "Another alias";
+
+	Climb_add_alias(c, alias1);
+	VERIFY(errno == 0);
+
+	Climb_add_alias(c, alias2);
+	VERIFY(errno == 0);
+
+	size_t aliaseslen;
+	const char **aliases = Climb_aliases(c, &aliaseslen);
+	VERIFY(errno == 0);
+	VERIFY(aliaseslen == 2);
+	VERIFY(string_array_contains(aliases, aliaseslen, alias1));
+	VERIFY(string_array_contains(aliases, aliaseslen, alias2));
+
+	Climb_remove_alias(c, alias1);
+	VERIFY(errno == 0);
+
+	aliases = Climb_aliases(c, &aliaseslen);
+	VERIFY(errno == 0);
+	VERIFY(aliaseslen == 1);
+	VERIFY(!string_array_contains(aliases, aliaseslen, alias1));
+	VERIFY(string_array_contains(aliases, aliaseslen, alias2));
+
+	Climb_add_alias(c, alias2);
+	VERIFY(errno == 0);
+	Climb_aliases(c, &aliaseslen);
+	VERIFY(errno == 0);
+	VERIFY(aliaseslen == 1);
+
+	Climb_free(c);
+	VERIFY(errno == 0);
+}
+
 int climb()
 {
 	test_free_null();
@@ -93,6 +145,7 @@ int climb()
 	test_name();
 	test_description();
 	test_brief();
+	test_aliases();
 
 	exit(EXIT_SUCCESS);
 }
