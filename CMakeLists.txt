@@ -14,6 +14,7 @@ add_library(grades
     grades_font.c
     climb.c
     str_util.c
+    int_util.c
 )
 
 # Compiler warning flags

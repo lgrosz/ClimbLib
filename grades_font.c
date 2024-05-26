@@ -1,4 +1,5 @@
 #include "grades.h"
+#include "int_util.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -90,17 +91,6 @@ GradeFontainebleau GradeFontainebleau_dup(const GradeFontainebleau grade)
 	return GradeFontainebleau_new(grade->grade, grade->division, grade->modifier);
 }
 
-static int normalize(int a)
-{
-	if (a < 0) {
-		return -1;
-	} else if (a > 0) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
-
 int GradeFontainebleau_cmp(const GradeFontainebleau a, const GradeFontainebleau b)
 {
 	if (a == NULL || b == NULL) {
@@ -111,7 +101,7 @@ int GradeFontainebleau_cmp(const GradeFontainebleau a, const GradeFontainebleau 
 	}
 
 	if (a->grade != b->grade) {
-		return normalize(a->grade - b->grade);
+		return clamp(a->grade - b->grade, -1, 1);
 	}
 
 	// Divisions only matter in F6 or higher
