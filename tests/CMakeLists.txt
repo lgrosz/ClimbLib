@@ -2,6 +2,7 @@ set(TestSources
     font.c
     hueco.c
     climb.c
+    formation.c
     graph.c
 )
 
