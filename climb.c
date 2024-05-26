@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+#include "str_util.h"
 
 struct Climb_
 {
@@ -11,25 +12,6 @@ struct Climb_
 	const char **aliases;
 	size_t aliaseslen;
 };
-
-// Frees str_addr contents and replaces them with str. Sets errno accordingly
-static void free_allocate_and_assign_str(char const **str_addr, const char *str)
-{
-	errno = 0;
-
-	if (*str_addr) {
-		free((void*)*str_addr);
-	}
-
-	char *result;
-	if (NULL == (result = malloc(strlen(str)+1))) {
-		errno = ENOMEM;
-		return;
-	}
-
-	strcpy(result, str);
-	*str_addr = result;
-}
 
 static int contains(const char **strs, size_t len, const char *str)
 {

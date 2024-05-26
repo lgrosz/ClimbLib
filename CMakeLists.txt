@@ -13,6 +13,7 @@ add_library(grades
     grades_hueco.c
     grades_font.c
     climb.c
+    str_util.c
 )
 
 # Compiler warning flags
