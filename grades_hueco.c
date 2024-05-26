@@ -1,4 +1,5 @@
 #include "grades.h"
+#include "int_util.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -73,17 +74,6 @@ GradeHueco GradeHueco_dup(const GradeHueco grade)
 	return GradeHueco_new(grade->grade, grade->modifier);
 }
 
-static int normalize(int a)
-{
-	if (a < 0) {
-		return -1;
-	} else if (a > 0) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
-
 int GradeHueco_cmp(const GradeHueco a, const GradeHueco b)
 {
 	if (a == NULL || b == NULL) {
@@ -94,7 +84,7 @@ int GradeHueco_cmp(const GradeHueco a, const GradeHueco b)
 	}
 
 	if (a->grade != b->grade) {
-		return normalize(a->grade - b->grade);
+		return clamp(a->grade - b->grade, -1, 1);
 	}
 
 	if (a->modifier == b->modifier) {
