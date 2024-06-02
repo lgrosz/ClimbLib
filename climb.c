@@ -31,6 +31,11 @@ Climb Climb_new()
 	if (NULL == (ret = malloc(sizeof(struct Climb_)))) {
 		errno = ENOMEM;
 		return NULL;
+	} else {
+		ret->name = NULL;
+		ret->description = NULL;
+		ret->brief = NULL;
+		ret->aliases = NULL;
 	}
 
 	Climb_set_name(ret, "");
