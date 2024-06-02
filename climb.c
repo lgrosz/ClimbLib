@@ -33,35 +33,9 @@ Climb Climb_new()
 		return NULL;
 	}
 
-	char *name;
-	if (NULL == (name = malloc(strlen("")+1))) {
-		errno = ENOMEM;
-		Climb_free(ret);
-		return NULL;
-	} else {
-		strcpy(name, "");
-		ret->name = name;
-	}
-
-	char *description;
-	if (NULL == (description = malloc(strlen("")+1))) {
-		errno = ENOMEM;
-		Climb_free(ret);
-		return NULL;
-	} else {
-		strcpy(description, "");
-		ret->description = description;
-	}
-
-	char *brief;
-	if (NULL == (brief = malloc(strlen("")+1))) {
-		errno = ENOMEM;
-		Climb_free(ret);
-		return NULL;
-	} else {
-		strcpy(brief, "");
-		ret->brief = brief;
-	}
+	Climb_set_name(ret, "");
+	Climb_set_description(ret, "");
+	Climb_set_brief(ret, "");
 
 	ret->aliaseslen = 0;
 
