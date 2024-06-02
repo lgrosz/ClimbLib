@@ -8,16 +8,9 @@ void free_allocate_and_assign_str(char const **str_addr, const char *str)
 {
 	errno = 0;
 
-	if (*str_addr) {
-		free((void*)*str_addr);
-	}
+	*str_addr = realloc((void*)*str_addr, strlen(str) + 1);
 
-	char *result;
-	if (NULL == (result = malloc(strlen(str)+1))) {
-		errno = ENOMEM;
-		return;
+	if (*str_addr != NULL) {
+		strcpy((char*)*str_addr, str);
 	}
-
-	strcpy(result, str);
-	*str_addr = result;
 }
