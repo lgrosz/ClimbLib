@@ -108,38 +108,22 @@ void Climb_add_alias(Climb climb, const char *alias)
 		return;
 	}
 
+	errno = 0;
+
 	if (contains(climb->aliases, climb->aliaseslen, alias)) {
 		return;
 	}
 
-	const char **aliases;
-	if (NULL == (aliases = malloc((climb->aliaseslen + 1) * sizeof(const char *)))) {
-		errno = ENOMEM;
+	if (NULL == (climb->aliases = realloc(climb->aliases, sizeof(const char *) * (climb->aliaseslen + 1)))) {
 		return;
 	}
 
-	for (size_t i = 0; i < climb->aliaseslen; ++i) {
-		aliases[i] = climb->aliases[i];
-	}
-
-	char *new_str;
-	if (NULL == (new_str = malloc(strlen(alias) + 1))) {
-		// TODO Cleanup
-		errno = ENOMEM;
+	if (NULL == (climb->aliases[climb->aliaseslen] = malloc(strlen(alias) + 1))) {
 		return;
 	}
 
-	strcpy(new_str, alias);
-
-	aliases[climb->aliaseslen] = new_str;
-
-	if (climb->aliases) {
-		free(climb->aliases);
-	}
-
-	errno = 0;
+	strcpy((char*)climb->aliases[climb->aliaseslen], alias);
 	climb->aliaseslen = climb->aliaseslen + 1;
-	climb->aliases = aliases;
 }
 
 void Climb_remove_alias(Climb climb, const char *alias)
