@@ -56,7 +56,6 @@ GradeFontainebleau GradeFontainebleau_new(unsigned int grade, GradeFontainebleau
 	}
 
 	if (NULL == (ret = malloc(sizeof(struct GradeFontainebleau_)))) {
-		errno = ENOMEM;
 		return NULL;
 	}
 

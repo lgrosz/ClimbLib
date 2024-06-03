@@ -41,7 +41,6 @@ GradeHueco GradeHueco_new(unsigned int grade, GradeHuecoModifier modifier)
 	}
 
 	if (NULL == (ret = malloc(sizeof(struct GradeHueco_)))) {
-		errno = ENOMEM;
 		return NULL;
 	}
 
