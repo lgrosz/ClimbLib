@@ -29,7 +29,6 @@ Climb Climb_new()
 	Climb ret;
 
 	if (NULL == (ret = malloc(sizeof(struct Climb_)))) {
-		errno = ENOMEM;
 		return NULL;
 	} else {
 		ret->name = NULL;
@@ -150,7 +149,6 @@ void Climb_remove_alias(Climb climb, const char *alias)
 
 	const char **aliases;
 	if (NULL == (aliases = malloc((climb->aliaseslen - 1) * sizeof(const char *)))) {
-		errno = ENOMEM;
 		return;
 	}
 
