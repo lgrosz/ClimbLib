@@ -1,6 +1,8 @@
 #ifndef _CLIMBLIB_TESTS_VERIFY_H_
 #define _CLIMBLIB_TESTS_VERIFY_H_
 
+#include <stdio.h>
+
 #define VERIFY(expr) \
     do { \
         if (!(expr)) { \
