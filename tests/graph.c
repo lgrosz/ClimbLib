@@ -186,6 +186,64 @@ static void test_variations()
 	CLEANUP_CLIMB(b2, b2n);
 }
 
+static void test_linkup()
+{
+	SETUP_GRAPH(g);
+	SETUP_CLIMB(a, an);
+	SETUP_CLIMB(b, bn);
+	SETUP_CLIMB(c, cn);
+	ADD_CLIMB(g, an);
+	ADD_CLIMB(g, bn);
+	ADD_CLIMB(g, cn);
+
+	ClimbNode links[] = { bn, cn };
+	ClimbGraph_add_linkup(g, an, links, 2);
+	VERIFY(errno == 0);
+
+	VERIFY(ClimbGraph_is_linkup(g, an) == 1);
+	VERIFY(errno == 0);
+
+	size_t linkslen;
+	ClimbGraph_linkup(g, an, NULL, &linkslen);
+	VERIFY(errno == 0);
+	VERIFY(linkslen == 2);
+
+	ClimbNode *links_from_graph;
+	links_from_graph = malloc(sizeof(ClimbNode) * linkslen);
+	ClimbGraph_linkup(g, an, links_from_graph, &linkslen);
+	VERIFY(errno == 0);
+	VERIFY(linkslen == 2);
+	VERIFY(links_from_graph[0] == bn);
+	VERIFY(links_from_graph[1] == cn);
+	free(links_from_graph);
+
+	VERIFY(ClimbGraph_is_of_linkup(g, bn));
+	VERIFY(errno == 0);
+
+	size_t linkupslen;
+	ClimbGraph_of_linkup(g, bn, NULL, &linkupslen);
+	VERIFY(errno == 0);
+	VERIFY(linkupslen == 1);
+
+	ClimbNode *linkups;
+	linkups = malloc(sizeof(ClimbNode) * linkupslen);
+	ClimbGraph_of_linkup(g, bn, linkups, &linkupslen);
+	VERIFY(errno == 0);
+	VERIFY(linkupslen == 1);
+	VERIFY(linkups[0] == an);
+	free(linkups);
+
+	ClimbGraph_remove_linkup(g, an);
+	VERIFY(errno == 0);
+	VERIFY(!ClimbGraph_is_linkup(g, an));
+	VERIFY(!ClimbGraph_is_of_linkup(g, bn));
+
+	CLEANUP_GRAPH(g);
+	CLEANUP_CLIMB(a, an);
+	CLEANUP_CLIMB(b, bn);
+	CLEANUP_CLIMB(c, cn);
+}
+
 void graph()
 {
 	test_free_null();
@@ -194,5 +252,6 @@ void graph()
 	test_climbs();
 	test_add_variation();
 	test_variations();
+	test_linkup();
 	exit(EXIT_SUCCESS);
 }

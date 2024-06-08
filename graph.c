@@ -7,12 +7,21 @@ typedef struct VariationEdge_ {
 	ClimbNode v;
 } VariationEdge_;
 
+typedef struct LinkupEdge_ {
+	ClimbNode c;
+	ClimbNode *l;
+	size_t llen;
+} LinkupEdge_;
+
 struct ClimbGraph_ {
 	ClimbNode *climbs;
 	size_t climbslen;
 
 	VariationEdge_ *variations;
 	size_t variationslen;
+
+	LinkupEdge_ *linkups;
+	size_t linkupslen;
 };
 
 ClimbGraph ClimbGraph_new()
@@ -26,6 +35,8 @@ ClimbGraph ClimbGraph_new()
 		ret->climbslen = 0;
 		ret->variations = NULL;
 		ret->variationslen = 0;
+		ret->linkups = NULL;
+		ret->linkupslen = 0;
 	}
 
 	errno = 0;
@@ -45,6 +56,16 @@ void ClimbGraph_free(ClimbGraph graph)
 
 	if (NULL != graph->variations) {
 		free(graph->variations);
+	}
+
+	for (size_t i = 0; i < graph->linkupslen; i++) {
+		if (NULL != graph->linkups[i].l) {
+			free(graph->linkups[i].l);
+		}
+	}
+
+	if (NULL != graph->linkups) {
+		free(graph->linkups);
 	}
 
 	free(graph);
@@ -195,6 +216,7 @@ int ClimbGraph_has_variation(const ClimbGraph g, const ClimbNode c, const ClimbN
 	return 0;
 }
 
+// TODO If vs is not null, and s is not null, then only populate vs with s nodes
 void ClimbGraph_variations(const ClimbGraph g, const ClimbNode n, ClimbNode *vs, size_t *s)
 {
 	if (g == NULL || n == NULL || s == NULL) {
@@ -223,4 +245,181 @@ void ClimbGraph_variations(const ClimbGraph g, const ClimbNode n, ClimbNode *vs,
 	}
 
 	return;
+}
+
+void ClimbGraph_add_linkup(ClimbGraph g, const ClimbNode c, const ClimbNode *l, size_t llen)
+{
+	if (g == NULL || c == NULL || l == NULL) {
+		errno = EINVAL;
+		return;
+	}
+
+	if (llen < 2) {
+		errno = EINVAL;
+		return;
+	}
+
+	for (size_t i = 0; i < llen; i++) {
+		if (!ClimbGraph_has_climb(g, l[i])) {
+			errno = EINVAL;
+			return;
+		}
+	}
+
+	LinkupEdge_ edge = { c, malloc(sizeof(ClimbNode) * llen), llen };
+	if (edge.l == NULL) {
+		return;
+	}
+
+	for (int i = 0; i < llen; i++) {
+		edge.l[i] = l[i];
+	}
+
+	if (NULL == (g->linkups = realloc(g->linkups, sizeof(LinkupEdge_) * (g->linkupslen + 1)))) {
+		return;
+	}
+
+	g->linkups[g->linkupslen] = edge;
+	g->linkupslen = g->linkupslen + 1;
+	errno = 0;
+}
+
+void ClimbGraph_remove_linkup(ClimbGraph g, const ClimbNode c)
+{
+	if (g == NULL || c == NULL) {
+		errno = EINVAL;
+		return;
+	}
+
+	int index = -1;
+
+	for (int i = 0; i < g->linkupslen; i++) {
+		if (g->linkups[i].c == c) {
+			index = i;
+			break;
+		}
+	}
+
+	if (index == -1) {
+		return;
+	}
+
+	LinkupEdge_ linkup = g->linkups[index];
+	free(linkup.l);
+
+	for (int i = index; i < g->linkupslen - 1; i++) {
+		g->linkups[i] = g->linkups[i + 1];
+	}
+
+	if (NULL == (g->linkups = realloc(g->linkups, sizeof(ClimbNode) * (g->linkupslen - 1)))) {
+		return;
+	}
+
+	g->linkupslen = g->linkupslen - 1;
+}
+
+int ClimbGraph_is_linkup(ClimbGraph g, const ClimbNode c)
+{
+	if (g == NULL || c == NULL) {
+		errno = EINVAL;
+		return 0;
+	}
+
+	errno = 0;
+	for (int i = 0; i < g->linkupslen; i++) {
+		if (g->linkups[i].c == c) {
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
+// TODO If l is not null, and llen is not null, then only populate l with llen nodes
+void ClimbGraph_linkup(ClimbGraph g, const ClimbNode c, ClimbNode *l, size_t *llen)
+{
+	if (g == NULL || c == NULL) {
+		errno = EINVAL;
+		return;
+	}
+
+        // Expect at least one of the return references to be non-null.
+        if (l == NULL && llen == NULL) {
+		errno = EINVAL;
+		return;
+	}
+
+        for (int i = 0; i < g->linkupslen; i++) {
+		if (g->linkups[i].c == c) {
+			LinkupEdge_ linkup = g->linkups[i];
+
+			if (llen != NULL) {
+				*llen = linkup.llen;
+			}
+
+			if (l != NULL) {
+				for (int j = 0; j < g->linkups[i].llen; j++) {
+					l[j] = linkup.l[j];
+				}
+			}
+		}
+
+		return;
+	}
+}
+
+int ClimbGraph_is_of_linkup(ClimbGraph g, const ClimbNode c)
+{
+	if (g == NULL || c == NULL) {
+		errno = EINVAL;
+		return 0;
+	}
+
+	errno = 0;
+
+	for (size_t i = 0; i < g->linkupslen; i++) {
+		for (size_t j = 0; j < g->linkups[i].llen; j++) {
+			if (c == g->linkups[i].l[j]) {
+				return 1;
+			}
+		}
+	}
+
+	return 0;
+}
+
+// TODO If l is not null, and llen is not null, then only populate l with llen nodes
+void ClimbGraph_of_linkup(ClimbGraph g, const ClimbNode c, ClimbNode *l, size_t *llen)
+{
+	if (g == NULL || c == NULL) {
+		errno = EINVAL;
+		return;
+	}
+
+        // Expect at least one of the return references to be non-null.
+        if (l == NULL && llen == NULL) {
+		errno = EINVAL;
+		return;
+	}
+
+	if (llen != NULL) {
+		*llen = 0;
+	}
+
+        for (size_t i = 0; i < g->linkupslen; i++) {
+		LinkupEdge_ linkup = g->linkups[i];
+		for (size_t j = 0; j < linkup.llen; j++) {
+			if (linkup.l[j] == c) {
+				if (l != NULL) {
+					l[*llen] = linkup.c;
+				}
+
+				if (llen != NULL) {
+					(*llen)++;
+				}
+
+				break;
+			}
+		}
+	}
 }
