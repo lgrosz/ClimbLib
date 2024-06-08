@@ -18,4 +18,12 @@ void ClimbGraph_remove_variation(ClimbGraph, const ClimbNode, const ClimbNode);
 int ClimbGraph_has_variation(const ClimbGraph, const ClimbNode, const ClimbNode);
 void ClimbGraph_variations(const ClimbGraph, const ClimbNode, ClimbNode *, size_t *);
 
+// Climb link-ups
+void ClimbGraph_add_linkup(ClimbGraph, const ClimbNode, const ClimbNode *, size_t);
+void ClimbGraph_remove_linkup(ClimbGraph, const ClimbNode);
+int ClimbGraph_is_linkup(ClimbGraph, const ClimbNode);
+void ClimbGraph_linkup(ClimbGraph, const ClimbNode, ClimbNode *, size_t *);
+int ClimbGraph_is_of_linkup(ClimbGraph, const ClimbNode);
+void ClimbGraph_of_linkup(ClimbGraph, const ClimbNode, ClimbNode *, size_t *);
+
 #endif
