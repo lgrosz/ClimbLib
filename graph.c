@@ -113,6 +113,18 @@ int ClimbGraph_has_climb(ClimbGraph graph, ClimbNode node)
 	return 0;
 }
 
+ClimbNode *ClimbGraph_climbs(const ClimbGraph graph, size_t *size)
+{
+	if (graph == NULL || size == NULL) {
+		errno = EINVAL;
+		return NULL;
+	}
+
+	errno = 0;
+	*size = graph->climbslen;
+	return graph->climbs;
+}
+
 void ClimbGraph_add_variation(ClimbGraph g, const ClimbNode c, const ClimbNode v)
 {
 	if (g == NULL || c == NULL || v == NULL) {

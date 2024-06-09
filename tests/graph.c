@@ -55,6 +55,38 @@ static void test_add_climb()
 	Climb_free(c);
 }
 
+static void test_climbs()
+{
+	SETUP_GRAPH(g);
+
+	Climb c = Climb_new();
+	ClimbNode cn = ClimbNode_new(c);
+	ClimbGraph_add_climb(g, cn);
+	VERIFY(errno == 0);
+
+	size_t climbslen;
+	ClimbNode *climbs = ClimbGraph_climbs(g, &climbslen);
+	VERIFY(errno == 0);
+	VERIFY(climbslen == 1);
+	VERIFY(climbs[0] == cn);
+
+	Climb c1 = Climb_new();
+	ClimbNode cn1 = ClimbNode_new(c1);
+	ClimbGraph_add_climb(g, cn1);
+	VERIFY(errno == 0);
+
+	climbs = ClimbGraph_climbs(g, &climbslen);
+	VERIFY(errno == 0);
+	VERIFY(climbslen == 2);
+	VERIFY(climbs[1] == cn1);
+
+	CLEANUP_GRAPH(g);
+	ClimbNode_free(cn);
+	Climb_free(c);
+	ClimbNode_free(cn1);
+	Climb_free(c1);
+}
+
 #define SETUP_CLIMB(a, b) \
 	Climb (a) = Climb_new(); \
 	VERIFY(errno == 0); \
@@ -102,6 +134,7 @@ void graph()
 	test_free_null();
 	test_new();
 	test_add_climb();
+	test_climbs();
 	test_add_variation();
 	exit(EXIT_SUCCESS);
 }
