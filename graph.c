@@ -194,3 +194,33 @@ int ClimbGraph_has_variation(const ClimbGraph g, const ClimbNode c, const ClimbN
 
 	return 0;
 }
+
+void ClimbGraph_variations(const ClimbGraph g, const ClimbNode n, ClimbNode *vs, size_t *s)
+{
+	if (g == NULL || n == NULL || s == NULL) {
+		errno = EINVAL;
+		return;
+	}
+
+	int count_only = vs == NULL;
+	size_t max = count_only ? g->variationslen : *s;
+	*s = 0;
+
+	for (int i = 0; i < g->variationslen; i++) {
+		VariationEdge_ *var = &(g->variations[i]);
+
+		if (var->c == n) {
+			if (!count_only) {
+				vs[*s] = var->v;
+			}
+
+			(*s)++;
+
+			if (*s > max) {
+				break;
+			}
+		}
+	}
+
+	return;
+}

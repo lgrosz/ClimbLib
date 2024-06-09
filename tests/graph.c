@@ -129,6 +129,63 @@ static void test_add_variation()
 	CLEANUP_GRAPH(g);
 }
 
+static void test_variations()
+{
+	SETUP_GRAPH(g);
+
+	SETUP_CLIMB(a, an);
+	SETUP_CLIMB(a1, a1n);
+	SETUP_CLIMB(b, bn);
+	SETUP_CLIMB(b1, b1n);
+	SETUP_CLIMB(b2, b2n);
+	ADD_CLIMB(g, an);
+	ADD_CLIMB(g, a1n);
+	ADD_CLIMB(g, bn);
+	ADD_CLIMB(g, b1n);
+	ADD_CLIMB(g, b2n);
+
+	ClimbGraph_add_variation(g, an, a1n);
+	VERIFY(errno == 0);
+	ClimbGraph_add_variation(g, bn, b1n);
+	VERIFY(errno == 0);
+	ClimbGraph_add_variation(g, bn, b2n);
+	VERIFY(errno == 0);
+
+	size_t avarslen;
+	ClimbGraph_variations(g, an, NULL, &avarslen);
+	VERIFY(errno == 0);
+	VERIFY(avarslen == 1);
+	ClimbNode *avars;
+	VERIFY(NULL != (avars = malloc(sizeof(ClimbNode) * avarslen)));
+	ClimbGraph_variations(g, an, avars, &avarslen);
+	VERIFY(errno == 0);
+	VERIFY(avarslen == 1);
+	VERIFY(avars[0] == a1n);
+	free(avars);
+
+	size_t bvarslen;
+	ClimbGraph_variations(g, bn, NULL, &bvarslen);
+	VERIFY(errno == 0);
+	VERIFY(bvarslen == 2);
+	ClimbNode *bvars;
+	VERIFY(NULL != (bvars = malloc(sizeof(ClimbNode) * bvarslen)));
+	ClimbGraph_variations(g, bn, bvars, &bvarslen);
+	VERIFY(errno == 0);
+	printf("%zu", bvarslen);
+	VERIFY(bvarslen == 2);
+	VERIFY(bvars[0] == b1n);
+	VERIFY(bvars[1] == b2n);
+	free(bvars);
+
+	CLEANUP_GRAPH(g);
+
+	CLEANUP_CLIMB(a, an);
+	CLEANUP_CLIMB(a1, a1n);
+	CLEANUP_CLIMB(b, bn);
+	CLEANUP_CLIMB(b1, b1n);
+	CLEANUP_CLIMB(b2, b2n);
+}
+
 void graph()
 {
 	test_free_null();
@@ -136,5 +193,6 @@ void graph()
 	test_add_climb();
 	test_climbs();
 	test_add_variation();
+	test_variations();
 	exit(EXIT_SUCCESS);
 }

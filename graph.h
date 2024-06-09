@@ -16,5 +16,6 @@ ClimbNode *ClimbGraph_climbs(const ClimbGraph, size_t *);
 void ClimbGraph_add_variation(ClimbGraph, const ClimbNode, const ClimbNode);
 void ClimbGraph_remove_variation(ClimbGraph, const ClimbNode, const ClimbNode);
 int ClimbGraph_has_variation(const ClimbGraph, const ClimbNode, const ClimbNode);
+void ClimbGraph_variations(const ClimbGraph, const ClimbNode, ClimbNode *, size_t *);
 
 #endif
