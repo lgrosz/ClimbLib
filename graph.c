@@ -107,6 +107,14 @@ void ClimbGraph_remove_climb(ClimbGraph graph, const ClimbNode node)
 		return;
 	}
 
+	// Case where the last climb was removed
+	if (graph->climbslen == 1) {
+		graph->climbslen = 0;
+		free(graph->climbs);
+		graph->climbs = NULL;
+		return;
+	}
+
 	for (int i = index; i < graph->climbslen - 1; i++) {
 		graph->climbs[i] = graph->climbs[i + 1];
 	}
@@ -186,6 +194,14 @@ void ClimbGraph_remove_variation(ClimbGraph g, const ClimbNode c, const ClimbNod
 	}
 
 	if (index == -1) {
+		return;
+	}
+
+	// Case where the last variation was removed
+	if (g->variationslen == 1) {
+		g->variationslen = 0;
+		free(g->variations);
+		g->variations = NULL;
 		return;
 	}
 
@@ -301,6 +317,14 @@ void ClimbGraph_remove_linkup(ClimbGraph g, const ClimbNode c)
 	}
 
 	if (index == -1) {
+		return;
+	}
+
+	// Case where the last linkup was removed
+	if (g->linkupslen == 1) {
+		g->linkupslen = 0;
+		free(g->linkups);
+		g->linkups = NULL;
 		return;
 	}
 
