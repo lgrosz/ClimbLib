@@ -26,4 +26,16 @@ void ClimbGraph_linkup(ClimbGraph, const ClimbNode, ClimbNode *, size_t *);
 int ClimbGraph_is_of_linkup(ClimbGraph, const ClimbNode);
 void ClimbGraph_of_linkup(ClimbGraph, const ClimbNode, ClimbNode *, size_t *);
 
+// Formation operations
+void ClimbGraph_add_formation(ClimbGraph, const FormationNode);
+void ClimbGraph_remove_formation(ClimbGraph, const FormationNode);
+int ClimbGraph_has_formation(ClimbGraph, const FormationNode);
+FormationNode *ClimbGraph_formations(const ClimbGraph, size_t *);
+void ClimbGraph_add_subformation(ClimbGraph, const FormationNode, const FormationNode);
+void ClimbGraph_remove_subformation(ClimbGraph, const FormationNode, const FormationNode);
+int ClimbGraph_has_subformation(ClimbGraph, const FormationNode, const FormationNode);
+void ClimbGraph_formation_add_climb(ClimbGraph, const FormationNode, const ClimbNode);
+void ClimbGraph_formation_remove_climb(ClimbGraph, const FormationNode, const ClimbNode);
+int ClimbGraph_formation_has_climb(ClimbGraph, const FormationNode, const ClimbNode);
+
 #endif
