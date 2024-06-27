@@ -16,6 +16,7 @@ add_library(grades
     node.c
     graph.c
     str_util.c
+    strarr_util.c
     int_util.c
 )
 
