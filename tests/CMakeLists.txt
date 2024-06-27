@@ -5,6 +5,7 @@ set(TestSources
     grade_font.c
     grade_hueco.c
     climb.c
+    formation.c
     graph.c
 )
 
