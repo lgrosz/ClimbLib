@@ -15,6 +15,7 @@ add_library(ClimbLib
     grade_hueco.c
     grade_font.c
     climb.c
+    formation.c
     graph.c
     str_util.c
     strarr_util.c
@@ -47,6 +48,7 @@ install(TARGETS
 install(
     FILES
         climb.h
+        formation.h
         grade_font.h
         grade_hueco.h
         graph.h
