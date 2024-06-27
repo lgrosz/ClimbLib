@@ -13,6 +13,7 @@ add_library(grades
     grades_hueco.c
     grades_font.c
     climb.c
+    formation.c
     node.c
     graph.c
     str_util.c
