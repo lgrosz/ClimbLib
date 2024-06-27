@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "str_util.h"
+#include "strarr_util.h"
 
 struct Climb_
 {
@@ -113,16 +114,7 @@ void Climb_add_alias(Climb *climb, const char *alias)
 		return;
 	}
 
-	if (NULL == (climb->aliases = realloc(climb->aliases, sizeof(const char *) * (climb->aliaseslen + 1)))) {
-		return;
-	}
-
-	if (NULL == (climb->aliases[climb->aliaseslen] = malloc(strlen(alias) + 1))) {
-		return;
-	}
-
-	strcpy((char*)climb->aliases[climb->aliaseslen], alias);
-	climb->aliaseslen = climb->aliaseslen + 1;
+	add_str_to_strarr(alias, &climb->aliases, &climb->aliaseslen);
 }
 
 void Climb_remove_alias(Climb *climb, const char *alias)
@@ -132,41 +124,7 @@ void Climb_remove_alias(Climb *climb, const char *alias)
 		return;
 	}
 
-	size_t index = 0;
-	int found = 0;
-
-	for (index = 0; index < climb->aliaseslen; ++index) {
-		if (strcmp(climb->aliases[index], alias) == 0) {
-			found = 1;
-			break;
-		}
-	}
-
-	if (!found) {
-		errno = 0;
-		return;
-	}
-
-	const char **aliases;
-	if (NULL == (aliases = malloc((climb->aliaseslen - 1) * sizeof(const char *)))) {
-		return;
-	}
-
-	// Copy elements, skipping the element to remove
-	for (size_t i = 0, j = 0; i < climb->aliaseslen; ++i) {
-		if (i != index) {
-			aliases[j++] = climb->aliases[i];
-		}
-	}
-
-	if (climb->aliases) {
-		free((void *)climb->aliases[index]);
-		free(climb->aliases);
-	}
-
-	errno = 0;
-	climb->aliaseslen = climb->aliaseslen - 1;
-	climb->aliases = aliases;
+	remove_str_from_strarr(alias, &climb->aliases, &climb->aliaseslen);
 }
 
 const char **Climb_aliases(const Climb *climb, size_t *len)
