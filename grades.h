@@ -12,7 +12,7 @@ GradeHueco GradeHueco_new(unsigned int, GradeHuecoModifier);
 void GradeHueco_free(GradeHueco);
 GradeHueco GradeHueco_dup(const GradeHueco);
 int GradeHueco_cmp(const GradeHueco, const GradeHueco);
-char *GradeHueco_str(const GradeHueco);
+const char *GradeHueco_str(const GradeHueco);
 GradeHueco GradeHueco_fromstr(const char *);
 
 typedef struct GradeFontainebleau_* GradeFontainebleau;
@@ -30,7 +30,7 @@ GradeFontainebleau GradeFontainebleau_new(unsigned int, GradeFontainebleauDivisi
 void GradeFontainebleau_free(GradeFontainebleau);
 GradeFontainebleau GradeFontainebleau_dup(const GradeFontainebleau);
 int GradeFontainebleau_cmp(const GradeFontainebleau, const GradeFontainebleau);
-char *GradeFontainebleau_str(const GradeFontainebleau);
+const char *GradeFontainebleau_str(const GradeFontainebleau);
 GradeFontainebleau GradeFontainebleau_fromstr(const char *);
 
 #endif
