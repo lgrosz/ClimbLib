@@ -1,21 +1,27 @@
 #include "graph.h"
+#include "hash_table.h"
 #include <errno.h>
 #include <stdlib.h>
 
+#define CLIMBS_SIZE 100
+
+typedef struct ClimbNode {
+	Climb c;
+} ClimbNode;
+
 typedef struct VariationEdge_ {
-	ClimbNode c;
-	ClimbNode v;
+	ClimbNode *c;
+	ClimbNode *v;
 } VariationEdge_;
 
 typedef struct LinkupEdge_ {
-	ClimbNode c;
-	ClimbNode *l;
+	ClimbNode *c;
+	ClimbNode **l;
 	size_t llen;
 } LinkupEdge_;
 
 struct ClimbGraph_ {
-	ClimbNode *climbs;
-	size_t climbslen;
+	HashTable *climbs;
 
 	VariationEdge_ *variations;
 	size_t variationslen;
@@ -31,8 +37,7 @@ ClimbGraph ClimbGraph_new()
 	if (NULL == (ret = malloc(sizeof(struct ClimbGraph_)))) {
 		return NULL;
 	} else {
-		ret->climbs = NULL;
-		ret->climbslen = 0;
+		ret->climbs = create_table(CLIMBS_SIZE);
 		ret->variations = NULL;
 		ret->variationslen = 0;
 		ret->linkups = NULL;
@@ -72,89 +77,50 @@ void ClimbGraph_free(ClimbGraph graph)
 	errno = 0;
 }
 
-void ClimbGraph_add_climb(ClimbGraph graph, const ClimbNode node) {
+void ClimbGraph_add_climb(ClimbGraph graph, const Climb node) {
 	if (graph == NULL || node == NULL) {
 		errno = EINVAL;
 		return;
 	}
 
-	if (NULL == (graph->climbs = realloc(graph->climbs, sizeof(ClimbNode) * (graph->climbslen + 1)))) {
-		return;
-	}
+	ClimbNode *cn = malloc(sizeof(ClimbNode));
+	cn->c = node;
+	insert(graph->climbs, node, cn);
 
-	graph->climbs[graph->climbslen] = node;
-	graph->climbslen = graph->climbslen + 1;
 	errno = 0;
 }
 
-void ClimbGraph_remove_climb(ClimbGraph graph, const ClimbNode node)
+void ClimbGraph_remove_climb(ClimbGraph graph, const Climb node)
 {
 	if (graph == NULL || node == NULL) {
 		errno = EINVAL;
 		return;
 	}
 
-	int index = -1;
-
-	for (int i = 0; i < graph->climbslen; i++) {
-		if (graph->climbs[i] == node) {
-			index = i;
-			break;
-		}
-	}
-
-	if (index == -1) {
-		return;
-	}
-
-	// Case where the last climb was removed
-	if (graph->climbslen == 1) {
-		graph->climbslen = 0;
-		free(graph->climbs);
-		graph->climbs = NULL;
-		return;
-	}
-
-	for (int i = index; i < graph->climbslen - 1; i++) {
-		graph->climbs[i] = graph->climbs[i + 1];
-	}
-
-	if (NULL == (graph->climbs = realloc(graph->climbs, sizeof(ClimbNode) * (graph->climbslen - 1)))) {
-		return;
-	}
-
-	graph->climbslen = graph->climbslen - 1;
+	delete(graph->climbs, node);
 }
 
-int ClimbGraph_has_climb(ClimbGraph graph, ClimbNode node)
+int ClimbGraph_has_climb(ClimbGraph graph, Climb node)
 {
 	if (graph == NULL || node == NULL) {
 		errno = EINVAL;
 		return 0;
 	}
 
-	for (size_t i = 0; i < graph->climbslen; i++) {
-		if (graph->climbs[i] == node) {
-			return 1;
-		}
-	}
-
-	return 0;
+	return NULL != search(graph->climbs, node);
 }
 
-ClimbNode *ClimbGraph_climbs(const ClimbGraph graph, size_t *size)
+Climb *ClimbGraph_climbs(const ClimbGraph graph, size_t *size)
 {
 	if (graph == NULL || size == NULL) {
 		errno = EINVAL;
 		return NULL;
 	}
 
-	errno = 0;
-	*size = graph->climbslen;
-	return graph->climbs;
+	return (Climb *)keys(graph->climbs, size);
 }
 
-void ClimbGraph_add_variation(ClimbGraph g, const ClimbNode c, const ClimbNode v)
+void ClimbGraph_add_variation(ClimbGraph g, const Climb c, const Climb v)
 {
 	if (g == NULL || c == NULL || v == NULL) {
 		errno = EINVAL;
@@ -170,14 +136,14 @@ void ClimbGraph_add_variation(ClimbGraph g, const ClimbNode c, const ClimbNode v
 		return;
 	}
 
-	VariationEdge_ edge = { c, v };
+	VariationEdge_ edge = { search(g->climbs, c), search(g->climbs, v) };
 
 	g->variations[g->variationslen] = edge;
 	g->variationslen = g->variationslen + 1;
 	errno = 0;
 }
 
-void ClimbGraph_remove_variation(ClimbGraph g, const ClimbNode c, const ClimbNode v)
+void ClimbGraph_remove_variation(ClimbGraph g, const Climb c, const Climb v)
 {
 	if (g == NULL || c == NULL || v == NULL) {
 		errno = EINVAL;
@@ -187,7 +153,7 @@ void ClimbGraph_remove_variation(ClimbGraph g, const ClimbNode c, const ClimbNod
 	int index = -1;
 
 	for (int i = 0; i < g->variationslen; i++) {
-		if (g->variations[i].c == c && g->variations[i].v == v) {
+		if (g->variations[i].c == search(g->climbs, c) && g->variations[i].v == search(g->climbs, v)) {
 			index = i;
 			break;
 		}
@@ -209,14 +175,14 @@ void ClimbGraph_remove_variation(ClimbGraph g, const ClimbNode c, const ClimbNod
 		g->variations[i] = g->variations[i + 1];
 	}
 
-	if (NULL == (g->variations = realloc(g->variations, sizeof(ClimbNode) * (g->variationslen - 1)))) {
+	if (NULL == (g->variations = realloc(g->variations, sizeof(Climb) * (g->variationslen - 1)))) {
 		return;
 	}
 
 	g->variationslen = g->variationslen - 1;
 }
 
-int ClimbGraph_has_variation(const ClimbGraph g, const ClimbNode c, const ClimbNode v)
+int ClimbGraph_has_variation(const ClimbGraph g, const Climb c, const Climb v)
 {
 	if (g == NULL || c == NULL || v == NULL) {
 		errno = EINVAL;
@@ -224,7 +190,7 @@ int ClimbGraph_has_variation(const ClimbGraph g, const ClimbNode c, const ClimbN
 	}
 
 	for (int i = 0; i < g->variationslen; i++) {
-		if (g->variations[i].c == c && g->variations[i].v == v) {
+		if (g->variations[i].c == search(g->climbs, c) && g->variations[i].v == search(g->climbs, v)) {
 			return 1;
 		}
 	}
@@ -233,7 +199,7 @@ int ClimbGraph_has_variation(const ClimbGraph g, const ClimbNode c, const ClimbN
 }
 
 // TODO If vs is not null, and s is not null, then only populate vs with s nodes
-void ClimbGraph_variations(const ClimbGraph g, const ClimbNode n, ClimbNode *vs, size_t *s)
+void ClimbGraph_variations(const ClimbGraph g, const Climb n, Climb *vs, size_t *s)
 {
 	if (g == NULL || n == NULL || s == NULL) {
 		errno = EINVAL;
@@ -247,9 +213,9 @@ void ClimbGraph_variations(const ClimbGraph g, const ClimbNode n, ClimbNode *vs,
 	for (int i = 0; i < g->variationslen; i++) {
 		VariationEdge_ *var = &(g->variations[i]);
 
-		if (var->c == n) {
+		if (var->c == search(g->climbs, n)) {
 			if (!count_only) {
-				vs[*s] = var->v;
+				vs[*s] = var->v->c;
 			}
 
 			(*s)++;
@@ -263,7 +229,7 @@ void ClimbGraph_variations(const ClimbGraph g, const ClimbNode n, ClimbNode *vs,
 	return;
 }
 
-void ClimbGraph_add_linkup(ClimbGraph g, const ClimbNode c, const ClimbNode *l, size_t llen)
+void ClimbGraph_add_linkup(ClimbGraph g, const Climb c, const Climb *l, size_t llen)
 {
 	if (g == NULL || c == NULL || l == NULL) {
 		errno = EINVAL;
@@ -282,13 +248,13 @@ void ClimbGraph_add_linkup(ClimbGraph g, const ClimbNode c, const ClimbNode *l, 
 		}
 	}
 
-	LinkupEdge_ edge = { c, malloc(sizeof(ClimbNode) * llen), llen };
+	LinkupEdge_ edge = { search(g->climbs, c), malloc(sizeof(Climb) * llen), llen };
 	if (edge.l == NULL) {
 		return;
 	}
 
 	for (int i = 0; i < llen; i++) {
-		edge.l[i] = l[i];
+		edge.l[i] = search(g->climbs, l[i]);
 	}
 
 	if (NULL == (g->linkups = realloc(g->linkups, sizeof(LinkupEdge_) * (g->linkupslen + 1)))) {
@@ -300,7 +266,7 @@ void ClimbGraph_add_linkup(ClimbGraph g, const ClimbNode c, const ClimbNode *l, 
 	errno = 0;
 }
 
-void ClimbGraph_remove_linkup(ClimbGraph g, const ClimbNode c)
+void ClimbGraph_remove_linkup(ClimbGraph g, const Climb c)
 {
 	if (g == NULL || c == NULL) {
 		errno = EINVAL;
@@ -310,7 +276,7 @@ void ClimbGraph_remove_linkup(ClimbGraph g, const ClimbNode c)
 	int index = -1;
 
 	for (int i = 0; i < g->linkupslen; i++) {
-		if (g->linkups[i].c == c) {
+		if (g->linkups[i].c == search(g->climbs, c)) {
 			index = i;
 			break;
 		}
@@ -335,14 +301,14 @@ void ClimbGraph_remove_linkup(ClimbGraph g, const ClimbNode c)
 		g->linkups[i] = g->linkups[i + 1];
 	}
 
-	if (NULL == (g->linkups = realloc(g->linkups, sizeof(ClimbNode) * (g->linkupslen - 1)))) {
+	if (NULL == (g->linkups = realloc(g->linkups, sizeof(Climb) * (g->linkupslen - 1)))) {
 		return;
 	}
 
 	g->linkupslen = g->linkupslen - 1;
 }
 
-int ClimbGraph_is_linkup(ClimbGraph g, const ClimbNode c)
+int ClimbGraph_is_linkup(ClimbGraph g, const Climb c)
 {
 	if (g == NULL || c == NULL) {
 		errno = EINVAL;
@@ -351,7 +317,7 @@ int ClimbGraph_is_linkup(ClimbGraph g, const ClimbNode c)
 
 	errno = 0;
 	for (int i = 0; i < g->linkupslen; i++) {
-		if (g->linkups[i].c == c) {
+		if (g->linkups[i].c == search(g->climbs, c)) {
 			return 1;
 		}
 	}
@@ -360,7 +326,7 @@ int ClimbGraph_is_linkup(ClimbGraph g, const ClimbNode c)
 }
 
 // TODO If l is not null, and llen is not null, then only populate l with llen nodes
-void ClimbGraph_linkup(ClimbGraph g, const ClimbNode c, ClimbNode *l, size_t *llen)
+void ClimbGraph_linkup(ClimbGraph g, const Climb c, Climb *l, size_t *llen)
 {
 	if (g == NULL || c == NULL) {
 		errno = EINVAL;
@@ -374,7 +340,7 @@ void ClimbGraph_linkup(ClimbGraph g, const ClimbNode c, ClimbNode *l, size_t *ll
 	}
 
         for (int i = 0; i < g->linkupslen; i++) {
-		if (g->linkups[i].c == c) {
+		if (g->linkups[i].c == search(g->climbs, c)) {
 			LinkupEdge_ linkup = g->linkups[i];
 
 			if (llen != NULL) {
@@ -383,7 +349,7 @@ void ClimbGraph_linkup(ClimbGraph g, const ClimbNode c, ClimbNode *l, size_t *ll
 
 			if (l != NULL) {
 				for (int j = 0; j < g->linkups[i].llen; j++) {
-					l[j] = linkup.l[j];
+					l[j] = linkup.l[j]->c;
 				}
 			}
 		}
@@ -392,7 +358,7 @@ void ClimbGraph_linkup(ClimbGraph g, const ClimbNode c, ClimbNode *l, size_t *ll
 	}
 }
 
-int ClimbGraph_is_of_linkup(ClimbGraph g, const ClimbNode c)
+int ClimbGraph_is_of_linkup(ClimbGraph g, const Climb c)
 {
 	if (g == NULL || c == NULL) {
 		errno = EINVAL;
@@ -403,7 +369,7 @@ int ClimbGraph_is_of_linkup(ClimbGraph g, const ClimbNode c)
 
 	for (size_t i = 0; i < g->linkupslen; i++) {
 		for (size_t j = 0; j < g->linkups[i].llen; j++) {
-			if (c == g->linkups[i].l[j]) {
+			if (search(g->climbs, c) == g->linkups[i].l[j]) {
 				return 1;
 			}
 		}
@@ -413,7 +379,7 @@ int ClimbGraph_is_of_linkup(ClimbGraph g, const ClimbNode c)
 }
 
 // TODO If l is not null, and llen is not null, then only populate l with llen nodes
-void ClimbGraph_of_linkup(ClimbGraph g, const ClimbNode c, ClimbNode *l, size_t *llen)
+void ClimbGraph_of_linkup(ClimbGraph g, const Climb c, Climb *l, size_t *llen)
 {
 	if (g == NULL || c == NULL) {
 		errno = EINVAL;
@@ -433,9 +399,9 @@ void ClimbGraph_of_linkup(ClimbGraph g, const ClimbNode c, ClimbNode *l, size_t 
         for (size_t i = 0; i < g->linkupslen; i++) {
 		LinkupEdge_ linkup = g->linkups[i];
 		for (size_t j = 0; j < linkup.llen; j++) {
-			if (linkup.l[j] == c) {
+			if (linkup.l[j] == search(g->climbs, c)) {
 				if (l != NULL) {
-					l[*llen] = linkup.c;
+					l[*llen] = linkup.c->c;
 				}
 
 				if (llen != NULL) {
