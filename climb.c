@@ -24,11 +24,11 @@ static int contains(const char **strs, size_t len, const char *str)
 	return 0;
 }
 
-Climb Climb_new()
+Climb *Climb_new()
 {
-	Climb ret;
+	Climb *ret;
 
-	if (NULL == (ret = malloc(sizeof(struct Climb_)))) {
+	if (NULL == (ret = malloc(sizeof(Climb)))) {
 		return NULL;
 	} else {
 		ret->name = NULL;
@@ -47,7 +47,7 @@ Climb Climb_new()
 	return ret;
 }
 
-void Climb_free(Climb climb)
+void Climb_free(Climb *climb)
 {
 	if (climb == NULL) {
 		errno = EINVAL;
@@ -70,37 +70,37 @@ void Climb_free(Climb climb)
 	free(climb);
 }
 
-void Climb_set_name(Climb climb, const char *name)
+void Climb_set_name(Climb *climb, const char *name)
 {
 	free_allocate_and_assign_str(&climb->name, name);
 }
 
-const char *Climb_name(const Climb climb)
+const char *Climb_name(const Climb *climb)
 {
 	return climb->name;
 }
 
-void Climb_set_description(Climb climb, const char *description)
+void Climb_set_description(Climb *climb, const char *description)
 {
 	free_allocate_and_assign_str(&climb->description, description);
 }
 
-const char *Climb_description(const Climb climb)
+const char *Climb_description(const Climb *climb)
 {
 	return climb->description;
 }
 
-void Climb_set_brief(Climb climb, const char *description)
+void Climb_set_brief(Climb *climb, const char *description)
 {
 	free_allocate_and_assign_str(&climb->brief, description);
 }
 
-const char *Climb_brief(const Climb climb)
+const char *Climb_brief(const Climb *climb)
 {
 	return climb->brief;
 }
 
-void Climb_add_alias(Climb climb, const char *alias)
+void Climb_add_alias(Climb *climb, const char *alias)
 {
 	if (climb == NULL) {
 		errno = EINVAL;
@@ -125,7 +125,7 @@ void Climb_add_alias(Climb climb, const char *alias)
 	climb->aliaseslen = climb->aliaseslen + 1;
 }
 
-void Climb_remove_alias(Climb climb, const char *alias)
+void Climb_remove_alias(Climb *climb, const char *alias)
 {
 	if (climb == NULL) {
 		errno = EINVAL;
@@ -169,7 +169,7 @@ void Climb_remove_alias(Climb climb, const char *alias)
 	climb->aliases = aliases;
 }
 
-const char **Climb_aliases(const Climb climb, size_t *len)
+const char **Climb_aliases(const Climb *climb, size_t *len)
 {
 	if (len == NULL) {
 		errno = EINVAL;

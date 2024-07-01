@@ -3,10 +3,10 @@
 
 #include "climb.h"
 
-typedef struct ClimbNode_* ClimbNode;
+typedef struct ClimbNode_ ClimbNode;
 
-ClimbNode ClimbNode_new(Climb);
-void ClimbNode_free(ClimbNode);
-Climb ClimbNode_climb(const ClimbNode);
+ClimbNode *ClimbNode_new(Climb *);
+void ClimbNode_free(ClimbNode *);
+Climb *ClimbNode_climb(const ClimbNode *);
 
 #endif

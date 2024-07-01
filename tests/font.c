@@ -14,7 +14,7 @@ static void test_free_null()
 
 static void test_new()
 {
-	GradeFontainebleau g = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
+	GradeFontainebleau *g = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
@@ -24,25 +24,25 @@ static void test_new()
 
 static void test_new_grade_out_of_range()
 {
-	GradeFontainebleau g = GradeFontainebleau_new(10, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
+	GradeFontainebleau *g = GradeFontainebleau_new(10, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
 	VERIFY(errno == EINVAL);
 	VERIFY(g == NULL);
 }
 
 static void test_dup_null()
 {
-	GradeFontainebleau g = GradeFontainebleau_dup(NULL);
+	GradeFontainebleau *g = GradeFontainebleau_dup(NULL);
 	VERIFY(errno == EINVAL);
 	VERIFY(g == NULL);
 }
 
 static void test_dup()
 {
-	GradeFontainebleau g = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
+	GradeFontainebleau *g = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
-	GradeFontainebleau h = GradeFontainebleau_dup(g);
+	GradeFontainebleau *h = GradeFontainebleau_dup(g);
 	VERIFY(errno == 0);
 	VERIFY(h != NULL);
 
@@ -57,11 +57,11 @@ static void test_dup()
 
 static void test_cmp_grade()
 {
-	GradeFontainebleau g = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
+	GradeFontainebleau *g = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
-	GradeFontainebleau h = GradeFontainebleau_new(8, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
+	GradeFontainebleau *h = GradeFontainebleau_new(8, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
@@ -76,11 +76,11 @@ static void test_cmp_grade()
 
 static void test_cmp_division_eq()
 {
-	GradeFontainebleau g = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
+	GradeFontainebleau *g = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
-	GradeFontainebleau h = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
+	GradeFontainebleau *h = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
@@ -95,11 +95,11 @@ static void test_cmp_division_eq()
 
 static void test_cmp_division_lt()
 {
-	GradeFontainebleau g = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
+	GradeFontainebleau *g = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
-	GradeFontainebleau h = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_C, GRADE_FONT_MODIFIER_NONE);
+	GradeFontainebleau *h = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_C, GRADE_FONT_MODIFIER_NONE);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
@@ -114,11 +114,11 @@ static void test_cmp_division_lt()
 
 static void test_cmp_mod_eq()
 {
-	GradeFontainebleau g = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS);
+	GradeFontainebleau *g = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
-	GradeFontainebleau h = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS);
+	GradeFontainebleau *h = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
@@ -133,11 +133,11 @@ static void test_cmp_mod_eq()
 
 static void test_cmp_mod_lt()
 {
-	GradeFontainebleau g = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
+	GradeFontainebleau *g = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
-	GradeFontainebleau h = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS);
+	GradeFontainebleau *h = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
@@ -152,11 +152,11 @@ static void test_cmp_mod_lt()
 
 static void test_cmp_grade_presc()
 {
-	GradeFontainebleau g = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_B, GRADE_FONT_MODIFIER_PLUS);
+	GradeFontainebleau *g = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_B, GRADE_FONT_MODIFIER_PLUS);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
-	GradeFontainebleau h = GradeFontainebleau_new(8, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
+	GradeFontainebleau *h = GradeFontainebleau_new(8, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
@@ -171,11 +171,11 @@ static void test_cmp_grade_presc()
 
 static void test_cmp_division_presc()
 {
-	GradeFontainebleau g = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS);
+	GradeFontainebleau *g = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
-	GradeFontainebleau h = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_B, GRADE_FONT_MODIFIER_NONE);
+	GradeFontainebleau *h = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_B, GRADE_FONT_MODIFIER_NONE);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
@@ -190,7 +190,7 @@ static void test_cmp_division_presc()
 
 static void test_str()
 {
-	GradeFontainebleau g = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
+	GradeFontainebleau *g = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
@@ -202,7 +202,7 @@ static void test_str()
 
 static void test_str_mod()
 {
-	GradeFontainebleau g = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS);
+	GradeFontainebleau *g = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
@@ -214,7 +214,7 @@ static void test_str_mod()
 
 static void test_str_lt_6()
 {
-	GradeFontainebleau g = GradeFontainebleau_new(5, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
+	GradeFontainebleau *g = GradeFontainebleau_new(5, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
@@ -226,7 +226,7 @@ static void test_str_lt_6()
 
 static void test_str_lt_6_mod()
 {
-	GradeFontainebleau g = GradeFontainebleau_new(5, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS);
+	GradeFontainebleau *g = GradeFontainebleau_new(5, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
@@ -238,25 +238,25 @@ static void test_str_lt_6_mod()
 
 static void test_fromstr_empty()
 {
-	GradeFontainebleau g = GradeFontainebleau_fromstr("");
+	GradeFontainebleau *g = GradeFontainebleau_fromstr("");
 	VERIFY(errno == EINVAL);
 	VERIFY(g == NULL);
 }
 
 static void test_fromstr_mess()
 {
-	GradeFontainebleau g = GradeFontainebleau_fromstr("abcdefg");
+	GradeFontainebleau *g = GradeFontainebleau_fromstr("abcdefg");
 	VERIFY(errno == EINVAL);
 	VERIFY(g == NULL);
 }
 
 static void test_fromstr()
 {
-	GradeFontainebleau g = GradeFontainebleau_fromstr("F7A");
+	GradeFontainebleau *g = GradeFontainebleau_fromstr("F7A");
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
-	GradeFontainebleau h = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
+	GradeFontainebleau *h = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
@@ -271,11 +271,11 @@ static void test_fromstr()
 
 static void test_fromstr_mod()
 {
-	GradeFontainebleau g = GradeFontainebleau_fromstr("F7A+");
+	GradeFontainebleau *g = GradeFontainebleau_fromstr("F7A+");
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
-	GradeFontainebleau h = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS);
+	GradeFontainebleau *h = GradeFontainebleau_new(7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
@@ -290,11 +290,11 @@ static void test_fromstr_mod()
 
 static void test_fromstr_lt_6()
 {
-	GradeFontainebleau g = GradeFontainebleau_fromstr("F5");
+	GradeFontainebleau *g = GradeFontainebleau_fromstr("F5");
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
-	GradeFontainebleau h = GradeFontainebleau_new(5, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
+	GradeFontainebleau *h = GradeFontainebleau_new(5, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
@@ -309,18 +309,18 @@ static void test_fromstr_lt_6()
 
 static void test_fromstr_lt_6_division()
 {
-	GradeFontainebleau g = GradeFontainebleau_fromstr("F5A");
+	GradeFontainebleau *g = GradeFontainebleau_fromstr("F5A");
 	VERIFY(errno == EINVAL);
 	VERIFY(g == NULL);
 }
 
 static void test_fromstr_lt_6_mod()
 {
-	GradeFontainebleau g = GradeFontainebleau_fromstr("F5+");
+	GradeFontainebleau *g = GradeFontainebleau_fromstr("F5+");
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
-	GradeFontainebleau h = GradeFontainebleau_new(5, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS);
+	GradeFontainebleau *h = GradeFontainebleau_new(5, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 

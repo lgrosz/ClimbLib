@@ -12,7 +12,7 @@ struct GradeHueco_
 	char str[5];
 };
 
-static void update_str(GradeHueco grade)
+static void update_str(GradeHueco *grade)
 {
 	char mod_str;
 	switch (grade->modifier) {
@@ -30,9 +30,9 @@ static void update_str(GradeHueco grade)
 	snprintf(grade->str, sizeof(grade->str), "V%d%c", grade->grade, mod_str);
 }
 
-GradeHueco GradeHueco_new(unsigned int grade, GradeHuecoModifier modifier)
+GradeHueco *GradeHueco_new(unsigned int grade, GradeHuecoModifier modifier)
 {
-	GradeHueco ret;
+	GradeHueco *ret;
 
 	if (grade > 99) {
 		/* Three digit numbers could overflow the string */
@@ -52,7 +52,7 @@ GradeHueco GradeHueco_new(unsigned int grade, GradeHuecoModifier modifier)
 	return ret;
 }
 
-void GradeHueco_free(GradeHueco grade)
+void GradeHueco_free(GradeHueco *grade)
 {
 	if (grade == NULL) {
 		errno = EINVAL;
@@ -63,7 +63,7 @@ void GradeHueco_free(GradeHueco grade)
 	free(grade);
 }
 
-GradeHueco GradeHueco_dup(const GradeHueco grade)
+GradeHueco *GradeHueco_dup(const GradeHueco *grade)
 {
 	if (grade == NULL) {
 		errno = EINVAL;
@@ -73,7 +73,7 @@ GradeHueco GradeHueco_dup(const GradeHueco grade)
 	return GradeHueco_new(grade->grade, grade->modifier);
 }
 
-int GradeHueco_cmp(const GradeHueco a, const GradeHueco b)
+int GradeHueco_cmp(const GradeHueco *a, const GradeHueco *b)
 {
 	if (a == NULL || b == NULL) {
 		errno = EINVAL;
@@ -95,12 +95,12 @@ int GradeHueco_cmp(const GradeHueco a, const GradeHueco b)
 	}
 }
 
-const char *GradeHueco_str(const GradeHueco grade)
+const char *GradeHueco_str(const GradeHueco *grade)
 {
 	return grade->str;
 }
 
-GradeHueco GradeHueco_fromstr(const char *str)
+GradeHueco *GradeHueco_fromstr(const char *str)
 {
 	size_t length = strlen(str);
 

@@ -15,7 +15,7 @@ static void test_free_null()
 
 static void test_new()
 {
-	ClimbGraph g = ClimbGraph_new();
+	ClimbGraph *g = ClimbGraph_new();
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
@@ -24,7 +24,7 @@ static void test_new()
 }
 
 #define SETUP_GRAPH(a) \
-	ClimbGraph (a) = ClimbGraph_new(); \
+	ClimbGraph *(a) = ClimbGraph_new(); \
 	VERIFY(errno == 0); \
 	VERIFY((a) != NULL); \
 
@@ -36,8 +36,8 @@ static void test_add_climb()
 {
 	SETUP_GRAPH(g);
 
-	Climb c = Climb_new();
-	ClimbNode cn = ClimbNode_new(c);
+	Climb *c = Climb_new();
+	ClimbNode *cn = ClimbNode_new(c);
 	ClimbGraph_add_climb(g, cn);
 	VERIFY(errno == 0);
 
@@ -59,19 +59,19 @@ static void test_climbs()
 {
 	SETUP_GRAPH(g);
 
-	Climb c = Climb_new();
-	ClimbNode cn = ClimbNode_new(c);
+	Climb *c = Climb_new();
+	ClimbNode *cn = ClimbNode_new(c);
 	ClimbGraph_add_climb(g, cn);
 	VERIFY(errno == 0);
 
 	size_t climbslen;
-	ClimbNode *climbs = ClimbGraph_climbs(g, &climbslen);
+	ClimbNode **climbs = ClimbGraph_climbs(g, &climbslen);
 	VERIFY(errno == 0);
 	VERIFY(climbslen == 1);
 	VERIFY(climbs[0] == cn);
 
-	Climb c1 = Climb_new();
-	ClimbNode cn1 = ClimbNode_new(c1);
+	Climb *c1 = Climb_new();
+	ClimbNode *cn1 = ClimbNode_new(c1);
 	ClimbGraph_add_climb(g, cn1);
 	VERIFY(errno == 0);
 
@@ -88,10 +88,10 @@ static void test_climbs()
 }
 
 #define SETUP_CLIMB(a, b) \
-	Climb (a) = Climb_new(); \
+	Climb *(a) = Climb_new(); \
 	VERIFY(errno == 0); \
 	VERIFY((a) != NULL); \
-	ClimbNode (b) = ClimbNode_new((a)); \
+	ClimbNode *(b) = ClimbNode_new((a)); \
 	VERIFY(errno == 0); \
 	VERIFY((b) != NULL);
 
@@ -155,8 +155,8 @@ static void test_variations()
 	ClimbGraph_variations(g, an, NULL, &avarslen);
 	VERIFY(errno == 0);
 	VERIFY(avarslen == 1);
-	ClimbNode *avars;
-	VERIFY(NULL != (avars = malloc(sizeof(ClimbNode) * avarslen)));
+	const ClimbNode **avars;
+	VERIFY(NULL != (avars = malloc(sizeof(ClimbNode*) * avarslen)));
 	ClimbGraph_variations(g, an, avars, &avarslen);
 	VERIFY(errno == 0);
 	VERIFY(avarslen == 1);
@@ -167,8 +167,8 @@ static void test_variations()
 	ClimbGraph_variations(g, bn, NULL, &bvarslen);
 	VERIFY(errno == 0);
 	VERIFY(bvarslen == 2);
-	ClimbNode *bvars;
-	VERIFY(NULL != (bvars = malloc(sizeof(ClimbNode) * bvarslen)));
+	const ClimbNode **bvars;
+	VERIFY(NULL != (bvars = malloc(sizeof(ClimbNode*) * bvarslen)));
 	ClimbGraph_variations(g, bn, bvars, &bvarslen);
 	VERIFY(errno == 0);
 	printf("%zu", bvarslen);
@@ -196,7 +196,7 @@ static void test_linkup()
 	ADD_CLIMB(g, bn);
 	ADD_CLIMB(g, cn);
 
-	ClimbNode links[] = { bn, cn };
+	const ClimbNode *links[] = { bn, cn };
 	ClimbGraph_add_linkup(g, an, links, 2);
 	VERIFY(errno == 0);
 
@@ -208,8 +208,8 @@ static void test_linkup()
 	VERIFY(errno == 0);
 	VERIFY(linkslen == 2);
 
-	ClimbNode *links_from_graph;
-	links_from_graph = malloc(sizeof(ClimbNode) * linkslen);
+	const ClimbNode **links_from_graph;
+	links_from_graph = malloc(sizeof(ClimbNode*) * linkslen);
 	ClimbGraph_linkup(g, an, links_from_graph, &linkslen);
 	VERIFY(errno == 0);
 	VERIFY(linkslen == 2);
@@ -225,8 +225,8 @@ static void test_linkup()
 	VERIFY(errno == 0);
 	VERIFY(linkupslen == 1);
 
-	ClimbNode *linkups;
-	linkups = malloc(sizeof(ClimbNode) * linkupslen);
+	const ClimbNode **linkups;
+	linkups = malloc(sizeof(ClimbNode*) * linkupslen);
 	ClimbGraph_of_linkup(g, bn, linkups, &linkupslen);
 	VERIFY(errno == 0);
 	VERIFY(linkupslen == 1);

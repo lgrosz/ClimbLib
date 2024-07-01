@@ -14,7 +14,7 @@ static void test_free_null()
 
 static void test_new()
 {
-	GradeHueco g = GradeHueco_new(0, GRADE_HUECO_MODIFIER_NONE);
+	GradeHueco *g = GradeHueco_new(0, GRADE_HUECO_MODIFIER_NONE);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
@@ -24,25 +24,25 @@ static void test_new()
 
 static void test_new_grade_out_of_range()
 {
-	GradeHueco g = GradeHueco_new(100, GRADE_HUECO_MODIFIER_NONE);
+	GradeHueco *g = GradeHueco_new(100, GRADE_HUECO_MODIFIER_NONE);
 	VERIFY(errno == EINVAL);
 	VERIFY(g == NULL);
 }
 
 static void test_dup_null()
 {
-	GradeHueco g = GradeHueco_dup(NULL);
+	GradeHueco *g = GradeHueco_dup(NULL);
 	VERIFY(errno == EINVAL);
 	VERIFY(g == NULL);
 }
 
 static void test_dup()
 {
-	GradeHueco g = GradeHueco_new(5, GRADE_HUECO_MODIFIER_PLUS);
+	GradeHueco *g = GradeHueco_new(5, GRADE_HUECO_MODIFIER_PLUS);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
-	GradeHueco h = GradeHueco_dup(g);
+	GradeHueco *h = GradeHueco_dup(g);
 	VERIFY(errno == 0);
 	VERIFY(h != NULL);
 
@@ -57,11 +57,11 @@ static void test_dup()
 
 static void test_cmp_grade_eq()
 {
-	GradeHueco g = GradeHueco_new(3, GRADE_HUECO_MODIFIER_NONE);
+	GradeHueco *g = GradeHueco_new(3, GRADE_HUECO_MODIFIER_NONE);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
-	GradeHueco h = GradeHueco_new(3, GRADE_HUECO_MODIFIER_NONE);
+	GradeHueco *h = GradeHueco_new(3, GRADE_HUECO_MODIFIER_NONE);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
@@ -76,11 +76,11 @@ static void test_cmp_grade_eq()
 
 static void test_cmp_grade_lt()
 {
-	GradeHueco g = GradeHueco_new(3, GRADE_HUECO_MODIFIER_NONE);
+	GradeHueco *g = GradeHueco_new(3, GRADE_HUECO_MODIFIER_NONE);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
-	GradeHueco h = GradeHueco_new(6, GRADE_HUECO_MODIFIER_NONE);
+	GradeHueco *h = GradeHueco_new(6, GRADE_HUECO_MODIFIER_NONE);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
@@ -95,11 +95,11 @@ static void test_cmp_grade_lt()
 
 static void test_cmp_mod_eq()
 {
-	GradeHueco g = GradeHueco_new(4, GRADE_HUECO_MODIFIER_PLUS);
+	GradeHueco *g = GradeHueco_new(4, GRADE_HUECO_MODIFIER_PLUS);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
-	GradeHueco h = GradeHueco_new(4, GRADE_HUECO_MODIFIER_PLUS);
+	GradeHueco *h = GradeHueco_new(4, GRADE_HUECO_MODIFIER_PLUS);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
@@ -114,11 +114,11 @@ static void test_cmp_mod_eq()
 
 static void test_cmp_mod_lt()
 {
-	GradeHueco g = GradeHueco_new(4, GRADE_HUECO_MODIFIER_NONE);
+	GradeHueco *g = GradeHueco_new(4, GRADE_HUECO_MODIFIER_NONE);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
-	GradeHueco h = GradeHueco_new(4, GRADE_HUECO_MODIFIER_PLUS);
+	GradeHueco *h = GradeHueco_new(4, GRADE_HUECO_MODIFIER_PLUS);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
@@ -133,11 +133,11 @@ static void test_cmp_mod_lt()
 
 static void test_cmp_grade_presc()
 {
-	GradeHueco g = GradeHueco_new(4, GRADE_HUECO_MODIFIER_PLUS);
+	GradeHueco *g = GradeHueco_new(4, GRADE_HUECO_MODIFIER_PLUS);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
-	GradeHueco h = GradeHueco_new(5, GRADE_HUECO_MODIFIER_NONE);
+	GradeHueco *h = GradeHueco_new(5, GRADE_HUECO_MODIFIER_NONE);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
@@ -152,7 +152,7 @@ static void test_cmp_grade_presc()
 
 static void test_str()
 {
-	GradeHueco g = GradeHueco_new(4, GRADE_HUECO_MODIFIER_NONE);
+	GradeHueco *g = GradeHueco_new(4, GRADE_HUECO_MODIFIER_NONE);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
@@ -164,7 +164,7 @@ static void test_str()
 
 static void test_str_mod()
 {
-	GradeHueco g = GradeHueco_new(10, GRADE_HUECO_MODIFIER_PLUS);
+	GradeHueco *g = GradeHueco_new(10, GRADE_HUECO_MODIFIER_PLUS);
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
@@ -176,25 +176,25 @@ static void test_str_mod()
 
 static void test_fromstr_empty()
 {
-	GradeHueco g = GradeHueco_fromstr("");
+	GradeHueco *g = GradeHueco_fromstr("");
 	VERIFY(errno == EINVAL);
 	VERIFY(g == NULL);
 }
 
 static void test_fromstr_mess()
 {
-	GradeHueco g = GradeHueco_fromstr("adsfeg");
+	GradeHueco *g = GradeHueco_fromstr("adsfeg");
 	VERIFY(errno == EINVAL);
 	VERIFY(g == NULL);
 }
 
 static void test_fromstr()
 {
-	GradeHueco g = GradeHueco_fromstr("V5");
+	GradeHueco *g = GradeHueco_fromstr("V5");
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
-	GradeHueco h = GradeHueco_new(5, GRADE_HUECO_MODIFIER_NONE);
+	GradeHueco *h = GradeHueco_new(5, GRADE_HUECO_MODIFIER_NONE);
 	VERIFY(errno == 0);
 	VERIFY(h != NULL);
 
@@ -209,11 +209,11 @@ static void test_fromstr()
 
 static void test_fromstr_mod()
 {
-	GradeHueco g = GradeHueco_fromstr("V5+");
+	GradeHueco *g = GradeHueco_fromstr("V5+");
 	VERIFY(errno == 0);
 	VERIFY(g != NULL);
 
-	GradeHueco h = GradeHueco_new(5, GRADE_HUECO_MODIFIER_PLUS);
+	GradeHueco *h = GradeHueco_new(5, GRADE_HUECO_MODIFIER_PLUS);
 	VERIFY(errno == 0);
 	VERIFY(h != NULL);
 
