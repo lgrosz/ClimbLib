@@ -126,7 +126,7 @@ void ClimbGraph_remove_climb(ClimbGraph graph, const ClimbNode node)
 	graph->climbslen = graph->climbslen - 1;
 }
 
-int ClimbGraph_has_climb(ClimbGraph graph, ClimbNode node)
+int ClimbGraph_has_climb(ClimbGraph graph, const ClimbNode node)
 {
 	if (graph == NULL || node == NULL) {
 		errno = EINVAL;

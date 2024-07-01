@@ -75,7 +75,7 @@ void Climb_set_name(Climb climb, const char *name)
 	free_allocate_and_assign_str(&climb->name, name);
 }
 
-const char *Climb_name(Climb climb)
+const char *Climb_name(const Climb climb)
 {
 	return climb->name;
 }
@@ -85,7 +85,7 @@ void Climb_set_description(Climb climb, const char *description)
 	free_allocate_and_assign_str(&climb->description, description);
 }
 
-const char *Climb_description(Climb climb)
+const char *Climb_description(const Climb climb)
 {
 	return climb->description;
 }
@@ -95,7 +95,7 @@ void Climb_set_brief(Climb climb, const char *description)
 	free_allocate_and_assign_str(&climb->brief, description);
 }
 
-const char *Climb_brief(Climb climb)
+const char *Climb_brief(const Climb climb)
 {
 	return climb->brief;
 }
