@@ -13,7 +13,7 @@ struct GradeFontainebleau_
 	char str[5];
 };
 
-static void update_str(GradeFontainebleau grade)
+static void update_str(GradeFontainebleau *grade)
 {
 	char div_str;
 	switch (grade->division) {
@@ -45,9 +45,9 @@ static void update_str(GradeFontainebleau grade)
 	}
 }
 
-GradeFontainebleau GradeFontainebleau_new(unsigned int grade, GradeFontainebleauDivision division, GradeFontainebleauModifier modifier)
+GradeFontainebleau *GradeFontainebleau_new(unsigned int grade, GradeFontainebleauDivision division, GradeFontainebleauModifier modifier)
 {
-	GradeFontainebleau ret;
+	GradeFontainebleau *ret;
 
 	if (grade > 9) {
 		/* Two digit numbers could overflow the string */
@@ -68,7 +68,7 @@ GradeFontainebleau GradeFontainebleau_new(unsigned int grade, GradeFontainebleau
 	return ret;
 }
 
-void GradeFontainebleau_free(GradeFontainebleau grade)
+void GradeFontainebleau_free(GradeFontainebleau *grade)
 {
 	if (grade == NULL) {
 		errno = EINVAL;
@@ -79,7 +79,7 @@ void GradeFontainebleau_free(GradeFontainebleau grade)
 	free(grade);
 }
 
-GradeFontainebleau GradeFontainebleau_dup(const GradeFontainebleau grade)
+GradeFontainebleau *GradeFontainebleau_dup(const GradeFontainebleau *grade)
 {
 	if (grade == NULL) {
 		errno = EINVAL;
@@ -90,7 +90,7 @@ GradeFontainebleau GradeFontainebleau_dup(const GradeFontainebleau grade)
 	return GradeFontainebleau_new(grade->grade, grade->division, grade->modifier);
 }
 
-int GradeFontainebleau_cmp(const GradeFontainebleau a, const GradeFontainebleau b)
+int GradeFontainebleau_cmp(const GradeFontainebleau *a, const GradeFontainebleau *b)
 {
 	if (a == NULL || b == NULL) {
 		errno = EINVAL;
@@ -121,12 +121,12 @@ int GradeFontainebleau_cmp(const GradeFontainebleau a, const GradeFontainebleau 
 	}
 }
 
-const char *GradeFontainebleau_str(const GradeFontainebleau grade)
+const char *GradeFontainebleau_str(const GradeFontainebleau *grade)
 {
 	return grade->str;
 }
 
-GradeFontainebleau GradeFontainebleau_fromstr(const char *str)
+GradeFontainebleau *GradeFontainebleau_fromstr(const char *str)
 {
 	// TODO /^Fb/ is also a valid
 	if (strlen(str) == 0 || str[0] != 'F') {

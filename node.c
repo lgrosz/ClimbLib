@@ -3,12 +3,12 @@
 #include <stdlib.h>
 
 struct ClimbNode_ {
-	Climb climb;
+	Climb *climb;
 };
 
-ClimbNode ClimbNode_new(Climb climb)
+ClimbNode *ClimbNode_new(Climb *climb)
 {
-	ClimbNode ret;
+	ClimbNode *ret;
 
 	if (NULL == (ret = malloc(sizeof(ClimbNode)))) {
 		return NULL;
@@ -20,7 +20,7 @@ ClimbNode ClimbNode_new(Climb climb)
 	return ret;
 }
 
-void ClimbNode_free(ClimbNode node)
+void ClimbNode_free(ClimbNode *node)
 {
 	if (node == NULL) {
 		errno = EINVAL;
@@ -31,7 +31,7 @@ void ClimbNode_free(ClimbNode node)
 	errno = 0;
 }
 
-Climb ClimbNode_climb(const ClimbNode node)
+Climb *ClimbNode_climb(const ClimbNode *node)
 {
 	if (node == NULL) {
 		errno = EINVAL;

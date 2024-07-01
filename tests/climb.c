@@ -14,7 +14,7 @@ static void test_free_null()
 
 static void test_new()
 {
-	Climb c = Climb_new();
+	Climb *c = Climb_new();
 	VERIFY(errno == 0);
 	VERIFY(c != NULL);
 
@@ -24,7 +24,7 @@ static void test_new()
 
 static void test_name()
 {
-	Climb c = Climb_new();
+	Climb *c = Climb_new();
 	VERIFY(errno == 0);
 	VERIFY(c != NULL);
 
@@ -45,7 +45,7 @@ static void test_name()
 
 static void test_description()
 {
-	Climb c = Climb_new();
+	Climb *c = Climb_new();
 	VERIFY(errno == 0);
 	VERIFY(c != NULL);
 
@@ -66,7 +66,7 @@ static void test_description()
 
 static void test_brief()
 {
-	Climb c = Climb_new();
+	Climb *c = Climb_new();
 	VERIFY(errno == 0);
 	VERIFY(c != NULL);
 
@@ -98,7 +98,7 @@ static int string_array_contains(const char **arr, unsigned int len, const char 
 
 static void test_aliases()
 {
-	Climb c = Climb_new();
+	Climb *c = Climb_new();
 	VERIFY(errno == 0);
 	VERIFY(c != NULL);
 
