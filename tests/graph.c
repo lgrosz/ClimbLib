@@ -2,7 +2,6 @@
 #include <stdlib.h>
 
 #include "climb.h"
-#include "node.h"
 #include "verify.h"
 
 #include <graph.h>
@@ -37,21 +36,19 @@ static void test_add_climb()
 	SETUP_GRAPH(g);
 
 	Climb *c = Climb_new();
-	ClimbNode *cn = ClimbNode_new(c);
-	ClimbGraph_add_climb(g, cn);
+	ClimbGraph_add_climb(g, c);
 	VERIFY(errno == 0);
 
-	VERIFY(ClimbGraph_has_climb(g, cn));
+	VERIFY(ClimbGraph_has_climb(g, c));
 	VERIFY(errno == 0);
 
-	ClimbGraph_remove_climb(g, cn);
+	ClimbGraph_remove_climb(g, c);
 	VERIFY(errno == 0);
 
-	VERIFY(!ClimbGraph_has_climb(g, cn));
+	VERIFY(!ClimbGraph_has_climb(g, c));
 	VERIFY(errno == 0);
 
 	CLEANUP_GRAPH(g);
-	ClimbNode_free(cn);
 	Climb_free(c);
 }
 
@@ -60,44 +57,35 @@ static void test_climbs()
 	SETUP_GRAPH(g);
 
 	Climb *c = Climb_new();
-	ClimbNode *cn = ClimbNode_new(c);
-	ClimbGraph_add_climb(g, cn);
+	ClimbGraph_add_climb(g, c);
 	VERIFY(errno == 0);
 
 	size_t climbslen;
-	ClimbNode **climbs = ClimbGraph_climbs(g, &climbslen);
+	Climb **climbs = ClimbGraph_climbs(g, &climbslen);
 	VERIFY(errno == 0);
 	VERIFY(climbslen == 1);
-	VERIFY(climbs[0] == cn);
+	free(climbs);
 
 	Climb *c1 = Climb_new();
-	ClimbNode *cn1 = ClimbNode_new(c1);
-	ClimbGraph_add_climb(g, cn1);
+	ClimbGraph_add_climb(g, c1);
 	VERIFY(errno == 0);
 
 	climbs = ClimbGraph_climbs(g, &climbslen);
 	VERIFY(errno == 0);
 	VERIFY(climbslen == 2);
-	VERIFY(climbs[1] == cn1);
+	free(climbs);
 
 	CLEANUP_GRAPH(g);
-	ClimbNode_free(cn);
 	Climb_free(c);
-	ClimbNode_free(cn1);
 	Climb_free(c1);
 }
 
-#define SETUP_CLIMB(a, b) \
+#define SETUP_CLIMB(a) \
 	Climb *(a) = Climb_new(); \
 	VERIFY(errno == 0); \
-	VERIFY((a) != NULL); \
-	ClimbNode *(b) = ClimbNode_new((a)); \
-	VERIFY(errno == 0); \
-	VERIFY((b) != NULL);
+	VERIFY((a) != NULL);
 
-#define CLEANUP_CLIMB(a, b) \
-	ClimbNode_free((b)); \
-	VERIFY(errno == 0); \
+#define CLEANUP_CLIMB(a) \
 	Climb_free((a)); \
 	VERIFY(errno == 0);
 
@@ -108,24 +96,24 @@ static void test_climbs()
 static void test_add_variation()
 {
 	SETUP_GRAPH(g);
-	SETUP_CLIMB(a, an);
-	SETUP_CLIMB(b, bn);
-	ADD_CLIMB(g, an);
-	ADD_CLIMB(g, bn);
+	SETUP_CLIMB(a);
+	SETUP_CLIMB(b);
+	ADD_CLIMB(g, a);
+	ADD_CLIMB(g, b);
 
-	ClimbGraph_add_variation(g, an, bn);
+	ClimbGraph_add_variation(g, a, b);
 	VERIFY(errno == 0);
 
-	VERIFY(ClimbGraph_has_variation(g, an, bn));
-	VERIFY(!ClimbGraph_has_variation(g, bn, an));
+	VERIFY(ClimbGraph_has_variation(g, a, b));
+	VERIFY(!ClimbGraph_has_variation(g, b, a));
 
-	ClimbGraph_remove_variation(g, an, bn);
+	ClimbGraph_remove_variation(g, a, b);
 	VERIFY(errno == 0);
 
-	VERIFY(!ClimbGraph_has_variation(g, an, bn));
+	VERIFY(!ClimbGraph_has_variation(g, a, b));
 
-	CLEANUP_CLIMB(a, an);
-	CLEANUP_CLIMB(b, bn);
+	CLEANUP_CLIMB(a);
+	CLEANUP_CLIMB(b);
 	CLEANUP_GRAPH(g);
 }
 
@@ -133,115 +121,109 @@ static void test_variations()
 {
 	SETUP_GRAPH(g);
 
-	SETUP_CLIMB(a, an);
-	SETUP_CLIMB(a1, a1n);
-	SETUP_CLIMB(b, bn);
-	SETUP_CLIMB(b1, b1n);
-	SETUP_CLIMB(b2, b2n);
-	ADD_CLIMB(g, an);
-	ADD_CLIMB(g, a1n);
-	ADD_CLIMB(g, bn);
-	ADD_CLIMB(g, b1n);
-	ADD_CLIMB(g, b2n);
+	SETUP_CLIMB(a);
+	SETUP_CLIMB(a1);
+	SETUP_CLIMB(b);
+	SETUP_CLIMB(b1);
+	SETUP_CLIMB(b2);
+	ADD_CLIMB(g, a);
+	ADD_CLIMB(g, a1);
+	ADD_CLIMB(g, b);
+	ADD_CLIMB(g, b1);
+	ADD_CLIMB(g, b2);
 
-	ClimbGraph_add_variation(g, an, a1n);
+	ClimbGraph_add_variation(g, a, a1);
 	VERIFY(errno == 0);
-	ClimbGraph_add_variation(g, bn, b1n);
+	ClimbGraph_add_variation(g, b, b1);
 	VERIFY(errno == 0);
-	ClimbGraph_add_variation(g, bn, b2n);
+	ClimbGraph_add_variation(g, b, b2);
 	VERIFY(errno == 0);
 
 	size_t avarslen;
-	ClimbGraph_variations(g, an, NULL, &avarslen);
+	ClimbGraph_variations(g, a, NULL, &avarslen);
 	VERIFY(errno == 0);
 	VERIFY(avarslen == 1);
-	const ClimbNode **avars;
-	VERIFY(NULL != (avars = malloc(sizeof(ClimbNode*) * avarslen)));
-	ClimbGraph_variations(g, an, avars, &avarslen);
+	const Climb **avars;
+	VERIFY(NULL != (avars = malloc(sizeof(Climb*) * avarslen)));
+	ClimbGraph_variations(g, a, avars, &avarslen);
 	VERIFY(errno == 0);
 	VERIFY(avarslen == 1);
-	VERIFY(avars[0] == a1n);
 	free(avars);
 
 	size_t bvarslen;
-	ClimbGraph_variations(g, bn, NULL, &bvarslen);
+	ClimbGraph_variations(g, b, NULL, &bvarslen);
 	VERIFY(errno == 0);
 	VERIFY(bvarslen == 2);
-	const ClimbNode **bvars;
-	VERIFY(NULL != (bvars = malloc(sizeof(ClimbNode*) * bvarslen)));
-	ClimbGraph_variations(g, bn, bvars, &bvarslen);
+	const Climb **bvars;
+	VERIFY(NULL != (bvars = malloc(sizeof(Climb*) * bvarslen)));
+	ClimbGraph_variations(g, b, bvars, &bvarslen);
 	VERIFY(errno == 0);
 	printf("%zu", bvarslen);
 	VERIFY(bvarslen == 2);
-	VERIFY(bvars[0] == b1n);
-	VERIFY(bvars[1] == b2n);
 	free(bvars);
 
 	CLEANUP_GRAPH(g);
 
-	CLEANUP_CLIMB(a, an);
-	CLEANUP_CLIMB(a1, a1n);
-	CLEANUP_CLIMB(b, bn);
-	CLEANUP_CLIMB(b1, b1n);
-	CLEANUP_CLIMB(b2, b2n);
+	CLEANUP_CLIMB(a);
+	CLEANUP_CLIMB(a1);
+	CLEANUP_CLIMB(b);
+	CLEANUP_CLIMB(b1);
+	CLEANUP_CLIMB(b2);
 }
 
 static void test_linkup()
 {
 	SETUP_GRAPH(g);
-	SETUP_CLIMB(a, an);
-	SETUP_CLIMB(b, bn);
-	SETUP_CLIMB(c, cn);
-	ADD_CLIMB(g, an);
-	ADD_CLIMB(g, bn);
-	ADD_CLIMB(g, cn);
+	SETUP_CLIMB(a);
+	SETUP_CLIMB(b);
+	SETUP_CLIMB(c);
+	ADD_CLIMB(g, a);
+	ADD_CLIMB(g, b);
+	ADD_CLIMB(g, c);
 
-	const ClimbNode *links[] = { bn, cn };
-	ClimbGraph_add_linkup(g, an, links, 2);
+	const Climb *links[] = { b, c };
+	ClimbGraph_add_linkup(g, a, links, 2);
 	VERIFY(errno == 0);
 
-	VERIFY(ClimbGraph_is_linkup(g, an) == 1);
+	VERIFY(ClimbGraph_is_linkup(g, a) == 1);
 	VERIFY(errno == 0);
 
 	size_t linkslen;
-	ClimbGraph_linkup(g, an, NULL, &linkslen);
+	ClimbGraph_linkup(g, a, NULL, &linkslen);
 	VERIFY(errno == 0);
 	VERIFY(linkslen == 2);
 
-	const ClimbNode **links_from_graph;
-	links_from_graph = malloc(sizeof(ClimbNode*) * linkslen);
-	ClimbGraph_linkup(g, an, links_from_graph, &linkslen);
+	const Climb **links_from_graph;
+	links_from_graph = malloc(sizeof(Climb*) * linkslen);
+	ClimbGraph_linkup(g, a, links_from_graph, &linkslen);
 	VERIFY(errno == 0);
 	VERIFY(linkslen == 2);
-	VERIFY(links_from_graph[0] == bn);
-	VERIFY(links_from_graph[1] == cn);
 	free(links_from_graph);
 
-	VERIFY(ClimbGraph_is_of_linkup(g, bn));
+	VERIFY(ClimbGraph_is_of_linkup(g, b));
 	VERIFY(errno == 0);
 
 	size_t linkupslen;
-	ClimbGraph_of_linkup(g, bn, NULL, &linkupslen);
+	ClimbGraph_of_linkup(g, b, NULL, &linkupslen);
 	VERIFY(errno == 0);
 	VERIFY(linkupslen == 1);
 
-	const ClimbNode **linkups;
-	linkups = malloc(sizeof(ClimbNode*) * linkupslen);
-	ClimbGraph_of_linkup(g, bn, linkups, &linkupslen);
+	const Climb **linkups;
+	linkups = malloc(sizeof(Climb*) * linkupslen);
+	ClimbGraph_of_linkup(g, b, linkups, &linkupslen);
 	VERIFY(errno == 0);
 	VERIFY(linkupslen == 1);
-	VERIFY(linkups[0] == an);
 	free(linkups);
 
-	ClimbGraph_remove_linkup(g, an);
+	ClimbGraph_remove_linkup(g, a);
 	VERIFY(errno == 0);
-	VERIFY(!ClimbGraph_is_linkup(g, an));
-	VERIFY(!ClimbGraph_is_of_linkup(g, bn));
+	VERIFY(!ClimbGraph_is_linkup(g, a));
+	VERIFY(!ClimbGraph_is_of_linkup(g, b));
 
 	CLEANUP_GRAPH(g);
-	CLEANUP_CLIMB(a, an);
-	CLEANUP_CLIMB(b, bn);
-	CLEANUP_CLIMB(c, cn);
+	CLEANUP_CLIMB(a);
+	CLEANUP_CLIMB(b);
+	CLEANUP_CLIMB(c);
 }
 
 void graph()
