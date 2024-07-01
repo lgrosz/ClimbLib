@@ -121,7 +121,7 @@ int GradeFontainebleau_cmp(const GradeFontainebleau a, const GradeFontainebleau 
 	}
 }
 
-char *GradeFontainebleau_str(const GradeFontainebleau grade)
+const char *GradeFontainebleau_str(const GradeFontainebleau grade)
 {
 	return grade->str;
 }

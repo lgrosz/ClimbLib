@@ -95,7 +95,7 @@ int GradeHueco_cmp(const GradeHueco a, const GradeHueco b)
 	}
 }
 
-char *GradeHueco_str(const GradeHueco grade)
+const char *GradeHueco_str(const GradeHueco grade)
 {
 	return grade->str;
 }
