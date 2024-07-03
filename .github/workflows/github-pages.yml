@@ -1,0 +1,32 @@
+# This workflow deploys the Doxygen documentation to the
+# github pages for this project.
+
+on:
+  push:
+    branches: [ $default-branch ]
+
+jobs:
+  build:
+    name: Generate documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt install doxygen
+        name: Install Doxygen
+      - run: doxygen Doxyfile
+        name: Run Doxygen
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: html
+  deploy:
+    name: Deploy documentation to Github Pages
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/deploy-pages@v4
