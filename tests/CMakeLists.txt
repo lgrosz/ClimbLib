@@ -8,7 +8,7 @@ set(TestSources
 create_test_sourcelist(Tests UnitTests.c ${TestSources})
 
 add_executable(UnitTests ${Tests})
-target_link_libraries(UnitTests grades)
+target_link_libraries(UnitTests ClimbLib)
 
 foreach(test ${TestSources})
     get_filename_component(Name ${test} NAME_WE)
