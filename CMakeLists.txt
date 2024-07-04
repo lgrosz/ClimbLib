@@ -29,3 +29,18 @@ target_include_directories(ClimbLib
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
+
+install(TARGETS
+    ClimbLib
+    LIBRARY
+    ARCHIVE
+    RUNTIME
+)
+
+install(
+    FILES
+        climb.h
+        grades.h
+        graph.h
+    DESTINATION include
+)
