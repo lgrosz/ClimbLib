@@ -1,12 +1,11 @@
 cmake_minimum_required(VERSION 3.10)
 project(ClimbLib C)
 
-include(CTest)
-
 set(CMAKE_C_STANDARD 11)
 
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 
+include(CTest)
 if(BUILD_TESTING)
     add_subdirectory(tests)
 endif()
