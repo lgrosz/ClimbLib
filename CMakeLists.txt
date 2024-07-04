@@ -9,7 +9,7 @@ if(BUILD_TESTING)
     add_subdirectory(tests)
 endif()
 
-add_library(grades
+add_library(ClimbLib
     grades_hueco.c
     grades_font.c
     climb.c
@@ -19,12 +19,12 @@ add_library(grades
 )
 
 # Compiler warning flags
-target_compile_options(grades PRIVATE
+target_compile_options(ClimbLib PRIVATE
     $<$<C_COMPILER_ID:GNU,Clang,AppleClang>:-Wall -Werror>
     $<$<C_COMPILER_ID:MSVC>:/W4 /WX>
 )
 
-target_include_directories(grades
+target_include_directories(ClimbLib
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
