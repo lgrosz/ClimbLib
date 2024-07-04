@@ -5,6 +5,8 @@ include(CTest)
 
 set(CMAKE_C_STANDARD 11)
 
+option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
+
 if(BUILD_TESTING)
     add_subdirectory(tests)
 endif()
