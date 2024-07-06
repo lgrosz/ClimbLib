@@ -7,12 +7,11 @@
 
 typedef struct ClimbNode {
 	Climb *c;
-} ClimbNode;
 
-typedef struct VariationEdge_ {
-	const ClimbNode *c;
-	const ClimbNode *v;
-} VariationEdge_;
+        struct ClimbNode *var; //! Indicates node @ref c is a variation
+	struct ClimbNode **vars; //! Variations of @ref c
+	size_t varslen;
+} ClimbNode;
 
 typedef struct LinkupEdge_ {
 	const ClimbNode *c;
@@ -22,9 +21,6 @@ typedef struct LinkupEdge_ {
 
 struct ClimbGraph_ {
 	HashTable *climbs;
-
-	VariationEdge_ *variations;
-	size_t variationslen;
 
 	LinkupEdge_ *linkups;
 	size_t linkupslen;
@@ -39,12 +35,16 @@ ClimbNode *ClimbNode_new(Climb *climb)
 	}
 
 	node->c = climb;
+	node->var = NULL;
+	node->vars = NULL;
+	node->varslen = 0;
 
 	return node;
 }
 
 void ClimbNode_free(ClimbNode *node)
 {
+	if(node->vars)	free(node->vars);
 	free(node);
 }
 
@@ -56,8 +56,6 @@ ClimbGraph *ClimbGraph_new()
 		return NULL;
 	} else {
 		ret->climbs = HashTable_create(CLIMBS_SIZE);
-		ret->variations = NULL;
-		ret->variationslen = 0;
 		ret->linkups = NULL;
 		ret->linkupslen = 0;
 	}
@@ -85,10 +83,6 @@ void ClimbGraph_free(ClimbGraph *graph)
 		free(climbs);
 
 		HashTable_free(graph->climbs);
-	}
-
-	if (NULL != graph->variations) {
-		free(graph->variations);
 	}
 
 	for (size_t i = 0; i < graph->linkupslen; i++) {
@@ -170,19 +164,27 @@ void ClimbGraph_add_variation(ClimbGraph *g, const Climb *c, const Climb *v)
 		return;
 	}
 
-	if (!ClimbGraph_has_climb(g, c) || !ClimbGraph_has_climb(g, v)) {
+	ClimbNode *cn = HashTable_search(g->climbs, c);
+
+	if (!cn) {
 		errno = EINVAL;
 		return;
 	}
 
-	if (NULL == (g->variations = realloc(g->variations, sizeof(VariationEdge_) * (g->variationslen + 1)))) {
+	ClimbNode *vn = HashTable_search(g->climbs, v);
+
+	if (!vn) {
+		errno = EINVAL;
 		return;
 	}
 
-	VariationEdge_ edge = { HashTable_search(g->climbs, c), HashTable_search(g->climbs, v) };
+	if (NULL == (cn->vars = realloc(cn->vars, sizeof(ClimbNode*) * (cn->varslen + 1)))) {
+		return;
+	} else {
+		cn->vars[cn->varslen++] = vn;
+		vn->var = cn;
+	}
 
-	g->variations[g->variationslen] = edge;
-	g->variationslen = g->variationslen + 1;
 	errno = 0;
 }
 
@@ -193,10 +195,28 @@ void ClimbGraph_remove_variation(ClimbGraph *g, const Climb *c, const Climb *v)
 		return;
 	}
 
+	ClimbNode *cn = HashTable_search(g->climbs, c);
+
+	if (!cn) {
+		errno = EINVAL;
+		return;
+	}
+
+	ClimbNode *vn = HashTable_search(g->climbs, v);
+
+	if (!vn) {
+		errno = EINVAL;
+		return;
+	}
+
+	if (vn->var == cn) {
+		vn->var = NULL;
+	}
+
 	int index = -1;
 
-	for (int i = 0; i < g->variationslen; i++) {
-		if (g->variations[i].c == HashTable_search(g->climbs, c) && g->variations[i].v == HashTable_search(g->climbs, v)) {
+	for (int i = 0; i < cn->varslen; i++) {
+		if (cn->vars[i] == vn) {
 			index = i;
 			break;
 		}
@@ -207,22 +227,22 @@ void ClimbGraph_remove_variation(ClimbGraph *g, const Climb *c, const Climb *v)
 	}
 
 	// Case where the last variation was removed
-	if (g->variationslen == 1) {
-		g->variationslen = 0;
-		free(g->variations);
-		g->variations = NULL;
+	if (cn->varslen == 1) {
+		cn->varslen = 0;
+		free(cn->vars);
+		cn->vars = NULL;
 		return;
 	}
 
-	for (int i = index; i < g->variationslen - 1; i++) {
-		g->variations[i] = g->variations[i + 1];
+	for (int i = index; i < cn->varslen; i++) {
+		cn->vars[i] = cn->vars[i + 1];
 	}
 
-	if (NULL == (g->variations = realloc(g->variations, sizeof(Climb*) * (g->variationslen - 1)))) {
+	if (NULL == (cn->vars = realloc(cn->vars, sizeof(ClimbNode*) * (cn->varslen - 1)))) {
 		return;
 	}
 
-	g->variationslen = g->variationslen - 1;
+	cn->varslen--;
 }
 
 int ClimbGraph_has_variation(const ClimbGraph *g, const Climb *c, const Climb *v)
@@ -232,40 +252,51 @@ int ClimbGraph_has_variation(const ClimbGraph *g, const Climb *c, const Climb *v
 		return 0;
 	}
 
-	for (int i = 0; i < g->variationslen; i++) {
-		if (g->variations[i].c == HashTable_search(g->climbs, c) && g->variations[i].v == HashTable_search(g->climbs, v)) {
-			return 1;
-		}
+	ClimbNode *cn = HashTable_search(g->climbs, c);
+
+	if (!cn) {
+		errno = EINVAL;
+		return 0;
 	}
 
-	return 0;
+	ClimbNode *vn = HashTable_search(g->climbs, v);
+
+	if (!vn) {
+		errno = EINVAL;
+		return 0;
+	}
+
+	return vn->var == cn;
 }
 
 // TODO If vs is not null, and s is not null, then only populate vs with s nodes
-void ClimbGraph_variations(const ClimbGraph *g, const Climb *n, const Climb **vs, size_t *s)
+void ClimbGraph_variations(const ClimbGraph *g, const Climb *climb, const Climb **vs, size_t *s)
 {
-	if (g == NULL || n == NULL || s == NULL) {
+	if (g == NULL || climb == NULL || s == NULL) {
+		errno = EINVAL;
+		return;
+	}
+
+	ClimbNode *node = HashTable_search(g->climbs, climb);
+
+	if (node == NULL) {
 		errno = EINVAL;
 		return;
 	}
 
 	int count_only = vs == NULL;
-	size_t max = count_only ? g->variationslen : *s;
+	size_t max = count_only ? node->varslen : *s;
 	*s = 0;
 
-	for (int i = 0; i < g->variationslen; i++) {
-		VariationEdge_ *var = &(g->variations[i]);
+	for (int i = 0; i < node->varslen; i++) {
+		if (!count_only) {
+			vs[*s] = node->vars[i]->c;
+		}
 
-		if (var->c == HashTable_search(g->climbs, n)) {
-			if (!count_only) {
-				vs[*s] = var->v->c;
-			}
+		(*s)++;
 
-			(*s)++;
-
-			if (*s > max) {
-				break;
-			}
+		if (*s > max) {
+			break;
 		}
 	}
 
