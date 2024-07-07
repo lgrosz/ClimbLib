@@ -323,6 +323,7 @@ void ClimbGraph_remove_linkup(ClimbGraph *g, const ClimbNode *c)
 	// Case where the last linkup was removed
 	if (g->linkupslen == 1) {
 		g->linkupslen = 0;
+		free(g->linkups[0].l);
 		free(g->linkups);
 		g->linkups = NULL;
 		return;
