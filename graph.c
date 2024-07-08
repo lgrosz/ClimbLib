@@ -145,15 +145,22 @@ int ClimbGraph_has_climb(const ClimbGraph *graph, const Climb *climb)
 	return NULL != HashTable_search(graph->climbs, climb);
 }
 
-// TODO DO NOT allocate memory.
-Climb **ClimbGraph_climbs(const ClimbGraph *graph, size_t *size)
+void ClimbGraph_climbs(const ClimbGraph *graph, const Climb **climbs, size_t *size)
 {
 	if (graph == NULL || size == NULL) {
 		errno = EINVAL;
-		return NULL;
+		return;
 	}
 
-	return (Climb **)HashTable_keys(graph->climbs, size);
+	Climb **keys = (Climb **)HashTable_keys(graph->climbs, size);
+
+	if (climbs) {
+		for (int i = 0; i < *size; i++) {
+			climbs[i] = keys[i];
+		}
+	}
+
+	free(keys);
 }
 
 void ClimbGraph_add_variation(ClimbGraph *g, const Climb *c, const Climb *v)

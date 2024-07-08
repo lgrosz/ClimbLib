@@ -61,19 +61,17 @@ static void test_climbs()
 	VERIFY(errno == 0);
 
 	size_t climbslen;
-	Climb **climbs = ClimbGraph_climbs(g, &climbslen);
+	ClimbGraph_climbs(g, NULL, &climbslen);
 	VERIFY(errno == 0);
 	VERIFY(climbslen == 1);
-	free(climbs);
 
 	Climb *c1 = Climb_new();
 	ClimbGraph_add_climb(g, c1);
 	VERIFY(errno == 0);
 
-	climbs = ClimbGraph_climbs(g, &climbslen);
+	ClimbGraph_climbs(g, NULL, &climbslen);
 	VERIFY(errno == 0);
 	VERIFY(climbslen == 2);
-	free(climbs);
 
 	CLEANUP_GRAPH(g);
 	Climb_free(c);

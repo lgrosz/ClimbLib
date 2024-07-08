@@ -10,7 +10,7 @@ void ClimbGraph_free(ClimbGraph *);
 void ClimbGraph_add_climb(ClimbGraph *, Climb *);
 void ClimbGraph_remove_climb(ClimbGraph *, Climb *);
 int ClimbGraph_has_climb(const ClimbGraph *, const Climb *);
-Climb **ClimbGraph_climbs(const ClimbGraph *, size_t *);
+void ClimbGraph_climbs(const ClimbGraph *, const Climb **, size_t *);
 
 // Climb variations
 void ClimbGraph_add_variation(ClimbGraph *, const Climb *, const Climb *);
