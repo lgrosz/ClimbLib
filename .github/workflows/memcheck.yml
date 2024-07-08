@@ -1,0 +1,27 @@
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Check for memory leaks
+    runs-on: ubuntu-latest
+    steps:
+      - run: sudo apt install valgrind
+        name: Install valgrind
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+      - name: Build
+        run: cmake --build build
+      - name: Run memcheck
+        run: |
+          ctest \
+          --overwrite MemoryCheckCommandOptions="--leak-check=full" \
+          -T memcheck --test-dir build
+      - name: Upload memcheck logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: memcheck-logs
+          path: build/Testing/Temporary/MemoryChecker.*.log
