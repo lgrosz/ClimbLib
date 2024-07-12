@@ -4,6 +4,7 @@ project(ClimbLib C)
 set(CMAKE_C_STANDARD 11)
 
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
+option(BUILD_COVERAGE "Builds with coverage flags." OFF)
 
 include(CTest)
 if(BUILD_TESTING)
@@ -18,6 +19,11 @@ add_library(ClimbLib
     str_util.c
     int_util.c
 )
+
+if (BUILD_COVERAGE)
+    target_compile_options(ClimbLib PRIVATE --coverage)
+    target_link_options(ClimbLib PRIVATE --coverage)
+endif()
 
 # Compiler warning flags
 target_compile_options(ClimbLib PRIVATE
