@@ -2,11 +2,13 @@
 #define _CLIMBLIB_GRAPH_H
 
 #include "climb.h"
+#include "formation.h"
 
 typedef struct ClimbGraph_ ClimbGraph;
 
 ClimbGraph *ClimbGraph_new();
 void ClimbGraph_free(ClimbGraph *);
+
 void ClimbGraph_add_climb(ClimbGraph *, Climb *);
 void ClimbGraph_remove_climb(ClimbGraph *, Climb *);
 int ClimbGraph_has_climb(const ClimbGraph *, const Climb *);
@@ -25,5 +27,9 @@ int ClimbGraph_is_linkup(ClimbGraph *, const Climb *);
 void ClimbGraph_linkup(ClimbGraph *, const Climb *, const Climb **, size_t *);
 int ClimbGraph_is_of_linkup(ClimbGraph *, const Climb *);
 void ClimbGraph_of_linkup(ClimbGraph *, const Climb *, const Climb **, size_t *);
+
+void ClimbGraph_add_formation(ClimbGraph *, Formation *);
+void ClimbGraph_remove_formation(ClimbGraph *, Formation *);
+int ClimbGraph_has_formation(ClimbGraph *, Formation *);
 
 #endif

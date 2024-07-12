@@ -224,6 +224,27 @@ static void test_linkup()
 	CLEANUP_CLIMB(c);
 }
 
+static void test_add_formation()
+{
+	SETUP_GRAPH(g);
+
+	Formation *f = Formation_new();
+	ClimbGraph_add_formation(g, f);
+	VERIFY(errno == 0);
+
+	VERIFY(ClimbGraph_has_formation(g, f));
+	VERIFY(errno == 0);
+
+	ClimbGraph_remove_formation(g, f);
+	VERIFY(errno == 0);
+
+	VERIFY(!ClimbGraph_has_formation(g, f));
+	VERIFY(errno == 0);
+
+	CLEANUP_GRAPH(g);
+	Formation_free(f);
+}
+
 void graph()
 {
 	test_free_null();
@@ -233,5 +254,6 @@ void graph()
 	test_add_variation();
 	test_variations();
 	test_linkup();
+	test_add_formation();
 	exit(EXIT_SUCCESS);
 }
