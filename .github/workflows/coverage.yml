@@ -1,0 +1,19 @@
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Perform coverage check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S . -B build -DBUILD_COVERAGE=ON
+      - name: Build
+        run: cmake --build build
+      - name: Run tests
+        run: ctest --test-dir build
+      - name: Run coverage report
+        run: ctest -T coverage --test-dir build
