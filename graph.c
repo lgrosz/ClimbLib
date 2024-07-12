@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 #define CLIMBS_SIZE 100
+#define FORMATIONS_SIZE 100
 
 /**
  * @brief Removes @p ptr from @p arr with reallocation
@@ -56,8 +57,13 @@ typedef struct ClimbNode {
 	size_t link_oflen;
 } ClimbNode;
 
+typedef struct FormationNode {
+	Formation *f;
+} FormationNode;
+
 struct ClimbGraph_ {
 	HashTable *climbs;
+	HashTable *formations;
 };
 
 ClimbNode *ClimbNode_new(Climb *climb)
@@ -88,6 +94,24 @@ void ClimbNode_free(ClimbNode *node)
 	free(node);
 }
 
+FormationNode *FormationNode_new(Formation *formation)
+{
+	FormationNode *node;
+
+	if (NULL == (node = malloc(sizeof(FormationNode)))) {
+		return NULL;
+	}
+
+	node->f = formation;
+
+	return node;
+}
+
+void FormationNode_free(FormationNode *node)
+{
+	if (node)	free(node);
+}
+
 ClimbGraph *ClimbGraph_new()
 {
 	ClimbGraph *ret;
@@ -96,6 +120,7 @@ ClimbGraph *ClimbGraph_new()
 		return NULL;
 	} else {
 		ret->climbs = HashTable_create(CLIMBS_SIZE);
+		ret->formations = HashTable_create(FORMATIONS_SIZE);
 	}
 
 	errno = 0;
@@ -121,6 +146,20 @@ void ClimbGraph_free(ClimbGraph *graph)
 		free(climbs);
 
 		HashTable_free(graph->climbs);
+	}
+
+	if (NULL != graph->formations) {
+		size_t formationslen;
+		Formation **formations = (Formation**)HashTable_keys(graph->formations, &formationslen);
+
+		for (int i = 0; i < formationslen; i++) {
+			FormationNode *node = HashTable_search(graph->formations, formations[i]);
+			FormationNode_free(node);
+		}
+
+		free(formations);
+
+		HashTable_free(graph->formations);
 	}
 
 	free(graph);
@@ -499,4 +538,45 @@ void ClimbGraph_of_linkup(ClimbGraph *g, const Climb *c, const Climb **l, size_t
 			l[i] = cn->link_of[i]->c;
 		}
 	}
+}
+
+void ClimbGraph_add_formation(ClimbGraph *graph, Formation *formation)
+{
+	if (graph == NULL || formation == NULL) {
+		errno = EINVAL;
+		return;
+	}
+
+	FormationNode *node;
+	if (NULL == (node = FormationNode_new(formation))) {
+		return;
+	}
+
+	HashTable_insert(graph->formations, formation, node);
+
+	errno = 0;
+}
+
+void ClimbGraph_remove_formation(ClimbGraph *graph, Formation *formation)
+{
+	if (graph == NULL || formation == NULL) {
+		errno = EINVAL;
+		return;
+	}
+
+	FormationNode *node = HashTable_remove(graph->formations, formation);
+
+	if (node) {
+		FormationNode_free(node);
+	}
+}
+
+int ClimbGraph_has_formation(ClimbGraph *graph, Formation *formation)
+{
+	if (graph == NULL || formation == NULL) {
+		errno = EINVAL;
+		return 0;
+	}
+
+	return NULL != HashTable_search(graph->formations, formation);
 }
