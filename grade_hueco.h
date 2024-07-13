@@ -9,6 +9,10 @@ typedef enum GradeHuecoModifier {
 } GradeHuecoModifier;
 
 GradeHueco *GradeHueco_new(unsigned int, GradeHuecoModifier);
+unsigned int GradeHueco_value(const GradeHueco *);
+GradeHuecoModifier GradeHueco_modifier(const GradeHueco *);
+int GradeHueco_set_value(GradeHueco *, unsigned int);
+int GradeHueco_set_modifier(GradeHueco *, GradeHuecoModifier);
 void GradeHueco_free(GradeHueco *);
 GradeHueco *GradeHueco_dup(const GradeHueco *);
 int GradeHueco_cmp(const GradeHueco *, const GradeHueco *);

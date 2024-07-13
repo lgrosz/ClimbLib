@@ -34,22 +34,53 @@ GradeHueco *GradeHueco_new(unsigned int grade, GradeHuecoModifier modifier)
 {
 	GradeHueco *ret;
 
-	if (grade > 99) {
-		/* Three digit numbers could overflow the string */
-		errno = EINVAL;
-		return NULL;
-	}
-
 	if (NULL == (ret = malloc(sizeof(struct GradeHueco)))) {
 		return NULL;
 	}
 
-	ret->grade = grade;
-	ret->modifier = modifier;
-	update_str(ret);
+	if (GradeHueco_set_value(ret, grade) != 0) {
+		errno = EINVAL;
+		return NULL;
+	}
+
+	if (GradeHueco_set_modifier(ret, modifier) != 0) {
+		errno = EINVAL;
+		return NULL;
+	}
 
 	errno = 0;
 	return ret;
+}
+
+unsigned int GradeHueco_value(const GradeHueco *grade)
+{
+	return grade->grade;
+}
+
+GradeHuecoModifier GradeHueco_modifier(const GradeHueco *grade)
+{
+	return grade->modifier;
+}
+
+int GradeHueco_set_value(GradeHueco *grade, unsigned int value)
+{
+	if (value > 99) {
+		/* Three digit numbers could overflow the string */
+		return 1;
+	}
+
+	grade->grade = value;
+	update_str(grade);
+
+	return 0;
+}
+
+int GradeHueco_set_modifier(GradeHueco *grade, GradeHuecoModifier modifier)
+{
+	grade->modifier = modifier;
+	update_str(grade);
+
+	return 0;
 }
 
 void GradeHueco_free(GradeHueco *grade)
