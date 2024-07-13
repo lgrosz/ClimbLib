@@ -12,8 +12,8 @@ if(BUILD_TESTING)
 endif()
 
 add_library(ClimbLib
-    grades_hueco.c
-    grades_font.c
+    grade_hueco.c
+    grade_font.c
     climb.c
     graph.c
     str_util.c
@@ -46,7 +46,8 @@ install(TARGETS
 install(
     FILES
         climb.h
-        grades.h
+        grade_font.h
+        grade_hueco.h
         graph.h
     DESTINATION include
 )

@@ -1,6 +1,6 @@
 set(TestSources
-    font.c
-    hueco.c
+    grade_font.c
+    grade_hueco.c
     climb.c
     graph.c
 )

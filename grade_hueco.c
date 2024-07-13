@@ -1,4 +1,4 @@
-#include "grades.h"
+#include "grade_hueco.h"
 #include "int_util.h"
 #include <stdio.h>
 #include <string.h>
