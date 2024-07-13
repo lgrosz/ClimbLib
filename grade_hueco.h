@@ -1,7 +1,7 @@
 #ifndef _CLIMBLIB_GRADE_HUECO_H_
 #define _CLIMBLIB_GRADE_HUECO_H_
 
-typedef struct GradeHueco_ GradeHueco;
+typedef struct GradeHueco GradeHueco;
 typedef enum GradeHuecoModifier {
 	GRADE_HUECO_MODIFIER_MINUS,
 	GRADE_HUECO_MODIFIER_NONE,

@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <errno.h>
 
-struct GradeHueco_
+struct GradeHueco
 {
 	unsigned int grade;
 	GradeHuecoModifier modifier;
@@ -40,7 +40,7 @@ GradeHueco *GradeHueco_new(unsigned int grade, GradeHuecoModifier modifier)
 		return NULL;
 	}
 
-	if (NULL == (ret = malloc(sizeof(struct GradeHueco_)))) {
+	if (NULL == (ret = malloc(sizeof(struct GradeHueco)))) {
 		return NULL;
 	}
 
