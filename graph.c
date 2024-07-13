@@ -59,6 +59,10 @@ typedef struct ClimbNode {
 
 typedef struct FormationNode {
 	Formation *f;
+
+	struct FormationNode *super_formation;
+	struct FormationNode **sub_formations;
+	size_t sub_formations_len;
 } FormationNode;
 
 struct ClimbGraph_ {
@@ -103,13 +107,19 @@ FormationNode *FormationNode_new(Formation *formation)
 	}
 
 	node->f = formation;
+	node->super_formation = NULL;
+	node->sub_formations = NULL;
+	node->sub_formations_len = 0;
 
 	return node;
 }
 
 void FormationNode_free(FormationNode *node)
 {
-	if (node)	free(node);
+	if (node) {
+		if (node->sub_formations)	free(node->sub_formations);
+		free(node);
+	}
 }
 
 ClimbGraph *ClimbGraph_new()
@@ -579,4 +589,85 @@ int ClimbGraph_has_formation(ClimbGraph *graph, Formation *formation)
 	}
 
 	return NULL != HashTable_search(graph->formations, formation);
+}
+
+void ClimbGraph_add_subformation(ClimbGraph *graph, const Formation *formation, const Formation *subformation)
+{
+	if (graph == NULL || formation == NULL || subformation == NULL) {
+		errno = EINVAL;
+		return;
+	}
+
+	FormationNode *fn = HashTable_search(graph->formations, formation);
+
+	if (!fn) {
+		errno = EINVAL;
+		return;
+	}
+
+	FormationNode *sfn = HashTable_search(graph->formations, subformation);
+
+	if (!sfn) {
+		errno = EINVAL;
+		return;
+	}
+
+	sfn->super_formation = fn;
+
+	if (NULL == (fn->sub_formations = realloc(fn->sub_formations, sizeof(FormationNode*) * (fn->sub_formations_len + 1)))) {
+		return;
+	}
+
+	fn->sub_formations[fn->sub_formations_len] = sfn;
+	fn->sub_formations_len++;
+}
+
+void ClimbGraph_remove_subformation(ClimbGraph *graph, const Formation *formation, const Formation *subformation)
+{
+	if (graph == NULL || formation == NULL || subformation == NULL) {
+		errno = EINVAL;
+		return;
+	}
+
+	FormationNode *fn = HashTable_search(graph->formations, formation);
+
+	if (!fn) {
+		errno = EINVAL;
+		return;
+	}
+
+	FormationNode *sfn = HashTable_search(graph->formations, subformation);
+
+	if (!sfn) {
+		errno = EINVAL;
+		return;
+	}
+
+	sfn->super_formation = NULL;
+
+	remove_ptr_from_arr((void*)&fn->sub_formations, &fn->sub_formations_len, sfn);
+}
+
+int ClimbGraph_has_subformation(const ClimbGraph *graph, const Formation *formation, const Formation *subformation)
+{
+	if (graph == NULL || formation == NULL || subformation == NULL) {
+		errno = EINVAL;
+		return 0;
+	}
+
+	FormationNode *fn = HashTable_search(graph->formations, formation);
+
+	if (!fn) {
+		errno = EINVAL;
+		return 0;
+	}
+
+	FormationNode *sfn = HashTable_search(graph->formations, subformation);
+
+	if (!sfn) {
+		errno = EINVAL;
+		return 0;
+	}
+
+	return sfn->super_formation == fn;
 }
