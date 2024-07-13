@@ -32,4 +32,8 @@ void ClimbGraph_add_formation(ClimbGraph *, Formation *);
 void ClimbGraph_remove_formation(ClimbGraph *, Formation *);
 int ClimbGraph_has_formation(ClimbGraph *, Formation *);
 
+void ClimbGraph_add_subformation(ClimbGraph *, const Formation *, const Formation *);
+void ClimbGraph_remove_subformation(ClimbGraph *, const Formation *, const Formation *);
+int ClimbGraph_has_subformation(const ClimbGraph *, const Formation *, const Formation *);
+
 #endif

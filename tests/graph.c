@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "climb.h"
+#include "formation.h"
 #include "verify.h"
 
 #include <graph.h>
@@ -245,6 +246,34 @@ static void test_add_formation()
 	Formation_free(f);
 }
 
+static void test_subformations()
+{
+	SETUP_GRAPH(g);
+
+	Formation *f = Formation_new();
+	VERIFY(errno == 0);
+
+	Formation *sf = Formation_new();
+	VERIFY(errno == 0);
+
+	ClimbGraph_add_formation(g, f);
+	ClimbGraph_add_formation(g, sf);
+
+	ClimbGraph_add_subformation(g, f, sf);
+	VERIFY(errno == 0);
+
+	VERIFY(ClimbGraph_has_subformation(g, f, sf));
+
+	ClimbGraph_remove_subformation(g, f, sf);
+	VERIFY(errno == 0);
+
+	VERIFY(!ClimbGraph_has_subformation(g, f, sf));
+
+	CLEANUP_GRAPH(g);
+	Formation_free(f);
+	Formation_free(sf);
+}
+
 void graph()
 {
 	test_free_null();
@@ -255,5 +284,6 @@ void graph()
 	test_variations();
 	test_linkup();
 	test_add_formation();
+	test_subformations();
 	exit(EXIT_SUCCESS);
 }
