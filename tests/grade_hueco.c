@@ -4,7 +4,7 @@
 
 #include "verify.h"
 
-#include <grades.h>
+#include <grade_hueco.h>
 
 static void test_free_null()
 {
@@ -226,7 +226,7 @@ static void test_fromstr_mod()
 	VERIFY(errno == 0);
 }
 
-void hueco()
+void grade_hueco()
 {
 	test_free_null();
 	test_new();

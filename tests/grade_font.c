@@ -4,7 +4,7 @@
 
 #include "verify.h"
 
-#include <grades.h>
+#include <grade_font.h>
 
 static void test_free_null()
 {
@@ -333,7 +333,7 @@ static void test_fromstr_lt_6_mod()
 	VERIFY(errno == 0);
 }
 
-void font()
+void grade_font()
 {
 	test_free_null();
 	test_new();
