@@ -8,6 +8,8 @@ jobs:
     name: Perform coverage check
     runs-on: ubuntu-latest
     steps:
+      - name: Install "Check"
+        run: sudo apt install check
       - uses: actions/checkout@v4
       - name: Configure
         run: cmake -S . -B build -DBUILD_COVERAGE=ON
