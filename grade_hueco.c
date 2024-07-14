@@ -119,16 +119,10 @@ int GradeHueco_cmp(const GradeHueco *a, const GradeHueco *b)
 	}
 
 	if (a->grade != b->grade) {
-		return clamp(a->grade - b->grade, -1, 1);
+		return a->grade - b->grade;
 	}
 
-	if (a->modifier == b->modifier) {
-		return 0;
-	} else if (a->modifier < b->modifier) {
-		return -1;
-	} else {
-		return 1;
-	}
+	return a->modifier - b->modifier;
 }
 
 const char *GradeHueco_str(const GradeHueco *grade)
