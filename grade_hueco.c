@@ -19,11 +19,11 @@ static void update_str(GradeHueco *grade)
 		case GRADE_HUECO_MODIFIER_MINUS:
 			mod_str = '-';
 			break;
-		case GRADE_HUECO_MODIFIER_NONE:
-			mod_str = '\0';
-			break;
 		case GRADE_HUECO_MODIFIER_PLUS:
 			mod_str = '+';
+			break;
+		default:
+			mod_str = '\0';
 			break;
 	}
 
@@ -77,6 +77,11 @@ int GradeHueco_set_value(GradeHueco *grade, unsigned int value)
 
 int GradeHueco_set_modifier(GradeHueco *grade, GradeHuecoModifier modifier)
 {
+	if (modifier < GRADE_HUECO_MODIFIER_MINUS || modifier >= GRADE_HUECO_MODIFIER_MAX) {
+		errno = EINVAL;
+		return 1;
+	}
+
 	grade->modifier = modifier;
 	update_str(grade);
 

@@ -6,6 +6,7 @@ typedef enum GradeHuecoModifier {
 	GRADE_HUECO_MODIFIER_MINUS,
 	GRADE_HUECO_MODIFIER_NONE,
 	GRADE_HUECO_MODIFIER_PLUS,
+	GRADE_HUECO_MODIFIER_MAX,
 } GradeHuecoModifier;
 
 GradeHueco *GradeHueco_new(unsigned int, GradeHuecoModifier);
