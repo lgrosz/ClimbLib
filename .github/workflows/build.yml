@@ -14,6 +14,12 @@ jobs:
           - macos-latest
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Install "Check" (Ubuntu)
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: sudo apt install check
+      - name: Install "Check" (MacOS)
+        if: ${{ matrix.os == 'macos-latest' }}
+        run: brew install check
       - uses: actions/checkout@v4
       - name: Configure
         run: cmake -S . -B build

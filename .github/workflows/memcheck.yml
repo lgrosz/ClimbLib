@@ -8,6 +8,8 @@ jobs:
     name: Check for memory leaks
     runs-on: ubuntu-latest
     steps:
+      - run: sudo apt install check
+        name: Install "Check"
       - run: sudo apt install valgrind
         name: Install valgrind
       - uses: actions/checkout@v4
