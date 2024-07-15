@@ -4,7 +4,7 @@
 #include "climb.h"
 #include "formation.h"
 
-typedef struct ClimbGraph_ ClimbGraph;
+typedef struct ClimbGraph ClimbGraph;
 
 ClimbGraph *ClimbGraph_new();
 void ClimbGraph_free(ClimbGraph *);

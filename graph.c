@@ -65,7 +65,7 @@ typedef struct FormationNode {
 	size_t sub_formations_len;
 } FormationNode;
 
-struct ClimbGraph_ {
+struct ClimbGraph {
 	HashTable *climbs;
 	HashTable *formations;
 };
@@ -126,7 +126,7 @@ ClimbGraph *ClimbGraph_new()
 {
 	ClimbGraph *ret;
 
-	if (NULL == (ret = malloc(sizeof(struct ClimbGraph_)))) {
+	if (NULL == (ret = malloc(sizeof(ClimbGraph)))) {
 		return NULL;
 	} else {
 		ret->climbs = HashTable_create(CLIMBS_SIZE);
