@@ -39,11 +39,13 @@ GradeHueco *GradeHueco_new(unsigned int grade, GradeHuecoModifier modifier)
 	}
 
 	if (GradeHueco_set_value(ret, grade) != 0) {
+		GradeHueco_free(ret);
 		errno = EINVAL;
 		return NULL;
 	}
 
 	if (GradeHueco_set_modifier(ret, modifier) != 0) {
+		GradeHueco_free(ret);
 		errno = EINVAL;
 		return NULL;
 	}
