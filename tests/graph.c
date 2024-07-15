@@ -1,5 +1,6 @@
 #include <errno.h>
 #include <stdlib.h>
+#include <check.h>
 
 #include "climb.h"
 #include "formation.h"
@@ -7,21 +8,20 @@
 
 #include <graph.h>
 
-static void test_free_null()
+START_TEST(test_new)
+{
+	ClimbGraph *graph = ClimbGraph_new();
+	ck_assert_ptr_nonnull(graph);
+	ClimbGraph_free(graph);
+}
+END_TEST
+
+START_TEST(test_free_null)
 {
 	ClimbGraph_free(NULL);
-	VERIFY(errno == EINVAL);
+	ck_assert_int_eq(errno, EINVAL);
 }
-
-static void test_new()
-{
-	ClimbGraph *g = ClimbGraph_new();
-	VERIFY(errno == 0);
-	VERIFY(g != NULL);
-
-	ClimbGraph_free(g);
-	VERIFY(errno == 0);
-}
+END_TEST
 
 #define SETUP_GRAPH(a) \
 	ClimbGraph *(a) = ClimbGraph_new(); \
@@ -274,10 +274,23 @@ static void test_subformations()
 	Formation_free(sf);
 }
 
+static Suite *suite()
+{
+	Suite *s;
+	TCase *tc_core;
+
+	s = suite_create("Hueco Grades");
+
+	tc_core = tcase_create("Core");
+	tcase_add_test(tc_core, test_new);
+	tcase_add_test(tc_core, test_free_null);
+
+	suite_add_tcase(s, tc_core);
+
+	return s;
+}
 void graph()
 {
-	test_free_null();
-	test_new();
 	test_add_climb();
 	test_climbs();
 	test_add_variation();
@@ -285,5 +298,16 @@ void graph()
 	test_linkup();
 	test_add_formation();
 	test_subformations();
-	exit(EXIT_SUCCESS);
+
+	int number_failed;
+	Suite *s;
+	SRunner *sr;
+
+	s = suite();
+	sr = srunner_create(s);
+	srunner_run_all(sr, CK_NORMAL);
+	number_failed = srunner_ntests_failed(sr);
+	srunner_free(sr);
+
+	exit((number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE);
 }
