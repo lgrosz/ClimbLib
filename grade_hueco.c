@@ -36,6 +36,9 @@ GradeHueco *GradeHueco_new(unsigned int grade, GradeHuecoModifier modifier)
 
 	if (NULL == (ret = malloc(sizeof(struct GradeHueco)))) {
 		return NULL;
+	} else {
+		ret->grade = 0;
+		ret->modifier = GRADE_HUECO_MODIFIER_NONE;
 	}
 
 	if (GradeHueco_set_value(ret, grade) != 0) {
