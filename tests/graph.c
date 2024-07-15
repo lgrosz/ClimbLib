@@ -225,59 +225,53 @@ static void test_linkup()
 	CLEANUP_CLIMB(c);
 }
 
-static void test_add_formation()
+START_TEST(test_add_formation)
 {
-	SETUP_GRAPH(g);
+	ClimbGraph *graph;
+	Formation *formation;
 
-	Formation *f = Formation_new();
-	ClimbGraph_add_formation(g, f);
-	VERIFY(errno == 0);
+	graph = ClimbGraph_new();
+	formation = Formation_new();
 
-	VERIFY(ClimbGraph_has_formation(g, f));
-	VERIFY(errno == 0);
+	ClimbGraph_add_formation(graph, formation);
+	ck_assert(ClimbGraph_has_formation(graph, formation));
 
-	ClimbGraph_remove_formation(g, f);
-	VERIFY(errno == 0);
+	ClimbGraph_remove_formation(graph, formation);
+	ck_assert(!ClimbGraph_has_formation(graph, formation));
 
-	VERIFY(!ClimbGraph_has_formation(g, f));
-	VERIFY(errno == 0);
-
-	CLEANUP_GRAPH(g);
-	Formation_free(f);
+	ClimbGraph_free(graph);
+	Formation_free(formation);
 }
+END_TEST
 
-static void test_subformations()
+START_TEST(test_add_subformation)
 {
-	SETUP_GRAPH(g);
+	ClimbGraph *graph;
+	Formation *formation, *subformation;
 
-	Formation *f = Formation_new();
-	VERIFY(errno == 0);
+	graph = ClimbGraph_new();
+	formation = Formation_new();
+	subformation = Formation_new();
 
-	Formation *sf = Formation_new();
-	VERIFY(errno == 0);
+	ClimbGraph_add_formation(graph, formation);
+	ClimbGraph_add_formation(graph, subformation);
 
-	ClimbGraph_add_formation(g, f);
-	ClimbGraph_add_formation(g, sf);
+	ClimbGraph_add_subformation(graph, formation, subformation);
+	ck_assert(ClimbGraph_has_subformation(graph, formation, subformation));
 
-	ClimbGraph_add_subformation(g, f, sf);
-	VERIFY(errno == 0);
+	ClimbGraph_remove_subformation(graph, formation, subformation);
+	ck_assert(!ClimbGraph_has_subformation(graph, formation, subformation));
 
-	VERIFY(ClimbGraph_has_subformation(g, f, sf));
-
-	ClimbGraph_remove_subformation(g, f, sf);
-	VERIFY(errno == 0);
-
-	VERIFY(!ClimbGraph_has_subformation(g, f, sf));
-
-	CLEANUP_GRAPH(g);
-	Formation_free(f);
-	Formation_free(sf);
+	ClimbGraph_free(graph);
+	Formation_free(formation);
+	Formation_free(subformation);
 }
+END_TEST
 
 static Suite *suite()
 {
 	Suite *s;
-	TCase *tc_core;
+	TCase *tc_core, *tc_formations;
 
 	s = suite_create("Hueco Grades");
 
@@ -285,7 +279,12 @@ static Suite *suite()
 	tcase_add_test(tc_core, test_new);
 	tcase_add_test(tc_core, test_free_null);
 
+	tc_formations = tcase_create("Formations");
+	tcase_add_test(tc_formations, test_add_formation);
+	tcase_add_test(tc_formations, test_add_subformation);
+
 	suite_add_tcase(s, tc_core);
+	suite_add_tcase(s, tc_formations);
 
 	return s;
 }
@@ -296,8 +295,6 @@ void graph()
 	test_add_variation();
 	test_variations();
 	test_linkup();
-	test_add_formation();
-	test_subformations();
 
 	int number_failed;
 	Suite *s;
