@@ -290,36 +290,7 @@ void ClimbGraph_remove_variation(ClimbGraph *g, const Climb *c, const Climb *v)
 		vn->var = NULL;
 	}
 
-	int index = -1;
-
-	for (int i = 0; i < cn->varslen; i++) {
-		if (cn->vars[i] == vn) {
-			index = i;
-			break;
-		}
-	}
-
-	if (index == -1) {
-		return;
-	}
-
-	// Case where the last variation was removed
-	if (cn->varslen == 1) {
-		cn->varslen = 0;
-		free(cn->vars);
-		cn->vars = NULL;
-		return;
-	}
-
-	for (int i = index; i < cn->varslen; i++) {
-		cn->vars[i] = cn->vars[i + 1];
-	}
-
-	if (NULL == (cn->vars = realloc(cn->vars, sizeof(ClimbNode*) * (cn->varslen - 1)))) {
-		return;
-	}
-
-	cn->varslen--;
+	remove_ptr_from_arr((void***)&cn->vars, &cn->varslen, vn);
 }
 
 int ClimbGraph_has_variation(const ClimbGraph *g, const Climb *c, const Climb *v)
@@ -645,7 +616,7 @@ void ClimbGraph_remove_subformation(ClimbGraph *graph, const Formation *formatio
 
 	sfn->super_formation = NULL;
 
-	remove_ptr_from_arr((void*)&fn->sub_formations, &fn->sub_formations_len, sfn);
+	remove_ptr_from_arr((void***)&fn->sub_formations, &fn->sub_formations_len, sfn);
 }
 
 int ClimbGraph_has_subformation(const ClimbGraph *graph, const Formation *formation, const Formation *subformation)
