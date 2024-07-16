@@ -12,6 +12,7 @@ if(BUILD_TESTING)
 endif()
 
 add_library(ClimbLib
+    allocator.c
     grade_hueco.c
     grade_font.c
     climb.c
@@ -47,6 +48,7 @@ install(TARGETS
 
 install(
     FILES
+        allocator.h
         climb.h
         formation.h
         grade_font.h
