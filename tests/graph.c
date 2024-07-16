@@ -268,6 +268,31 @@ START_TEST(test_add_subformation)
 }
 END_TEST
 
+START_TEST(test_add_formation_climb)
+{
+	ClimbGraph *graph;
+	Formation *formation;
+	Climb *climb;
+
+	graph = ClimbGraph_new();
+	formation = Formation_new();
+	climb = Climb_new();
+
+	ClimbGraph_add_formation(graph, formation);
+	ClimbGraph_add_climb(graph, climb);
+
+	ClimbGraph_add_formation_climb(graph, formation, climb);
+	ck_assert(ClimbGraph_has_formation_climb(graph, formation, climb));
+
+	ClimbGraph_remove_formation_climb(graph, formation, climb);
+	ck_assert(!ClimbGraph_has_formation_climb(graph, formation, climb));
+
+	ClimbGraph_free(graph);
+	Formation_free(formation);
+	Climb_free(climb);
+}
+END_TEST
+
 static Suite *suite()
 {
 	Suite *s;
@@ -282,6 +307,7 @@ static Suite *suite()
 	tc_formations = tcase_create("Formations");
 	tcase_add_test(tc_formations, test_add_formation);
 	tcase_add_test(tc_formations, test_add_subformation);
+	tcase_add_test(tc_formations, test_add_formation_climb);
 
 	suite_add_tcase(s, tc_core);
 	suite_add_tcase(s, tc_formations);
