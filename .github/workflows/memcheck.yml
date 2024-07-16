@@ -20,7 +20,7 @@ jobs:
       - name: Run memcheck
         run: |
           ctest \
-          --overwrite MemoryCheckCommandOptions="--leak-check=full" \
+          --overwrite MemoryCheckCommandOptions="--leak-check=full --show-leak-kinds=all" \
           -T memcheck --test-dir build
       - name: Upload memcheck logs
         uses: actions/upload-artifact@v4
