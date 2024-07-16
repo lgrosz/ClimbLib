@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
+#include "allocator.h"
 
 struct GradeHueco
 {
@@ -34,7 +35,7 @@ GradeHueco *GradeHueco_new(unsigned int grade, GradeHuecoModifier modifier)
 {
 	GradeHueco *ret;
 
-	if (NULL == (ret = malloc(sizeof(struct GradeHueco)))) {
+	if (NULL == (ret = climblib_malloc(sizeof(struct GradeHueco)))) {
 		return NULL;
 	} else {
 		ret->grade = 0;
@@ -101,7 +102,7 @@ void GradeHueco_free(GradeHueco *grade)
 	}
 
 	errno = 0;
-	free(grade);
+	climblib_free(grade);
 }
 
 GradeHueco *GradeHueco_dup(const GradeHueco *grade)

@@ -1,3 +1,4 @@
+#include "allocator.h"
 #include <errno.h>
 #include <stdlib.h>
 #include <check.h>
@@ -41,6 +42,18 @@ START_TEST(test_free_null)
 {
 	GradeHueco_free(NULL);
 	ck_assert_int_eq(errno, EINVAL);
+}
+END_TEST
+
+static void *bad_malloc(size_t size)
+{
+	return NULL;
+}
+
+START_TEST(test_new_bad_malloc)
+{
+	climblib_set_alloc(bad_malloc, NULL, NULL);
+	ck_assert_ptr_null(GradeHueco_new(0, GRADE_HUECO_MODIFIER_NONE));
 }
 END_TEST
 
@@ -165,6 +178,11 @@ START_TEST(test_fromstr)
 }
 END_TEST
 
+static void default_allocators()
+{
+	climblib_set_alloc(NULL, NULL, NULL);
+}
+
 static Suite *suite()
 {
 	Suite *s;
@@ -175,11 +193,13 @@ static Suite *suite()
 	tc_core = tcase_create("Core");
 	tcase_add_test(tc_core, test_new);
 	tcase_add_test(tc_core, test_new_invalid);
+	tcase_add_test(tc_core, test_new_bad_malloc);
 	tcase_add_test(tc_core, test_free_null);
 	tcase_add_test(tc_core, test_dup);
 	tcase_add_test(tc_core, test_cmp);
 	tcase_add_test(tc_core, test_str);
 	tcase_add_test(tc_core, test_fromstr);
+	tcase_add_checked_fixture(tc_core, NULL, default_allocators);
 
 	suite_add_tcase(s, tc_core);
 
