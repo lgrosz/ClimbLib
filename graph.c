@@ -7,6 +7,19 @@
 #define FORMATIONS_SIZE 100
 
 /**
+ * @brief Adds @p ptr to @p arr, with reallocation
+ */
+static void add_ptr_to_arr(void ***arr, size_t *arrlen, void *ptr)
+{
+	if (NULL == ((*arr) = realloc(*arr, sizeof(void*) * (*arrlen + 1)))) {
+		return;
+	}
+
+	(*arr)[*arrlen] = ptr;
+	(*arrlen)++;
+}
+
+/**
  * @brief Removes @p ptr from @p arr with reallocation
  */
 static void remove_ptr_from_arr(void ***arr, size_t *arrlen, void *ptr)
@@ -255,13 +268,8 @@ void ClimbGraph_add_variation(ClimbGraph *g, const Climb *c, const Climb *v)
 		return;
 	}
 
-	if (NULL == (cn->vars = realloc(cn->vars, sizeof(ClimbNode*) * (cn->varslen + 1)))) {
-		return;
-	} else {
-		cn->vars[cn->varslen++] = vn;
-		vn->var = cn;
-	}
-
+	vn->var = cn;
+	add_ptr_to_arr((void***)&cn->vars, &cn->varslen, vn);
 	errno = 0;
 }
 
@@ -382,9 +390,7 @@ void ClimbGraph_add_linkup(ClimbGraph *g, const Climb *c, const Climb **l, size_
 		if (NULL != (link_node = HashTable_search(g->climbs, l[i]))) {
 			cn->links[i] = link_node;
 
-			link_node->link_of = realloc(link_node->link_of, sizeof(ClimbNode*) * (link_node->link_oflen + 1));
-			link_node->link_of[link_node->link_oflen] = cn;
-			link_node->link_oflen++;
+			add_ptr_to_arr((void***)&link_node->link_of, &link_node->link_oflen, cn);
 		}
 	}
 
@@ -585,12 +591,7 @@ void ClimbGraph_add_subformation(ClimbGraph *graph, const Formation *formation, 
 
 	sfn->super_formation = fn;
 
-	if (NULL == (fn->sub_formations = realloc(fn->sub_formations, sizeof(FormationNode*) * (fn->sub_formations_len + 1)))) {
-		return;
-	}
-
-	fn->sub_formations[fn->sub_formations_len] = sfn;
-	fn->sub_formations_len++;
+	add_ptr_to_arr((void***)&fn->sub_formations, &fn->sub_formations_len, sfn);
 }
 
 void ClimbGraph_remove_subformation(ClimbGraph *graph, const Formation *formation, const Formation *subformation)
