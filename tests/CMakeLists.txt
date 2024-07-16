@@ -2,6 +2,7 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(CHECK REQUIRED check)
 
 set(TestSources
+    allocator.c
     grade_font.c
     grade_hueco.c
     climb.c
