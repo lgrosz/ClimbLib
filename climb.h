@@ -3,7 +3,7 @@
 
 #include <stddef.h>
 
-typedef struct Climb_ Climb;
+typedef struct Climb Climb;
 
 Climb *Climb_new();
 void Climb_free(Climb *);

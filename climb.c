@@ -6,7 +6,7 @@
 #include "str_util.h"
 #include "strarr_util.h"
 
-struct Climb_
+struct Climb
 {
 	const char *name;
 	const char *description;
