@@ -93,7 +93,7 @@ const char *Climb_brief(const Climb *climb)
 
 void Climb_add_alias(Climb *climb, const char *alias)
 {
-	if (climb == NULL) {
+	if (climb == NULL || alias == NULL) {
 		errno = EINVAL;
 		return;
 	}
@@ -109,7 +109,7 @@ void Climb_add_alias(Climb *climb, const char *alias)
 
 void Climb_remove_alias(Climb *climb, const char *alias)
 {
-	if (climb == NULL) {
+	if (climb == NULL || alias == NULL) {
 		errno = EINVAL;
 		return;
 	}
@@ -119,7 +119,7 @@ void Climb_remove_alias(Climb *climb, const char *alias)
 
 const char **Climb_aliases(const Climb *climb, size_t *len)
 {
-	if (len == NULL) {
+	if (climb ==NULL || len == NULL) {
 		errno = EINVAL;
 		return NULL;
 	}
