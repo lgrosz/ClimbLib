@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "verify.h"
+#include <check.h>
 
 #include <climb.h>
 
@@ -12,14 +13,14 @@ static void test_free_null()
 	VERIFY(errno == EINVAL);
 }
 
-static void test_new()
+START_TEST(test_new)
 {
-	Climb *c = Climb_new();
-	VERIFY(errno == 0);
-	VERIFY(c != NULL);
+	Climb *c;
+
+	c = Climb_new();
+	ck_assert_ptr_nonnull(c);
 
 	Climb_free(c);
-	VERIFY(errno == 0);
 }
 
 static void test_name()
@@ -137,14 +138,38 @@ static void test_aliases()
 	VERIFY(errno == 0);
 }
 
+static Suite *suite()
+{
+	Suite *s;
+	TCase *tc_core;
+
+	s = suite_create("Climbs");
+
+	tc_core = tcase_create("Core");
+	tcase_add_test(tc_core, test_new);
+
+	suite_add_tcase(s, tc_core);
+
+	return s;
+}
+
 int climb()
 {
 	test_free_null();
-	test_new();
 	test_name();
 	test_description();
 	test_brief();
 	test_aliases();
 
-	exit(EXIT_SUCCESS);
+	int number_failed;
+	Suite *s;
+	SRunner *sr;
+
+	s = suite();
+	sr = srunner_create(s);
+	srunner_run_all(sr, CK_NORMAL);
+	number_failed = srunner_ntests_failed(sr);
+	srunner_free(sr);
+
+	exit((number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE);
 }
