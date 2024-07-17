@@ -2,3 +2,4 @@
 
 void add_str_to_strarr(const char *, const char ***, size_t *);
 void remove_str_from_strarr(const char *, const char ***, size_t *);
+int strarr_contains(const char **, size_t, const char *);
