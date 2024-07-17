@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "more_allocators.h"
 #include "verify.h"
 #include <check.h>
 
+#include <allocator.h>
 #include <climb.h>
 
 static void test_free_null()
@@ -21,6 +23,12 @@ START_TEST(test_new)
 	ck_assert_ptr_nonnull(c);
 
 	Climb_free(c);
+}
+
+START_TEST(test_new_bad_malloc)
+{
+	climblib_set_alloc(bad_malloc, NULL, NULL);
+	ck_assert_ptr_null(Climb_new());
 }
 
 static void test_name()
@@ -138,6 +146,11 @@ static void test_aliases()
 	VERIFY(errno == 0);
 }
 
+static void default_allocators()
+{
+	climblib_set_alloc(NULL, NULL, NULL);
+}
+
 static Suite *suite()
 {
 	Suite *s;
@@ -147,6 +160,8 @@ static Suite *suite()
 
 	tc_core = tcase_create("Core");
 	tcase_add_test(tc_core, test_new);
+	tcase_add_test(tc_core, test_new_bad_malloc);
+	tcase_add_checked_fixture(tc_core, NULL, default_allocators);
 
 	suite_add_tcase(s, tc_core);
 
