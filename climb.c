@@ -15,17 +15,6 @@ struct Climb_
 	size_t aliaseslen;
 };
 
-static int contains(const char **strs, size_t len, const char *str)
-{
-	for (int i = 0; i < len; i++) {
-		if (strcmp(strs[i], str) == 0) {
-			return 1;
-		}
-	}
-
-	return 0;
-}
-
 Climb *Climb_new()
 {
 	Climb *ret;
@@ -111,7 +100,7 @@ void Climb_add_alias(Climb *climb, const char *alias)
 
 	errno = 0;
 
-	if (contains(climb->aliases, climb->aliaseslen, alias)) {
+	if (strarr_contains(climb->aliases, climb->aliaseslen, alias)) {
 		return;
 	}
 

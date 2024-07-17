@@ -56,3 +56,14 @@ void remove_str_from_strarr(const char *str, const char ***arr, size_t *arrlen)
 	*arrlen = *arrlen - 1;
 	*arr = newarr;
 }
+
+int strarr_contains(const char **strs, size_t len, const char *str)
+{
+	for (int i = 0; i < len; i++) {
+		if (strcmp(strs[i], str) == 0) {
+			return 1;
+		}
+	}
+
+	return 0;
+}

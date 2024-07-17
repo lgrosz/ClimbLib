@@ -14,17 +14,6 @@ struct Formation_
 	size_t aliaseslen;
 };
 
-static int contains(const char **strs, size_t len, const char *str)
-{
-	for (int i = 0; i < len; i++) {
-		if (strcmp(strs[i], str) == 0) {
-			return 1;
-		}
-	}
-
-	return 0;
-}
-
 Formation *Formation_new()
 {
 	Formation *ret;
@@ -110,7 +99,7 @@ void Formation_add_alias(Formation *formation, const char *alias)
 
 	errno = 0;
 
-	if (contains(formation->aliases, formation->aliaseslen, alias)) {
+	if (strarr_contains(formation->aliases, formation->aliaseslen, alias)) {
 		return;
 	}
 
