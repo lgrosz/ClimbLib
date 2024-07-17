@@ -1,4 +1,5 @@
 #include "allocator.h"
+#include "more_allocators.h"
 #include <errno.h>
 #include <stdlib.h>
 #include <check.h>
@@ -44,11 +45,6 @@ START_TEST(test_free_null)
 	ck_assert_int_eq(errno, EINVAL);
 }
 END_TEST
-
-static void *bad_malloc(size_t size)
-{
-	return NULL;
-}
 
 START_TEST(test_new_bad_malloc)
 {
