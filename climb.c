@@ -1,4 +1,5 @@
 #include "climb.h"
+#include "allocator.h"
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
@@ -29,7 +30,7 @@ Climb *Climb_new()
 {
 	Climb *ret;
 
-	if (NULL == (ret = malloc(sizeof(Climb)))) {
+	if (NULL == (ret = climblib_malloc(sizeof(Climb)))) {
 		return NULL;
 	} else {
 		ret->name = NULL;
@@ -56,19 +57,19 @@ void Climb_free(Climb *climb)
 	}
 
 	errno = 0;
-	if (climb->name)	free((void*)climb->name);
-	if (climb->description)	free((void*)climb->description);
-	if (climb->brief)	free((void*)climb->brief);
+	if (climb->name)	climblib_free((void*)climb->name);
+	if (climb->description)	climblib_free((void*)climb->description);
+	if (climb->brief)	climblib_free((void*)climb->brief);
 
 	if (climb->aliases) {
 		for (int i = 0; i < climb->aliaseslen; i++) {
-			free((void*)climb->aliases[i]);
+			climblib_free((void*)climb->aliases[i]);
 		}
 
-		free(climb->aliases);
+		climblib_free(climb->aliases);
 	}
 
-	free(climb);
+	climblib_free(climb);
 }
 
 void Climb_set_name(Climb *climb, const char *name)
