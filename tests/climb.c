@@ -105,46 +105,73 @@ static int string_array_contains(const char **arr, unsigned int len, const char 
 	return 0;
 }
 
-static void test_aliases()
+START_TEST(test_add_alias)
 {
-	Climb *c = Climb_new();
-	VERIFY(errno == 0);
-	VERIFY(c != NULL);
+	Climb *c;
+	const char **aliases;
+
+	c = Climb_new();
 
 	char alias1[] = "An alias";
 	char alias2[] = "Another alias";
 
 	Climb_add_alias(c, alias1);
-	VERIFY(errno == 0);
-
+	Climb_add_alias(c, alias1);
 	Climb_add_alias(c, alias2);
-	VERIFY(errno == 0);
 
 	size_t aliaseslen;
-	const char **aliases = Climb_aliases(c, &aliaseslen);
-	VERIFY(errno == 0);
-	VERIFY(aliaseslen == 2);
-	VERIFY(string_array_contains(aliases, aliaseslen, alias1));
-	VERIFY(string_array_contains(aliases, aliaseslen, alias2));
+	aliases = Climb_aliases(c, &aliaseslen);
+	ck_assert_ptr_nonnull(aliases);
+	ck_assert_int_eq(aliaseslen, 2);
+	ck_assert(string_array_contains(aliases, aliaseslen, alias1));
+	ck_assert(string_array_contains(aliases, aliaseslen, alias2));
 
 	Climb_remove_alias(c, alias1);
-	VERIFY(errno == 0);
 
 	aliases = Climb_aliases(c, &aliaseslen);
-	VERIFY(errno == 0);
-	VERIFY(aliaseslen == 1);
-	VERIFY(!string_array_contains(aliases, aliaseslen, alias1));
-	VERIFY(string_array_contains(aliases, aliaseslen, alias2));
-
-	Climb_add_alias(c, alias2);
-	VERIFY(errno == 0);
-	Climb_aliases(c, &aliaseslen);
-	VERIFY(errno == 0);
-	VERIFY(aliaseslen == 1);
+	ck_assert_ptr_nonnull(aliases);
+	ck_assert_int_eq(aliaseslen, 1);
+	ck_assert(!string_array_contains(aliases, aliaseslen, alias1));
+	ck_assert(string_array_contains(aliases, aliaseslen, alias2));
 
 	Climb_free(c);
-	VERIFY(errno == 0);
 }
+END_TEST
+
+START_TEST(test_add_alias_einvals)
+{
+	Climb *c;
+	size_t size;
+
+	errno = 0;
+	Climb_add_alias(NULL, "An alias");
+	ck_assert_int_eq(errno, EINVAL);
+
+	errno = 0;
+	Climb_remove_alias(NULL, "An alias");
+	ck_assert_int_eq(errno, EINVAL);
+
+	errno = 0;
+	Climb_aliases(NULL, &size);
+	ck_assert_int_eq(errno, EINVAL);
+
+	c = Climb_new();
+
+	errno = 0;
+	Climb_add_alias(c, NULL);
+	ck_assert_int_eq(errno, EINVAL);
+
+	errno = 0;
+	Climb_remove_alias(c, NULL);
+	ck_assert_int_eq(errno, EINVAL);
+
+	errno = 0;
+	Climb_aliases(c, NULL);
+	ck_assert_int_eq(errno, EINVAL);
+
+	Climb_free(c);
+}
+END_TEST
 
 static void default_allocators()
 {
@@ -161,6 +188,8 @@ static Suite *suite()
 	tc_core = tcase_create("Core");
 	tcase_add_test(tc_core, test_new);
 	tcase_add_test(tc_core, test_new_bad_malloc);
+	tcase_add_test(tc_core, test_add_alias);
+	tcase_add_test(tc_core, test_add_alias_einvals);
 	tcase_add_checked_fixture(tc_core, NULL, default_allocators);
 
 	suite_add_tcase(s, tc_core);
@@ -174,7 +203,6 @@ int climb()
 	test_name();
 	test_description();
 	test_brief();
-	test_aliases();
 
 	int number_failed;
 	Suite *s;
