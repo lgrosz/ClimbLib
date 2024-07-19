@@ -102,30 +102,35 @@ int GradeHueco_str(const GradeHueco grade, char *str, size_t strlen)
 
 int GradeHueco_fromstr(const char *str, GradeHueco *grade)
 {
-	size_t length = strlen(str);
-
-	if (length == 0 || str[0] != 'V' || grade == NULL) {
+	if (str == NULL || grade == NULL) {
 		errno = EINVAL;
 		return 1;
 	}
 
-	char *potential_mod;
-	unsigned int value = strtoul(str + 1, &potential_mod, 10);
+	int ret;
+	char mod_char;
+	int nfilled = sscanf(str, "V%d%c", &grade->grade, &mod_char);
 
-	GradeHuecoModifier modifier;
-
-	if (strcmp(potential_mod, "") == 0) {
-		modifier = GRADE_HUECO_MODIFIER_NONE;
-	} else if (strcmp(potential_mod, "-") == 0) {
-		modifier = GRADE_HUECO_MODIFIER_MINUS;
-	} else if (strcmp(potential_mod, "+") == 0) {
-		modifier = GRADE_HUECO_MODIFIER_PLUS;
+	if (nfilled < 1) {
+		ret = 1;
+	} else if (nfilled == 1) {
+		grade->modifier = GRADE_HUECO_MODIFIER_NONE;
+		ret = 0;
 	} else {
-		errno = EINVAL;
-		return 1;
+		switch (mod_char) {
+			case '-':
+				grade->modifier = GRADE_HUECO_MODIFIER_MINUS;
+				ret = 0;
+				break;
+			case '+':
+				grade->modifier = GRADE_HUECO_MODIFIER_PLUS;
+				ret = 0;
+				break;
+			default:
+				ret = 1;
+				break;
+		}
 	}
 
-	grade->grade = value;
-	grade->modifier = modifier;
-	return 0;
+	return ret;
 }
