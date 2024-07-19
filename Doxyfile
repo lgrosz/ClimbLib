@@ -4,4 +4,4 @@ TYPEDEF_HIDES_STRUCT   = YES
 EXTRACT_PRIVATE        = YES
 HIDE_UNDOC_MEMBERS     = YES
 HIDE_UNDOC_CLASSES     = YES
-SHOW_FILES             = NO
+INPUT                  = grade_hueco.h
