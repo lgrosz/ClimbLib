@@ -124,6 +124,9 @@ START_TEST(test_fromstr)
 {
 	GradeHueco grade;
 
+	ck_assert_int_eq(!GradeHueco_fromstr(NULL, &grade), 0);
+	ck_assert_int_eq(errno, EINVAL);
+
 	ck_assert_int_eq(!GradeHueco_fromstr("V10", NULL), 0);
 	ck_assert_int_eq(errno, EINVAL);
 
