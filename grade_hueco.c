@@ -32,14 +32,14 @@ GradeHueco *GradeHueco_new(unsigned int grade, GradeHuecoModifier modifier)
 	return ret;
 }
 
-unsigned int GradeHueco_value(const GradeHueco *grade)
+unsigned int GradeHueco_value(const GradeHueco grade)
 {
-	return grade->grade;
+	return grade.grade;
 }
 
-GradeHuecoModifier GradeHueco_modifier(const GradeHueco *grade)
+GradeHuecoModifier GradeHueco_modifier(const GradeHueco grade)
 {
-	return grade->modifier;
+	return grade.modifier;
 }
 
 int GradeHueco_set_value(GradeHueco *grade, unsigned int value)
@@ -72,29 +72,22 @@ void GradeHueco_free(GradeHueco *grade)
 	climblib_free(grade);
 }
 
-int GradeHueco_cmp(const GradeHueco *a, const GradeHueco *b)
+int GradeHueco_cmp(const GradeHueco a, const GradeHueco b)
 {
-	if (a == NULL || b == NULL) {
-		errno = EINVAL;
-		return 0;
-	} else {
-		errno = 0;
+	if (a.grade != b.grade) {
+		return a.grade - b.grade;
 	}
 
-	if (a->grade != b->grade) {
-		return a->grade - b->grade;
-	}
-
-	return a->modifier - b->modifier;
+	return a.modifier - b.modifier;
 }
 
-int GradeHueco_str(const GradeHueco *grade, char *str, size_t strlen)
+int GradeHueco_str(const GradeHueco grade, char *str, size_t strlen)
 {
-	if (grade->modifier == GRADE_HUECO_MODIFIER_NONE) {
-		return snprintf(str, strlen, "V%d", grade->grade);
+	if (grade.modifier == GRADE_HUECO_MODIFIER_NONE) {
+		return snprintf(str, strlen, "V%d", grade.grade);
 	} else {
 		char mod_str;
-		switch (grade->modifier) {
+		switch (grade.modifier) {
 			case GRADE_HUECO_MODIFIER_MINUS:
 				mod_str = '-';
 				break;
@@ -103,7 +96,7 @@ int GradeHueco_str(const GradeHueco *grade, char *str, size_t strlen)
 				break;
 		}
 
-		return snprintf(str, strlen, "V%d%c", grade->grade, mod_str);
+		return snprintf(str, strlen, "V%d%c", grade.grade, mod_str);
 	}
 }
 
