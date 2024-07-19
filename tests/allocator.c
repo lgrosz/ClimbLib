@@ -26,6 +26,8 @@ START_TEST(test_set_alloc)
 	int ret;
 	void *ptr;
 
+	climblib_get_alloc(NULL, NULL, NULL);
+
 	climblib_get_alloc(&m, &r, &f);
 	ck_assert_ptr_null(m);
 	ck_assert_ptr_null(r);
