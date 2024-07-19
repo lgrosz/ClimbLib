@@ -5,12 +5,6 @@
 #include <errno.h>
 #include "allocator.h"
 
-struct GradeHueco
-{
-	unsigned int grade;
-	GradeHuecoModifier modifier;
-};
-
 GradeHueco *GradeHueco_new(unsigned int grade, GradeHuecoModifier modifier)
 {
 	GradeHueco *ret;

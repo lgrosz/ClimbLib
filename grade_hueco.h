@@ -3,13 +3,17 @@
 
 #include <stddef.h>
 
-typedef struct GradeHueco GradeHueco;
 typedef enum GradeHuecoModifier {
 	GRADE_HUECO_MODIFIER_MINUS,
 	GRADE_HUECO_MODIFIER_NONE,
 	GRADE_HUECO_MODIFIER_PLUS,
 	GRADE_HUECO_MODIFIER_MAX,
 } GradeHuecoModifier;
+
+typedef struct {
+	unsigned int grade;
+	GradeHuecoModifier modifier;
+} GradeHueco;
 
 GradeHueco *GradeHueco_new(unsigned int, GradeHuecoModifier);
 unsigned int GradeHueco_value(const GradeHueco *);
