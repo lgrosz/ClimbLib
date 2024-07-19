@@ -21,7 +21,6 @@ GradeHuecoModifier GradeHueco_modifier(const GradeHueco *);
 int GradeHueco_set_value(GradeHueco *, unsigned int);
 int GradeHueco_set_modifier(GradeHueco *, GradeHuecoModifier);
 void GradeHueco_free(GradeHueco *);
-GradeHueco *GradeHueco_dup(const GradeHueco *);
 int GradeHueco_cmp(const GradeHueco *, const GradeHueco *);
 int GradeHueco_str(const GradeHueco *, char *, size_t);
 GradeHueco *GradeHueco_fromstr(const char *);

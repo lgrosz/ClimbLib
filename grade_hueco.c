@@ -72,16 +72,6 @@ void GradeHueco_free(GradeHueco *grade)
 	climblib_free(grade);
 }
 
-GradeHueco *GradeHueco_dup(const GradeHueco *grade)
-{
-	if (grade == NULL) {
-		errno = EINVAL;
-		return NULL;
-	}
-
-	return GradeHueco_new(grade->grade, grade->modifier);
-}
-
 int GradeHueco_cmp(const GradeHueco *a, const GradeHueco *b)
 {
 	if (a == NULL || b == NULL) {
