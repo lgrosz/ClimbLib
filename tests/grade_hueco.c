@@ -122,40 +122,25 @@ END_TEST
 
 START_TEST(test_fromstr)
 {
-	GradeHueco *grade, *grade_from_str;
-	char *str;
+	GradeHueco grade;
 
-	grade_from_str = GradeHueco_fromstr("Not a valid grade-string");
-	ck_assert_ptr_null(grade_from_str);
+	ck_assert_int_eq(!GradeHueco_fromstr("V10", NULL), 0);
 	ck_assert_int_eq(errno, EINVAL);
 
-	grade_from_str = GradeHueco_fromstr("V5/");
-	ck_assert_ptr_null(grade_from_str);
+	ck_assert_int_eq(!GradeHueco_fromstr("Not a valid grade-string", &grade), 0);
 	ck_assert_int_eq(errno, EINVAL);
 
-	str = "V0";
-	grade = GradeHueco_new(0, GRADE_HUECO_MODIFIER_NONE);
-	grade_from_str = GradeHueco_fromstr(str);
-	ck_assert_ptr_nonnull(grade_from_str);
-	ck_assert_int_eq(GradeHueco_cmp(*grade, *grade_from_str), 0);
-	GradeHueco_free(grade);
-	GradeHueco_free(grade_from_str);
+	ck_assert_int_eq(!GradeHueco_fromstr("V5/", &grade), 0);
+	ck_assert_int_eq(errno, EINVAL);
 
-	str = "V7-";
-	grade = GradeHueco_new(7, GRADE_HUECO_MODIFIER_MINUS);
-	grade_from_str = GradeHueco_fromstr(str);
-	ck_assert_ptr_nonnull(grade_from_str);
-	ck_assert_int_eq(GradeHueco_cmp(*grade, *grade_from_str), 0);
-	GradeHueco_free(grade);
-	GradeHueco_free(grade_from_str);
+	ck_assert_int_eq(GradeHueco_fromstr("V0", &grade), 0);
+	ck_assert_int_eq(GradeHueco_cmp(grade, (GradeHueco) { 0, GRADE_HUECO_MODIFIER_NONE }), 0);
 
-	str = "V11+";
-	grade = GradeHueco_new(11, GRADE_HUECO_MODIFIER_PLUS);
-	grade_from_str = GradeHueco_fromstr(str);
-	ck_assert_ptr_nonnull(grade_from_str);
-	ck_assert_int_eq(GradeHueco_cmp(*grade, *grade_from_str), 0);
-	GradeHueco_free(grade);
-	GradeHueco_free(grade_from_str);
+	ck_assert_int_eq(GradeHueco_fromstr("V7-", &grade), 0);
+	ck_assert_int_eq(GradeHueco_cmp(grade, (GradeHueco) { 7, GRADE_HUECO_MODIFIER_MINUS }), 0);
+
+	ck_assert_int_eq(GradeHueco_fromstr("V11+", &grade), 0);
+	ck_assert_int_eq(GradeHueco_cmp(grade, (GradeHueco) { 11, GRADE_HUECO_MODIFIER_PLUS }), 0);
 }
 END_TEST
 
