@@ -44,11 +44,6 @@ GradeHuecoModifier GradeHueco_modifier(const GradeHueco *grade)
 
 int GradeHueco_set_value(GradeHueco *grade, unsigned int value)
 {
-	if (value > 99) {
-		/* Three digit numbers could overflow the string */
-		return 1;
-	}
-
 	grade->grade = value;
 
 	return 0;

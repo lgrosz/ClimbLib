@@ -24,10 +24,7 @@ END_TEST
 
 START_TEST(test_new_invalid)
 {
-	unsigned int grade_value = 100;
-	GradeHueco *grade = GradeHueco_new(100, GRADE_HUECO_MODIFIER_NONE);
-	ck_assert_ptr_null(grade);
-	ck_assert_int_eq(errno, EINVAL);
+	GradeHueco *grade;
 
 	grade = GradeHueco_new(0, -1);
 	ck_assert_ptr_null(grade);
