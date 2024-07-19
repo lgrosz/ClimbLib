@@ -9,26 +9,7 @@ struct GradeHueco
 {
 	unsigned int grade;
 	GradeHuecoModifier modifier;
-	char str[5];
 };
-
-static void update_str(GradeHueco *grade)
-{
-	char mod_str;
-	switch (grade->modifier) {
-		case GRADE_HUECO_MODIFIER_MINUS:
-			mod_str = '-';
-			break;
-		case GRADE_HUECO_MODIFIER_PLUS:
-			mod_str = '+';
-			break;
-		default:
-			mod_str = '\0';
-			break;
-	}
-
-	snprintf(grade->str, sizeof(grade->str), "V%d%c", grade->grade, mod_str);
-}
 
 GradeHueco *GradeHueco_new(unsigned int grade, GradeHuecoModifier modifier)
 {
@@ -75,7 +56,6 @@ int GradeHueco_set_value(GradeHueco *grade, unsigned int value)
 	}
 
 	grade->grade = value;
-	update_str(grade);
 
 	return 0;
 }
@@ -88,7 +68,6 @@ int GradeHueco_set_modifier(GradeHueco *grade, GradeHuecoModifier modifier)
 	}
 
 	grade->modifier = modifier;
-	update_str(grade);
 
 	return 0;
 }
@@ -130,9 +109,23 @@ int GradeHueco_cmp(const GradeHueco *a, const GradeHueco *b)
 	return a->modifier - b->modifier;
 }
 
-const char *GradeHueco_str(const GradeHueco *grade)
+int GradeHueco_str(const GradeHueco *grade, char *str, size_t strlen)
 {
-	return grade->str;
+	if (grade->modifier == GRADE_HUECO_MODIFIER_NONE) {
+		return snprintf(str, strlen, "V%d", grade->grade);
+	} else {
+		char mod_str;
+		switch (grade->modifier) {
+			case GRADE_HUECO_MODIFIER_MINUS:
+				mod_str = '-';
+				break;
+			default:
+				mod_str = '+';
+				break;
+		}
+
+		return snprintf(str, strlen, "V%d%c", grade->grade, mod_str);
+	}
 }
 
 GradeHueco *GradeHueco_fromstr(const char *str)
