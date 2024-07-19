@@ -23,6 +23,6 @@ int GradeHueco_set_modifier(GradeHueco *, GradeHuecoModifier);
 void GradeHueco_free(GradeHueco *);
 int GradeHueco_cmp(const GradeHueco, const GradeHueco);
 int GradeHueco_str(const GradeHueco, char *, size_t);
-GradeHueco *GradeHueco_fromstr(const char *);
+int GradeHueco_fromstr(const char *, GradeHueco *);
 
 #endif

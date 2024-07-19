@@ -100,17 +100,17 @@ int GradeHueco_str(const GradeHueco grade, char *str, size_t strlen)
 	}
 }
 
-GradeHueco *GradeHueco_fromstr(const char *str)
+int GradeHueco_fromstr(const char *str, GradeHueco *grade)
 {
 	size_t length = strlen(str);
 
-	if (length == 0 || str[0] != 'V') {
+	if (length == 0 || str[0] != 'V' || grade == NULL) {
 		errno = EINVAL;
-		return NULL;
+		return 1;
 	}
 
 	char *potential_mod;
-	unsigned int grade = strtoul(str + 1, &potential_mod, 10);
+	unsigned int value = strtoul(str + 1, &potential_mod, 10);
 
 	GradeHuecoModifier modifier;
 
@@ -122,9 +122,10 @@ GradeHueco *GradeHueco_fromstr(const char *str)
 		modifier = GRADE_HUECO_MODIFIER_PLUS;
 	} else {
 		errno = EINVAL;
-		return NULL;
+		return 1;
 	}
 
-	errno = 0;
-	return GradeHueco_new(grade, modifier);
+	grade->grade = value;
+	grade->modifier = modifier;
+	return 0;
 }
