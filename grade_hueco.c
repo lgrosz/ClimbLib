@@ -34,7 +34,7 @@ GradeHueco *GradeHueco_new(unsigned int grade, GradeHuecoModifier modifier)
 {
 	GradeHueco *ret;
 
-	if (NULL == (ret = climblib_malloc(sizeof(struct GradeHueco)))) {
+	if (NULL == (ret = climblib_malloc(sizeof(GradeHueco)))) {
 		return NULL;
 	} else {
 		ret->grade = 0;
