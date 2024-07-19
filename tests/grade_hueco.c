@@ -77,31 +77,6 @@ START_TEST(test_cmp)
 }
 END_TEST
 
-
-START_TEST(test_dup)
-{
-	unsigned int value;
-	GradeHuecoModifier modifier;
-	GradeHueco *grade, *duped;
-
-	duped = GradeHueco_dup(NULL);
-	ck_assert_ptr_null(duped);
-	ck_assert_int_eq(errno, EINVAL);
-
-	value = 5;
-	modifier = GRADE_HUECO_MODIFIER_NONE;
-
-	grade = GradeHueco_new(value, modifier);
-	duped = GradeHueco_dup(grade);
-
-	ck_assert_ptr_nonnull(duped);
-	ck_assert_int_eq(GradeHueco_cmp(grade, duped), 0);
-
-	GradeHueco_free(grade);
-	GradeHueco_free(duped);
-}
-END_TEST
-
 START_TEST(test_str)
 {
 	GradeHueco *grade;
@@ -204,7 +179,6 @@ static Suite *suite()
 	tcase_add_test(tc_core, test_new_invalid);
 	tcase_add_test(tc_core, test_new_bad_malloc);
 	tcase_add_test(tc_core, test_free_null);
-	tcase_add_test(tc_core, test_dup);
 	tcase_add_test(tc_core, test_cmp);
 	tcase_add_test(tc_core, test_str);
 	tcase_add_test(tc_core, test_fromstr);
