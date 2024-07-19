@@ -1,6 +1,8 @@
 #ifndef _CLIMBLIB_GRADE_HUECO_H_
 #define _CLIMBLIB_GRADE_HUECO_H_
 
+#include <stddef.h>
+
 typedef struct GradeHueco GradeHueco;
 typedef enum GradeHuecoModifier {
 	GRADE_HUECO_MODIFIER_MINUS,
@@ -17,7 +19,7 @@ int GradeHueco_set_modifier(GradeHueco *, GradeHuecoModifier);
 void GradeHueco_free(GradeHueco *);
 GradeHueco *GradeHueco_dup(const GradeHueco *);
 int GradeHueco_cmp(const GradeHueco *, const GradeHueco *);
-const char *GradeHueco_str(const GradeHueco *);
+int GradeHueco_str(const GradeHueco *, char *, size_t);
 GradeHueco *GradeHueco_fromstr(const char *);
 
 #endif

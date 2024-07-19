@@ -109,28 +109,44 @@ START_TEST(test_str)
 {
 	GradeHueco *grade;
 
+	// 4 characters is the largest string
+	char str[5];
+	size_t strlen;
+
 	grade = GradeHueco_new(0, GRADE_HUECO_MODIFIER_NONE);
-	ck_assert_str_eq(GradeHueco_str(grade), "V0");
+	ck_assert_int_eq((strlen = GradeHueco_str(grade, NULL, 0)), 2);
+	ck_assert_int_eq(GradeHueco_str(grade, str, strlen + 1), strlen);
+	ck_assert_str_eq(str, "V0");
 	GradeHueco_free(grade);
 
 	grade = GradeHueco_new(1, GRADE_HUECO_MODIFIER_MINUS);
-	ck_assert_str_eq(GradeHueco_str(grade), "V1-");
+	ck_assert_int_eq((strlen = GradeHueco_str(grade, NULL, 0)), 3);
+	ck_assert_int_eq(GradeHueco_str(grade, str, strlen + 1), strlen);
+	ck_assert_str_eq(str, "V1-");
 	GradeHueco_free(grade);
 
 	grade = GradeHueco_new(2, GRADE_HUECO_MODIFIER_PLUS);
-	ck_assert_str_eq(GradeHueco_str(grade), "V2+");
+	ck_assert_int_eq((strlen = GradeHueco_str(grade, NULL, 0)), 3);
+	ck_assert_int_eq(GradeHueco_str(grade, str, strlen + 1), strlen);
+	ck_assert_str_eq(str, "V2+");
 	GradeHueco_free(grade);
 
 	grade = GradeHueco_new(10, GRADE_HUECO_MODIFIER_NONE);
-	ck_assert_str_eq(GradeHueco_str(grade), "V10");
+	ck_assert_int_eq((strlen = GradeHueco_str(grade, NULL, 0)), 3);
+	ck_assert_int_eq(GradeHueco_str(grade, str, strlen + 1), strlen);
+	ck_assert_str_eq(str, "V10");
 	GradeHueco_free(grade);
 
 	grade = GradeHueco_new(11, GRADE_HUECO_MODIFIER_MINUS);
-	ck_assert_str_eq(GradeHueco_str(grade), "V11-");
+	ck_assert_int_eq((strlen = GradeHueco_str(grade, NULL, 0)), 4);
+	ck_assert_int_eq(GradeHueco_str(grade, str, strlen + 1), strlen);
+	ck_assert_str_eq(str, "V11-");
 	GradeHueco_free(grade);
 
 	grade = GradeHueco_new(12, GRADE_HUECO_MODIFIER_PLUS);
-	ck_assert_str_eq(GradeHueco_str(grade), "V12+");
+	ck_assert_int_eq((strlen = GradeHueco_str(grade, NULL, 0)), 4);
+	ck_assert_int_eq(GradeHueco_str(grade, str, strlen + 1), strlen);
+	ck_assert_str_eq(str, "V12+");
 	GradeHueco_free(grade);
 }
 END_TEST
