@@ -18,7 +18,6 @@ add_library(ClimbLib
     grade_font.c
     climb.c
     formation.c
-    graph.c
     str_util.c
     strarr_util.c
 )
