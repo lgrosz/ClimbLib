@@ -3,7 +3,6 @@
 
 #include <stddef.h>
 
-typedef struct GradeFontainebleau_ GradeFontainebleau;
 typedef enum GradeFontainebleauDivision {
 	GRADE_FONT_DIVISION_A,
 	GRADE_FONT_DIVISION_B,
@@ -13,6 +12,12 @@ typedef enum GradeFontainebleauModifier {
 	GRADE_FONT_MODIFIER_NONE,
 	GRADE_FONT_MODIFIER_PLUS,
 } GradeFontainebleauModifier;
+
+typedef struct {
+	unsigned int grade;
+	GradeFontainebleauDivision division;
+	GradeFontainebleauModifier modifier;
+} GradeFontainebleau;
 
 GradeFontainebleau *GradeFontainebleau_new(unsigned int, GradeFontainebleauDivision, GradeFontainebleauModifier);
 void GradeFontainebleau_free(GradeFontainebleau *);
