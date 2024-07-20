@@ -103,26 +103,31 @@ int GradeFontainebleau_str(const GradeFontainebleau grade, char *str, size_t str
 	}
 }
 
-GradeFontainebleau *GradeFontainebleau_fromstr(const char *str)
+int GradeFontainebleau_fromstr(const char *str, GradeFontainebleau *grade)
 {
+	if (str == NULL || grade == NULL) {
+		errno = EINVAL;
+		return 1;
+	}
+
 	// TODO /^Fb/ is also a valid
 	if (strlen(str) == 0 || str[0] != 'F') {
 		errno = EINVAL;
-		return NULL;
+		return 1;
 	}
 
 	char *the_rest;
-	unsigned int grade = strtoul(str + 1, &the_rest, 10);
+	unsigned int value = strtoul(str + 1, &the_rest, 10);
 
-	if (grade > 5 && strlen(the_rest) < 1) {
+	if (value > 5 && strlen(the_rest) < 1) {
 		errno = EINVAL;
-		return NULL;
+		return 1;
 	}
 
 	GradeFontainebleauDivision division = GRADE_FONT_DIVISION_A;
 
 	// Divisions are only valid for grades > F5
-	if (grade > 5) {
+	if (value > 5) {
 		if (*the_rest == 'A') {
 			division = GRADE_FONT_DIVISION_A;
 		} else if (*the_rest == 'B') {
@@ -131,7 +136,7 @@ GradeFontainebleau *GradeFontainebleau_fromstr(const char *str)
 			division = GRADE_FONT_DIVISION_C;
 		} else {
 			errno = EINVAL;
-			return NULL;
+			return 1;
 		}
 
 		the_rest = the_rest + 1;
@@ -145,9 +150,11 @@ GradeFontainebleau *GradeFontainebleau_fromstr(const char *str)
 		modifier = GRADE_FONT_MODIFIER_PLUS;
 	} else {
 		errno = EINVAL;
-		return NULL;
+		return 1;
 	}
 
-	errno = 0;
-	return GradeFontainebleau_new(grade, division, modifier);
+	grade->grade = value;
+	grade->division = division;
+	grade->modifier = modifier;
+	return 0;
 }

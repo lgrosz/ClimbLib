@@ -24,6 +24,6 @@ void GradeFontainebleau_free(GradeFontainebleau *);
 GradeFontainebleau *GradeFontainebleau_dup(const GradeFontainebleau *);
 int GradeFontainebleau_cmp(const GradeFontainebleau, const GradeFontainebleau);
 int GradeFontainebleau_str(const GradeFontainebleau, char *, size_t);
-GradeFontainebleau *GradeFontainebleau_fromstr(const char *);
+int GradeFontainebleau_fromstr(const char *, GradeFontainebleau *);
 
 #endif
