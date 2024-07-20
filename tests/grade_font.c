@@ -3,65 +3,60 @@
 #include <string.h>
 
 #include <check.h>
-#include "verify.h"
 
 #include <grade_font.h>
 
-static void test_cmp_grade()
+START_TEST(test_cmp)
 {
-	GradeFontainebleau g = (GradeFontainebleau) { 7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE };
-	GradeFontainebleau h = (GradeFontainebleau) { 8, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE };
+	ck_assert_int_lt(
+		GradeFontainebleau_cmp(
+			(GradeFontainebleau){4, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE},
+			(GradeFontainebleau){5, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE}),
+		0);
 
-	VERIFY(GradeFontainebleau_cmp(g, h) < 0);
+	ck_assert_int_lt(
+		GradeFontainebleau_cmp(
+			(GradeFontainebleau){5, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE},
+			(GradeFontainebleau){5, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS}),
+		0);
+
+	ck_assert_int_lt(
+		GradeFontainebleau_cmp(
+			(GradeFontainebleau){6, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE},
+			(GradeFontainebleau){6, GRADE_FONT_DIVISION_B, GRADE_FONT_MODIFIER_NONE}),
+		0);
+
+	ck_assert_int_gt(
+		GradeFontainebleau_cmp(
+			(GradeFontainebleau){6, GRADE_FONT_DIVISION_C, GRADE_FONT_MODIFIER_NONE},
+			(GradeFontainebleau){6, GRADE_FONT_DIVISION_B, GRADE_FONT_MODIFIER_NONE}),
+		0);
+
+	ck_assert_int_lt(
+		GradeFontainebleau_cmp(
+			(GradeFontainebleau){6, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE},
+			(GradeFontainebleau){6, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS}),
+		0);
+
+	ck_assert_int_lt(
+		GradeFontainebleau_cmp(
+			(GradeFontainebleau){7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE},
+			(GradeFontainebleau){7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS}),
+		0);
+
+	ck_assert_int_gt(
+		GradeFontainebleau_cmp(
+			(GradeFontainebleau){7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS},
+			(GradeFontainebleau){7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE}),
+		0);
+
+	ck_assert_int_eq(
+		GradeFontainebleau_cmp(
+			(GradeFontainebleau){7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE},
+			(GradeFontainebleau){7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE}),
+		0);
 }
-
-static void test_cmp_division_eq()
-{
-	GradeFontainebleau g = (GradeFontainebleau) { 7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE };
-	GradeFontainebleau h = (GradeFontainebleau) { 7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE };
-
-	VERIFY(GradeFontainebleau_cmp(g, h) == 0);
-}
-
-static void test_cmp_division_lt()
-{
-	GradeFontainebleau g = (GradeFontainebleau) { 7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE };
-	GradeFontainebleau h = (GradeFontainebleau) { 7, GRADE_FONT_DIVISION_C, GRADE_FONT_MODIFIER_NONE };
-
-	VERIFY(GradeFontainebleau_cmp(g, h) < 0);
-}
-
-static void test_cmp_mod_eq()
-{
-	GradeFontainebleau g = (GradeFontainebleau) { 7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS };
-	GradeFontainebleau h = (GradeFontainebleau) { 7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS };
-
-	VERIFY(GradeFontainebleau_cmp(g, h) == 0);
-}
-
-static void test_cmp_mod_lt()
-{
-	GradeFontainebleau g = (GradeFontainebleau) { 7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE };
-	GradeFontainebleau h = (GradeFontainebleau) { 7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS };
-
-	VERIFY(GradeFontainebleau_cmp(g, h) < 0);
-}
-
-static void test_cmp_grade_presc()
-{
-	GradeFontainebleau g = (GradeFontainebleau) { 7, GRADE_FONT_DIVISION_B, GRADE_FONT_MODIFIER_PLUS };
-	GradeFontainebleau h = (GradeFontainebleau) { 8, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE };
-
-	VERIFY(GradeFontainebleau_cmp(g, h) < 0);
-}
-
-static void test_cmp_division_presc()
-{
-	GradeFontainebleau g = (GradeFontainebleau) { 7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS };
-	GradeFontainebleau h = (GradeFontainebleau) { 7, GRADE_FONT_DIVISION_B, GRADE_FONT_MODIFIER_NONE };
-
-	VERIFY(GradeFontainebleau_cmp(g, h) < 0);
-}
+END_TEST
 
 START_TEST(test_str)
 {
@@ -154,6 +149,7 @@ static Suite *suite()
 	s = suite_create("Fontainebleau Grades");
 
 	tc_core = tcase_create("Core");
+	tcase_add_test(tc_core, test_cmp);
 	tcase_add_test(tc_core, test_str);
 	tcase_add_test(tc_core, test_fromstr);
 
@@ -164,14 +160,6 @@ static Suite *suite()
 
 void grade_font()
 {
-	test_cmp_grade();
-	test_cmp_division_eq();
-	test_cmp_division_lt();
-	test_cmp_mod_eq();
-	test_cmp_mod_lt();
-	test_cmp_grade_presc();
-	test_cmp_division_presc();
-
 	int number_failed;
 	Suite *s;
 	SRunner *sr;
