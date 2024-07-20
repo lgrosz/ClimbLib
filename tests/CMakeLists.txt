@@ -7,7 +7,6 @@ set(TestSources
     grade_hueco.c
     climb.c
     formation.c
-    graph.c
 )
 
 add_library(TestsHelpers
