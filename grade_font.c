@@ -1,5 +1,4 @@
 #include "grade_font.h"
-#include "int_util.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -8,25 +7,19 @@
 int GradeFontainebleau_cmp(const GradeFontainebleau a, const GradeFontainebleau b)
 {
 	if (a.grade != b.grade) {
-		return clamp(a.grade - b.grade, -1, 1);
+		return a.grade - b.grade;
 	}
 
-	// Divisions only matter in F6 or higher
-	if (a.grade > 5) {
-		if (a.division < b.division) {
-			return -1;
-		} else if (a.division > b.division){
-			return 1;
-		}
+	// Grades less than F6A do not have divisions
+	if (a.grade < 6) {
+		return a.modifier - b.modifier;
 	}
 
-	if (a.modifier == b.modifier) {
-		return 0;
-	} else if (a.modifier < b.modifier) {
-		return -1;
-	} else {
-		return 1;
+	if (a.division != b.division) {
+		return a.division - b.division;
 	}
+
+	return a.modifier - b.modifier;
 }
 
 int GradeFontainebleau_str(const GradeFontainebleau grade, char *str, size_t strlen)

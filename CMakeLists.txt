@@ -20,7 +20,6 @@ add_library(ClimbLib
     graph.c
     str_util.c
     strarr_util.c
-    int_util.c
 )
 
 if (BUILD_COVERAGE)
