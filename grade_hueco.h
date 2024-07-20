@@ -13,7 +13,7 @@
 /**
  * @brief Modifiers that granulate difficulty within a grade
  */
-typedef enum GradeHuecoModifier {
+typedef enum {
 	/**
 	 * @brief The "-" modifier
 	 */

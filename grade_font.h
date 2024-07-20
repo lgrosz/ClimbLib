@@ -3,12 +3,12 @@
 
 #include <stddef.h>
 
-typedef enum GradeFontainebleauDivision {
+typedef enum {
 	GRADE_FONT_DIVISION_A,
 	GRADE_FONT_DIVISION_B,
 	GRADE_FONT_DIVISION_C,
 } GradeFontainebleauDivision;
-typedef enum GradeFontainebleauModifier {
+typedef enum {
 	GRADE_FONT_MODIFIER_NONE,
 	GRADE_FONT_MODIFIER_PLUS,
 } GradeFontainebleauModifier;
