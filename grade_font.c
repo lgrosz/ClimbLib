@@ -49,49 +49,42 @@ GradeFontainebleau *GradeFontainebleau_dup(const GradeFontainebleau *grade)
 	return GradeFontainebleau_new(grade->grade, grade->division, grade->modifier);
 }
 
-int GradeFontainebleau_cmp(const GradeFontainebleau *a, const GradeFontainebleau *b)
+int GradeFontainebleau_cmp(const GradeFontainebleau a, const GradeFontainebleau b)
 {
-	if (a == NULL || b == NULL) {
-		errno = EINVAL;
-		return 0;
-	} else {
-		errno = 0;
-	}
-
-	if (a->grade != b->grade) {
-		return clamp(a->grade - b->grade, -1, 1);
+	if (a.grade != b.grade) {
+		return clamp(a.grade - b.grade, -1, 1);
 	}
 
 	// Divisions only matter in F6 or higher
-	if (a->grade > 5) {
-		if (a->division < b->division) {
+	if (a.grade > 5) {
+		if (a.division < b.division) {
 			return -1;
-		} else if (a->division > b->division){
+		} else if (a.division > b.division){
 			return 1;
 		}
 	}
 
-	if (a->modifier == b->modifier) {
+	if (a.modifier == b.modifier) {
 		return 0;
-	} else if (a->modifier < b->modifier) {
+	} else if (a.modifier < b.modifier) {
 		return -1;
 	} else {
 		return 1;
 	}
 }
 
-int GradeFontainebleau_str(const GradeFontainebleau *grade, char *str, size_t strlen)
+int GradeFontainebleau_str(const GradeFontainebleau grade, char *str, size_t strlen)
 {
-	if (grade->grade < 6) {
-		if (grade->modifier == GRADE_FONT_MODIFIER_NONE) {
-			return snprintf(str, strlen, "F%d", grade->grade);
+	if (grade.grade < 6) {
+		if (grade.modifier == GRADE_FONT_MODIFIER_NONE) {
+			return snprintf(str, strlen, "F%d", grade.grade);
 		} else {
-			return snprintf(str, strlen, "F%d+", grade->grade);
+			return snprintf(str, strlen, "F%d+", grade.grade);
 		}
 	}
 
 	char div_char;
-	switch (grade->division) {
+	switch (grade.division) {
 		case GRADE_FONT_DIVISION_A:
 			div_char = 'A';
 			break;
@@ -103,10 +96,10 @@ int GradeFontainebleau_str(const GradeFontainebleau *grade, char *str, size_t st
 			break;
         }
 
-        if (grade->modifier == GRADE_FONT_MODIFIER_NONE) {
-		return snprintf(str, strlen, "F%d%c", grade->grade, div_char);
+        if (grade.modifier == GRADE_FONT_MODIFIER_NONE) {
+		return snprintf(str, strlen, "F%d%c", grade.grade, div_char);
 	} else {
-		return snprintf(str, strlen, "F%d%c+", grade->grade, div_char);
+		return snprintf(str, strlen, "F%d%c+", grade.grade, div_char);
 	}
 }
 
