@@ -1,6 +1,8 @@
 #ifndef _CLIMBLIB_GRADE_FONT_H_
 #define _CLIMBLIB_GRADE_FONT_H_
 
+#include <stddef.h>
+
 typedef struct GradeFontainebleau_ GradeFontainebleau;
 typedef enum GradeFontainebleauDivision {
 	GRADE_FONT_DIVISION_A,
@@ -16,7 +18,7 @@ GradeFontainebleau *GradeFontainebleau_new(unsigned int, GradeFontainebleauDivis
 void GradeFontainebleau_free(GradeFontainebleau *);
 GradeFontainebleau *GradeFontainebleau_dup(const GradeFontainebleau *);
 int GradeFontainebleau_cmp(const GradeFontainebleau *, const GradeFontainebleau *);
-const char *GradeFontainebleau_str(const GradeFontainebleau *);
+int GradeFontainebleau_str(const GradeFontainebleau *, char *, size_t);
 GradeFontainebleau *GradeFontainebleau_fromstr(const char *);
 
 #endif

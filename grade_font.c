@@ -10,40 +10,7 @@ struct GradeFontainebleau_
 	unsigned int grade;
 	GradeFontainebleauDivision division;
 	GradeFontainebleauModifier modifier;
-	char str[5];
 };
-
-static void update_str(GradeFontainebleau *grade)
-{
-	char div_str;
-	switch (grade->division) {
-		case GRADE_FONT_DIVISION_A:
-			div_str = 'A';
-			break;
-		case GRADE_FONT_DIVISION_B:
-			div_str = 'B';
-			break;
-		case GRADE_FONT_DIVISION_C:
-			div_str = 'C';
-			break;
-	}
-
-	char mod_str;
-	switch (grade->modifier) {
-		case GRADE_FONT_MODIFIER_NONE:
-			mod_str = '\0';
-			break;
-		case GRADE_FONT_MODIFIER_PLUS:
-			mod_str = '+';
-			break;
-	}
-
-	if (grade->grade < 6) {
-		snprintf(grade->str, sizeof(grade->str), "F%d%c", grade->grade, mod_str);
-	} else {
-		snprintf(grade->str, sizeof(grade->str), "F%d%c%c", grade->grade, div_str, mod_str);
-	}
-}
 
 GradeFontainebleau *GradeFontainebleau_new(unsigned int grade, GradeFontainebleauDivision division, GradeFontainebleauModifier modifier)
 {
@@ -62,7 +29,6 @@ GradeFontainebleau *GradeFontainebleau_new(unsigned int grade, GradeFontaineblea
 	ret->grade = grade;
 	ret->division = division;
 	ret->modifier = modifier;
-	update_str(ret);
 
 	errno = 0;
 	return ret;
@@ -121,9 +87,34 @@ int GradeFontainebleau_cmp(const GradeFontainebleau *a, const GradeFontainebleau
 	}
 }
 
-const char *GradeFontainebleau_str(const GradeFontainebleau *grade)
+int GradeFontainebleau_str(const GradeFontainebleau *grade, char *str, size_t strlen)
 {
-	return grade->str;
+	if (grade->grade < 6) {
+		if (grade->modifier == GRADE_FONT_MODIFIER_NONE) {
+			return snprintf(str, strlen, "F%d", grade->grade);
+		} else {
+			return snprintf(str, strlen, "F%d+", grade->grade);
+		}
+	}
+
+	char div_char;
+	switch (grade->division) {
+		case GRADE_FONT_DIVISION_A:
+			div_char = 'A';
+			break;
+		case GRADE_FONT_DIVISION_B:
+			div_char = 'B';
+			break;
+		default:
+			div_char = 'C';
+			break;
+        }
+
+        if (grade->modifier == GRADE_FONT_MODIFIER_NONE) {
+		return snprintf(str, strlen, "F%d%c", grade->grade, div_char);
+	} else {
+		return snprintf(str, strlen, "F%d%c+", grade->grade, div_char);
+	}
 }
 
 GradeFontainebleau *GradeFontainebleau_fromstr(const char *str)
