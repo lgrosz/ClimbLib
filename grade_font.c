@@ -5,50 +5,6 @@
 #include <stdlib.h>
 #include <errno.h>
 
-GradeFontainebleau *GradeFontainebleau_new(unsigned int grade, GradeFontainebleauDivision division, GradeFontainebleauModifier modifier)
-{
-	GradeFontainebleau *ret;
-
-	if (grade > 9) {
-		/* Two digit numbers could overflow the string */
-		errno = EINVAL;
-		return NULL;
-	}
-
-	if (NULL == (ret = malloc(sizeof(GradeFontainebleau)))) {
-		return NULL;
-	}
-
-	ret->grade = grade;
-	ret->division = division;
-	ret->modifier = modifier;
-
-	errno = 0;
-	return ret;
-}
-
-void GradeFontainebleau_free(GradeFontainebleau *grade)
-{
-	if (grade == NULL) {
-		errno = EINVAL;
-		return;
-	}
-
-	errno = 0;
-	free(grade);
-}
-
-GradeFontainebleau *GradeFontainebleau_dup(const GradeFontainebleau *grade)
-{
-	if (grade == NULL) {
-		errno = EINVAL;
-		return NULL;
-	}
-
-	errno = 0;
-	return GradeFontainebleau_new(grade->grade, grade->division, grade->modifier);
-}
-
 int GradeFontainebleau_cmp(const GradeFontainebleau a, const GradeFontainebleau b)
 {
 	if (a.grade != b.grade) {
