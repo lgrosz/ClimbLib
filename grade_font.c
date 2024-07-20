@@ -5,13 +5,6 @@
 #include <stdlib.h>
 #include <errno.h>
 
-struct GradeFontainebleau_
-{
-	unsigned int grade;
-	GradeFontainebleauDivision division;
-	GradeFontainebleauModifier modifier;
-};
-
 GradeFontainebleau *GradeFontainebleau_new(unsigned int grade, GradeFontainebleauDivision division, GradeFontainebleauModifier modifier)
 {
 	GradeFontainebleau *ret;
@@ -22,7 +15,7 @@ GradeFontainebleau *GradeFontainebleau_new(unsigned int grade, GradeFontaineblea
 		return NULL;
 	}
 
-	if (NULL == (ret = malloc(sizeof(struct GradeFontainebleau_)))) {
+	if (NULL == (ret = malloc(sizeof(GradeFontainebleau)))) {
 		return NULL;
 	}
 
