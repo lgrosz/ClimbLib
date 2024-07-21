@@ -40,4 +40,21 @@ Node *Node_new();
  */
 void Node_free(Node *);
 
+/**
+ * @brief Adds node to graph
+ *
+ * @returns 0 on success, non-zero otherwise
+ */
+int Graph_add_node(Graph *, Node *);
+
+/**
+ * @brief Returns the first node of the graph
+ */
+Node *Graph_get_nodes(Graph *);
+
+/**
+ * @brief Returns the next node in the list
+ */
+Node *Node_get_next(Node *);
+
 #endif
