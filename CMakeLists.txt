@@ -3,6 +3,7 @@ project(ClimbLib C)
 
 set(CMAKE_C_STANDARD 11)
 
+option(BUILD_DOCS "Builds documentation" OFF)
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 option(BUILD_COVERAGE "Builds with coverage flags." OFF)
 
@@ -55,3 +56,19 @@ install(
         graph.h
     DESTINATION include
 )
+
+if (BUILD_DOCS)
+    find_package(Doxygen REQUIRED)
+
+    set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
+    set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+
+    configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+
+    add_custom_target(docs ALL
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Building documentation"
+        VERBATIM
+    )
+endif()
