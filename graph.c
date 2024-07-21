@@ -7,6 +7,12 @@ struct Graph {
 
 struct Node {
 	Node *next;
+	Edge *edges;
+};
+
+struct Edge {
+	Node *node;
+	Edge *next;
 };
 
 Graph *Graph_new()
@@ -26,6 +32,16 @@ Node *Node_new()
 
 void Node_free(Node *node)
 {
+	Edge *edge;
+
+	edge = node->edges;
+
+	while (edge != NULL) {
+		Edge *fedge = edge;
+		edge = fedge->next;
+		climblib_free(fedge);
+	}
+
 	climblib_free(node);
 }
 
@@ -65,4 +81,38 @@ Node *Node_get_next(Node *node)
 	}
 
 	return node->next;
+}
+
+int Node_add_edge(Node *src, Node *dest)
+{
+	Edge *edge = climblib_malloc(sizeof(Edge));
+	edge->node = dest;
+
+	if (src->edges) {
+		Edge *last = src->edges;
+		while (last->next != NULL) {
+			last = last->next;
+		}
+
+		last->next = edge;
+	} else {
+		src->edges = edge;
+	}
+
+	return 0;
+}
+
+Edge *Node_get_edges(Node *node)
+{
+	return node->edges;
+}
+
+Node *Edge_get_node(Edge *edge)
+{
+	return edge->node;
+}
+
+Edge *Edge_get_next(Edge *edge)
+{
+	return edge->next;
 }

@@ -51,6 +51,42 @@ START_TEST(test_nodes)
 }
 END_TEST
 
+START_TEST(test_edges)
+{
+	Graph *graph;
+	Node *a, *b, *c, *d;
+	Edge *e;
+
+	graph = Graph_new();
+	a = Node_new();
+	b = Node_new();
+	c = Node_new();
+	d = Node_new();
+
+	Graph_add_node(graph, a);
+	Graph_add_node(graph, b);
+	Graph_add_node(graph, c);
+	Graph_add_node(graph, d);
+
+	ck_assert_int_eq(Node_add_edge(a, b), 0);
+	ck_assert_int_eq(Node_add_edge(a, c), 0);
+	ck_assert_int_eq(Node_add_edge(a, d), 0);
+	ck_assert_ptr_nonnull(e = Node_get_edges(a));
+	ck_assert_ptr_eq(Edge_get_node(e), b);
+	ck_assert_ptr_nonnull(e = Edge_get_next(e));
+	ck_assert_ptr_eq(Edge_get_node(e), c);
+	ck_assert_ptr_nonnull(e = Edge_get_next(e));
+	ck_assert_ptr_eq(Edge_get_node(e), d);
+	ck_assert_ptr_null(e = Edge_get_next(e));
+
+	Graph_free(graph);
+	Node_free(a);
+	Node_free(b);
+	Node_free(c);
+	Node_free(d);
+}
+END_TEST
+
 static Suite *suite()
 {
 	Suite *s;
@@ -61,6 +97,7 @@ static Suite *suite()
 	tc_core = tcase_create("Core");
 	tcase_add_test(tc_core, test_new);
 	tcase_add_test(tc_core, test_nodes);
+	tcase_add_test(tc_core, test_edges);
 
 	suite_add_tcase(s, tc_core);
 
