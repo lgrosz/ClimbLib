@@ -16,6 +16,7 @@ add_library(ClimbLib
     allocator.c
     grade_hueco.c
     grade_font.c
+    graph.c
     climb.c
     formation.c
     str_util.c
