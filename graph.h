@@ -16,6 +16,11 @@
 typedef struct Graph Graph;
 
 /**
+ * @brief An opaque entity node
+ */
+typedef struct Node Node;
+
+/**
  * @brief Creates a new graph
  */
 Graph *Graph_new();
@@ -24,5 +29,15 @@ Graph *Graph_new();
  * @brief Frees a graph
  */
 void Graph_free(Graph *);
+
+/**
+ * @brief Creates a new node
+ */
+Node *Node_new();
+
+/**
+ * @brief Frees a node
+ */
+void Node_free(Node *);
 
 #endif
