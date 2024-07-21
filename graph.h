@@ -21,6 +21,11 @@ typedef struct Graph Graph;
 typedef struct Node Node;
 
 /**
+ * @brief An opaque edge between two nodes
+ */
+typedef struct Edge Edge;
+
+/**
  * @brief Creates a new graph
  */
 Graph *Graph_new();
@@ -56,5 +61,25 @@ Node *Graph_get_nodes(Graph *);
  * @brief Returns the next node in the list
  */
 Node *Node_get_next(Node *);
+
+/**
+ * @brief Adds edge to node
+ */
+int Node_add_edge(Node *, Node *);
+
+/**
+ * @brief Returns the edge-list of the node
+ */
+Edge *Node_get_edges(Node *);
+
+/**
+ * @brief Gets the end-node of an edge
+ */
+Node *Edge_get_node(Edge *);
+
+/**
+ * @brief Gets the next edge in the edge-list
+ */
+Edge *Edge_get_next(Edge *);
 
 #endif
