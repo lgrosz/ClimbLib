@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: sudo apt install doxygen
+      - run: sudo apt install doxygen graphviz
         name: Install Doxygen
       - name: Configure
         run: cmake -S . -B build -DBUILD_DOCS=ON
