@@ -6,11 +6,16 @@
 START_TEST(test_new)
 {
 	Graph *graph;
+	Node *node;
 
 	graph = Graph_new();
 	ck_assert_ptr_nonnull(graph);
 
+	node = Node_new();
+	ck_assert_ptr_nonnull(node);
+
 	Graph_free(graph);
+	Node_free(node);
 }
 END_TEST
 
