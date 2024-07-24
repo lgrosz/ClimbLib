@@ -1,6 +1,9 @@
 #ifndef _CLIMBLIB_GRAPH_H_
 #define _CLIMBLIB_GRAPH_H_
 
+#include "formation.h"
+#include "climb.h"
+
 /**
  * @file graph.h
  *
@@ -21,6 +24,16 @@ typedef struct Graph Graph;
 typedef struct Node Node;
 
 /**
+ * @brief Node types
+ */
+typedef enum {
+	NodeType_FORMATION,
+	NodeType_CLIMB,
+} NodeType ;
+
+// TODO Edges should only make sense if the nodes are in the same graph
+
+/**
  * @brief An opaque edge between two nodes
  */
 typedef struct Edge Edge;
@@ -39,6 +52,16 @@ void Graph_free(Graph *);
  * @brief Creates a new node
  */
 Node *Node_new();
+
+/**
+ * @brief Creates a new formation node
+ */
+Node *Node_new_formation(Formation *);
+
+/**
+ * @brief Creates a new climb node
+ */
+Node *Node_new_climb(Climb *);
 
 /**
  * @brief Frees a node
@@ -71,6 +94,21 @@ int Node_add_edge(Node *, Node *);
  * @brief Returns the edge-list of the node
  */
 Edge *Node_get_edges(Node *);
+
+/**
+ * @brief Returns @ref NodeType of node
+ */
+NodeType Node_get_type(const Node *);
+
+/**
+ * @brief Returns node data as @ref Formation.
+ */
+Formation *Node_get_formation(const Node *);
+
+/**
+ * @brief Returns node data as @ref Climb.
+ */
+Climb *Node_get_climb(const Node *);
 
 /**
  * @brief Gets the end-node of an edge

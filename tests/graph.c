@@ -2,6 +2,8 @@
 #include <stdlib.h>
 
 #include "graph.h"
+#include "climb.h"
+#include "formation.h"
 
 START_TEST(test_new)
 {
@@ -51,6 +53,40 @@ START_TEST(test_nodes)
 }
 END_TEST
 
+START_TEST(test_formation_node)
+{
+	Formation *formation;
+	Node *formation_node;
+
+	formation = Formation_new();
+	ck_assert_ptr_nonnull(formation_node = Node_new_formation(formation));
+
+	ck_assert_int_eq(Node_get_type(formation_node), NodeType_FORMATION);
+	ck_assert_ptr_eq(Node_get_formation(formation_node), formation);
+	ck_assert_ptr_null(Node_get_climb(formation_node));
+
+	Node_free(formation_node);
+	Formation_free(formation);
+}
+END_TEST
+
+START_TEST(test_climb_node)
+{
+	Climb *climb;
+	Node *climb_node;
+
+	climb = Climb_new();
+	ck_assert_ptr_nonnull(climb_node = Node_new_climb(climb));
+
+	ck_assert_int_eq(Node_get_type(climb_node), NodeType_CLIMB);
+	ck_assert_ptr_eq(Node_get_climb(climb_node), climb);
+	ck_assert_ptr_null(Node_get_formation(climb_node));
+
+	Node_free(climb_node);
+	Climb_free(climb);
+}
+END_TEST
+
 START_TEST(test_edges)
 {
 	Graph *graph;
@@ -97,6 +133,8 @@ static Suite *suite()
 	tc_core = tcase_create("Core");
 	tcase_add_test(tc_core, test_new);
 	tcase_add_test(tc_core, test_nodes);
+	tcase_add_test(tc_core, test_formation_node);
+	tcase_add_test(tc_core, test_climb_node);
 	tcase_add_test(tc_core, test_edges);
 
 	suite_add_tcase(s, tc_core);

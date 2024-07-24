@@ -8,6 +8,11 @@ struct Graph {
 struct Node {
 	Node *next;
 	Edge *edges;
+	NodeType type;
+	union {
+		Formation *formation;
+		Climb *climb;
+	} data;
 };
 
 struct Edge {
@@ -28,6 +33,29 @@ void Graph_free(Graph *graph)
 Node *Node_new()
 {
 	return climblib_malloc(sizeof(Node));
+}
+
+Node *Node_new_formation(Formation *formation)
+{
+	Node *node;
+
+	node = Node_new();
+	node->type = NodeType_FORMATION;
+	node->data.formation = formation;
+
+	return node;
+}
+
+Node *Node_new_climb(Climb *climb)
+{
+
+	Node *node;
+
+	node = Node_new();
+	node->type = NodeType_CLIMB;
+	node->data.climb = climb;
+
+	return node;
 }
 
 void Node_free(Node *node)
@@ -105,6 +133,29 @@ int Node_add_edge(Node *src, Node *dest)
 Edge *Node_get_edges(Node *node)
 {
 	return node->edges;
+}
+
+NodeType Node_get_type(const Node *node)
+{
+	return node->type;
+}
+
+Formation *Node_get_formation(const Node *node)
+{
+	if (node->type == NodeType_FORMATION) {
+		return node->data.formation;
+	} else {
+		return NULL;
+	}
+}
+
+Climb *Node_get_climb(const Node *node)
+{
+	if (node->type == NodeType_CLIMB) {
+		return node->data.climb;
+	} else {
+		return NULL;
+	}
 }
 
 Node *Edge_get_node(Edge *edge)
