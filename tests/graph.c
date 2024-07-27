@@ -34,7 +34,12 @@ START_TEST(test_nodes)
 	Node *a, *b, *c, *n;
 
 	graph = Graph_new();
+
 	a = Node_new();
+
+	ck_assert_ptr_nonnull(a);
+	ck_assert_int_eq(Node_get_type(a), NodeType_UNDEFINED);
+
 	b = Node_new();
 	c = Node_new();
 

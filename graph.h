@@ -27,6 +27,7 @@ typedef struct Node Node;
  * @brief Node types
  */
 typedef enum {
+	NodeType_UNDEFINED,
 	NodeType_FORMATION,
 	NodeType_CLIMB,
 } NodeType ;
