@@ -107,6 +107,9 @@ START_TEST(test_edges)
 
 	graph = Graph_new();
 	a = Node_new();
+
+	ck_assert_ptr_null(Node_get_edges(a));
+
 	b = Node_new();
 	c = Node_new();
 	d = Node_new();
