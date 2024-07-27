@@ -134,6 +134,10 @@ START_TEST(test_edges)
 	Graph_add_node(graph, c);
 	Graph_add_node(graph, d);
 
+	climblib_set_alloc(bad_malloc, NULL, NULL);
+	ck_assert_int_eq(!Node_add_edge(a, b), 0);
+	climblib_set_alloc(NULL, NULL, NULL);
+
 	ck_assert_int_eq(Node_add_edge(a, b), 0);
 	ck_assert_int_eq(Node_add_edge(a, c), 0);
 	ck_assert_int_eq(Node_add_edge(a, d), 0);

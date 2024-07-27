@@ -131,7 +131,13 @@ Node *Node_get_next(Node *node)
 
 int Node_add_edge(Node *src, Node *dest)
 {
-	Edge *edge = climblib_malloc(sizeof(Edge));
+	Edge *edge;
+
+	if (!(edge = climblib_malloc(sizeof(Edge)))) {
+		return 1;
+	}
+
+	edge->next = NULL;
 	edge->node = dest;
 
 	if (src->edges) {
