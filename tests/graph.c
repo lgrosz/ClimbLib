@@ -4,11 +4,18 @@
 #include "graph.h"
 #include "climb.h"
 #include "formation.h"
+#include "allocator.h"
+#include "more_allocators.h"
 
 START_TEST(test_new)
 {
 	Graph *graph;
 	Node *node;
+
+	climblib_set_alloc(bad_malloc, NULL, NULL);
+	graph = Graph_new();
+	ck_assert_ptr_null(graph);
+	climblib_set_alloc(NULL, NULL, NULL);
 
 	graph = Graph_new();
 	ck_assert_ptr_nonnull(graph);

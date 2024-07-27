@@ -22,7 +22,15 @@ struct Edge {
 
 Graph *Graph_new()
 {
-	return climblib_malloc(sizeof(Graph));
+	Graph *graph;
+
+	graph = climblib_malloc(sizeof(Graph));
+
+	if (graph) {
+		graph->head = NULL;
+	}
+
+	return graph;
 }
 
 void Graph_free(Graph *graph)
