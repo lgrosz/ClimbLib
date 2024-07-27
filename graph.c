@@ -40,16 +40,25 @@ void Graph_free(Graph *graph)
 
 Node *Node_new()
 {
-	return climblib_malloc(sizeof(Node));
+	Node *node;
+
+	if ((node = climblib_malloc(sizeof(Node)))) {
+		node->next = NULL;
+		node->edges = NULL;
+		node->type = NodeType_UNDEFINED;
+	}
+
+	return node;
 }
 
 Node *Node_new_formation(Formation *formation)
 {
 	Node *node;
 
-	node = Node_new();
-	node->type = NodeType_FORMATION;
-	node->data.formation = formation;
+	if ((node = Node_new())) {
+		node->type = NodeType_FORMATION;
+		node->data.formation = formation;
+	}
 
 	return node;
 }
@@ -59,9 +68,10 @@ Node *Node_new_climb(Climb *climb)
 
 	Node *node;
 
-	node = Node_new();
-	node->type = NodeType_CLIMB;
-	node->data.climb = climb;
+	if ((node = Node_new())) {
+		node->type = NodeType_CLIMB;
+		node->data.climb = climb;
+	}
 
 	return node;
 }
