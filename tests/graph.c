@@ -33,6 +33,11 @@ START_TEST(test_nodes)
 	Graph *graph;
 	Node *a, *b, *c, *n;
 
+	climblib_set_alloc(bad_malloc, NULL, NULL);
+	a = Node_new();
+	ck_assert_ptr_null(a);
+	climblib_set_alloc(NULL, NULL, NULL);
+
 	graph = Graph_new();
 
 	a = Node_new();
@@ -70,6 +75,11 @@ START_TEST(test_formation_node)
 	Formation *formation;
 	Node *formation_node;
 
+	climblib_set_alloc(bad_malloc, NULL, NULL);
+	formation_node = Node_new_formation(NULL);
+	ck_assert_ptr_null(formation_node);
+	climblib_set_alloc(NULL, NULL, NULL);
+
 	formation = Formation_new();
 	ck_assert_ptr_nonnull(formation_node = Node_new_formation(formation));
 
@@ -86,6 +96,11 @@ START_TEST(test_climb_node)
 {
 	Climb *climb;
 	Node *climb_node;
+
+	climblib_set_alloc(bad_malloc, NULL, NULL);
+	climb_node = Node_new_climb(NULL);
+	ck_assert_ptr_null(climb_node);
+	climblib_set_alloc(NULL, NULL, NULL);
 
 	climb = Climb_new();
 	ck_assert_ptr_nonnull(climb_node = Node_new_climb(climb));
