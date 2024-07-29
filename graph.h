@@ -35,6 +35,18 @@ typedef enum {
 // TODO Edges should only make sense if the nodes are in the same graph
 
 /**
+ * @brief A node property
+ */
+typedef struct NodeProperty NodeProperty;
+
+/**
+ * @brief A node property type
+ */
+typedef enum {
+	NodePropertyType_String,
+} NodePropertyType;
+
+/**
  * @brief An opaque edge between two nodes
  */
 typedef struct Edge Edge;
@@ -110,6 +122,28 @@ Formation *Node_get_formation(const Node *);
  * @brief Returns node data as @ref Climb.
  */
 Climb *Node_get_climb(const Node *);
+
+/**
+ * @brief Creates a new string node property.
+ */
+NodeProperty *NodeProperty_new_string(const char *);
+
+/**
+ * @brief Gets the type of the prop.erty
+ */
+NodePropertyType NodeProperty_type(const NodeProperty *);
+
+/**
+ * @brief Gets the string property.
+ *
+ * @returns 0 on success, non-zero otherwise.
+ */
+int NodeProperty_string(const NodeProperty *, const char **);
+
+/**
+ * @brief Frees a @ref NodeProperty.
+ */
+void NodeProperty_free(NodeProperty *);
 
 /**
  * @brief Gets the end-node of an edge

@@ -1,5 +1,6 @@
 #include <check.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "graph.h"
 #include "climb.h"
@@ -157,10 +158,32 @@ START_TEST(test_edges)
 }
 END_TEST
 
+START_TEST(test_node_str_props)
+{
+	NodeProperty *prop;
+	char str[] = "abcdefg";
+	const char *result;
+
+	NodeProperty_free(NULL);
+
+	climblib_set_alloc(bad_malloc, NULL, NULL);
+	ck_assert_ptr_null(prop = NodeProperty_new_string(str));
+	climblib_set_alloc(NULL, NULL, NULL);
+
+	ck_assert_ptr_nonnull(prop = NodeProperty_new_string(str));
+	ck_assert_int_eq(NodeProperty_type(prop), NodePropertyType_String);
+	ck_assert_int_eq(NodeProperty_string(prop, &result), 0);
+	ck_assert_ptr_nonnull(result);
+	ck_assert_int_eq(strcmp(str, result), 0);
+
+	NodeProperty_free(prop);
+}
+END_TEST
+
 static Suite *suite()
 {
 	Suite *s;
-	TCase *tc_core;
+	TCase *tc_core, *tc_node_props;
 
 	s = suite_create("Graph");
 
@@ -171,7 +194,11 @@ static Suite *suite()
 	tcase_add_test(tc_core, test_climb_node);
 	tcase_add_test(tc_core, test_edges);
 
+	tc_node_props = tcase_create("Node Properties");
+	tcase_add_test(tc_node_props, test_node_str_props);
+
 	suite_add_tcase(s, tc_core);
+	suite_add_tcase(s, tc_node_props);
 
 	return s;
 }
