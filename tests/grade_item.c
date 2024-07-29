@@ -59,6 +59,26 @@ START_TEST(test_hueco)
 }
 END_TEST
 
+START_TEST(test_list)
+{
+	GradeItem *a, *b;
+	GradeFontainebleau fa, fb;
+
+	fa = (GradeFontainebleau){ 6, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE };
+	fb = (GradeFontainebleau){ 6, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_PLUS };
+
+	a = GradeItem_new_fontainebleau(fa);
+	b = GradeItem_new_fontainebleau(fb);
+
+	ck_assert_ptr_null(GradeItem_set_next(a, b));
+
+	ck_assert_ptr_eq(GradeItem_next(a), b);
+
+	GradeItem_free(a);
+	GradeItem_free(b);
+}
+END_TEST
+
 static Suite *suite()
 {
 	Suite *s;
@@ -72,6 +92,7 @@ static Suite *suite()
 	tcase_add_test(tc_core, bad_free);
 	tcase_add_test(tc_core, test_fontainebleau);
 	tcase_add_test(tc_core, test_hueco);
+	tcase_add_test(tc_core, test_list);
 
 	return s;
 }
