@@ -8,6 +8,15 @@
  * @file grade_item.h
  *
  * @brief Provides an abstraction for grades.
+ *
+ * @details
+ * Useful when dealing with the idea of "grades." @ref GradeItem is intended for
+ * use where multiple concrete grades may be applicable. As such a grade item
+ * can be treated as a list, traversed with the @ref GradeItem_next function.
+ * Multiple grades may be applicable when...
+ *
+ * - Grading a climb that can be done in more than one style
+ * - Giving a climb a "slash-grade"
  */
 
 /**
@@ -56,5 +65,17 @@ int GradeItem_hueco(GradeItem *, GradeHueco *);
  * @brief Frees a grade item.
  */
 void GradeItem_free(GradeItem *);
+
+/**
+ * @brief Sets the next grade item
+ *
+ * @returns The overwritten "next" item
+ */
+GradeItem *GradeItem_set_next(GradeItem *, GradeItem *);
+
+/**
+ * @brief Gets the next @ref GradeItem.
+ */
+GradeItem *GradeItem_next(GradeItem *);
 
 #endif

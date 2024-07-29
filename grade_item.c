@@ -8,6 +8,7 @@ struct GradeItem {
 		GradeFontainebleau fontainebleau;
 		GradeHueco hueco;
 	} grade;
+	GradeItem *next;
 };
 
 static GradeItem *GradeItem_new()
@@ -68,4 +69,19 @@ int GradeItem_hueco(GradeItem *grade_item, GradeHueco *grade_hueco)
 void GradeItem_free(GradeItem *grade_item)
 {
 	if (grade_item)	climblib_free(grade_item);
+}
+
+GradeItem *GradeItem_set_next(GradeItem *grade_item, GradeItem *next_item)
+{
+	GradeItem *previous_item;
+
+	previous_item = grade_item->next;
+	grade_item->next = next_item;
+
+	return previous_item;
+}
+
+GradeItem *GradeItem_next(GradeItem *grade_item)
+{
+	return grade_item->next;
 }
