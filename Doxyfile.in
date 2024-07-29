@@ -7,4 +7,5 @@ HIDE_UNDOC_CLASSES     = YES
 OUTPUT_DIRECTORY       = @CMAKE_CURRENT_BINARY_DIR@
 INPUT                  = grade_hueco.h \
                          grade_font.h \
+                         grade_item.h \
                          graph.h
