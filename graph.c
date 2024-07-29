@@ -1,5 +1,6 @@
 #include "graph.h"
 #include "allocator.h"
+#include <string.h>
 
 struct Graph {
 	Node *head;
@@ -12,6 +13,13 @@ struct Node {
 	union {
 		Formation *formation;
 		Climb *climb;
+	} data;
+};
+
+struct NodeProperty {
+	NodePropertyType type;
+	union {
+		char *string;
 	} data;
 };
 
@@ -179,6 +187,37 @@ Climb *Node_get_climb(const Node *node)
 		return node->data.climb;
 	} else {
 		return NULL;
+	}
+}
+
+NodeProperty *NodeProperty_new_string(const char *string)
+{
+	NodeProperty *property;
+
+	if ((property = climblib_malloc(sizeof(NodeProperty)))) {
+		property->type = NodePropertyType_String;
+		property->data.string = strdup(string);
+	}
+
+	return property;
+}
+
+NodePropertyType NodeProperty_type(const NodeProperty *property)
+{
+	return property->type;
+}
+
+int NodeProperty_string(const NodeProperty *property, const char **string)
+{
+	*string = property->data.string;
+	return 0;
+}
+
+void NodeProperty_free(NodeProperty *property)
+{
+	if (property) {
+		climblib_free(property->data.string);
+		climblib_free(property);
 	}
 }
 
