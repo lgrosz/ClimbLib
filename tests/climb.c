@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "grade_font.h"
+#include "grade_item.h"
 #include "more_allocators.h"
 #include "verify.h"
 #include <check.h>
@@ -173,6 +175,22 @@ START_TEST(test_add_alias_einvals)
 }
 END_TEST
 
+START_TEST(test_grades)
+{
+	Climb *climb;
+	GradeItem *grades;
+
+	climb = Climb_new();
+	grades = GradeItem_new_fontainebleau((GradeFontainebleau){ 7, GRADE_FONT_DIVISION_A, GRADE_FONT_MODIFIER_NONE });
+
+	ck_assert_ptr_null(Climb_set_grades(climb, grades));
+	ck_assert_ptr_eq(Climb_grades(climb), grades);
+
+	Climb_free(climb);
+	GradeItem_free(grades);
+}
+END_TEST
+
 static void default_allocators()
 {
 	climblib_set_alloc(NULL, NULL, NULL);
@@ -190,6 +208,7 @@ static Suite *suite()
 	tcase_add_test(tc_core, test_new_bad_malloc);
 	tcase_add_test(tc_core, test_add_alias);
 	tcase_add_test(tc_core, test_add_alias_einvals);
+	tcase_add_test(tc_core, test_grades);
 	tcase_add_checked_fixture(tc_core, NULL, default_allocators);
 
 	suite_add_tcase(s, tc_core);

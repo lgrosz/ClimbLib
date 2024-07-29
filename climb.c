@@ -1,5 +1,6 @@
 #include "climb.h"
 #include "allocator.h"
+#include "grade_item.h"
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,6 +14,7 @@ struct Climb
 	const char *brief;
 	const char **aliases;
 	size_t aliaseslen;
+	GradeItem *grades;
 };
 
 Climb *Climb_new()
@@ -26,6 +28,7 @@ Climb *Climb_new()
 		ret->description = NULL;
 		ret->brief = NULL;
 		ret->aliases = NULL;
+		ret->grades = NULL;
 	}
 
 	Climb_set_name(ret, "");
@@ -126,4 +129,19 @@ const char **Climb_aliases(const Climb *climb, size_t *len)
 
 	*len = climb->aliaseslen;
 	return climb->aliases;
+}
+
+GradeItem *Climb_set_grades(Climb *climb, GradeItem *grade_item)
+{
+	GradeItem *prev_grade_item;
+
+	prev_grade_item = climb->grades;
+	climb->grades = grade_item;
+
+	return prev_grade_item;
+}
+
+GradeItem *Climb_grades(Climb *climb)
+{
+	return climb->grades;
 }
