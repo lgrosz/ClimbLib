@@ -9,6 +9,7 @@ struct Graph {
 struct Node {
 	Node *next;
 	Edge *edges;
+	NodeProperty *properties;
 	NodeType type;
 	union {
 		Formation *formation;
@@ -18,9 +19,12 @@ struct Node {
 
 struct NodeProperty {
 	NodePropertyType type;
+	char *key;
 	union {
 		char *string;
 	} data;
+
+	NodeProperty *next;
 };
 
 struct Edge {
@@ -53,6 +57,7 @@ Node *Node_new()
 	if ((node = climblib_malloc(sizeof(Node)))) {
 		node->next = NULL;
 		node->edges = NULL;
+		node->properties = NULL;
 		node->type = NodeType_UNDEFINED;
 	}
 
@@ -190,13 +195,67 @@ Climb *Node_get_climb(const Node *node)
 	}
 }
 
+NodeProperty *Node_property(const Node *node, const char *name)
+{
+	NodeProperty *property;
+
+	property = node->properties;
+
+	while (property != NULL && strcmp(name, property->key)) {
+		property = property->next;
+	}
+
+	return property;
+}
+
+void Node_add_property(Node *node, const char *name, NodeProperty *property)
+{
+	property->key = strdup(name);
+
+	if (node->properties) {
+		NodeProperty *last = node->properties;
+		while (last->next != NULL) {
+			last = last->next;
+		}
+
+		last->next = property;
+	} else {
+		node->properties = property;
+	}
+}
+
+NodeProperty *Node_remove_property(Node *node, const char *name)
+{
+	NodeProperty *property = node->properties;
+	NodeProperty *previous = NULL;
+
+	while (property != NULL && strcmp(name, property->key)) {
+		previous = property;
+		property = property->next;
+	}
+
+	if (property == NULL) {
+		return NULL;
+	}
+
+	if (previous == NULL) {
+		node->properties = property->next;
+	} else {
+		previous->next = property->next;
+	}
+
+	return property;
+}
+
 NodeProperty *NodeProperty_new_string(const char *string)
 {
 	NodeProperty *property;
 
 	if ((property = climblib_malloc(sizeof(NodeProperty)))) {
 		property->type = NodePropertyType_String;
+		property->key = NULL;
 		property->data.string = strdup(string);
+		property->next = NULL;
 	}
 
 	return property;
@@ -217,6 +276,9 @@ void NodeProperty_free(NodeProperty *property)
 {
 	if (property) {
 		climblib_free(property->data.string);
+
+		if (property->key) climblib_free(property->key);
+
 		climblib_free(property);
 	}
 }

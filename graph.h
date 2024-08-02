@@ -124,6 +124,21 @@ Formation *Node_get_formation(const Node *);
 Climb *Node_get_climb(const Node *);
 
 /**
+ * @brief Gets named property from node.
+ */
+NodeProperty *Node_property(const Node *, const char *);
+
+/**
+ * @brief Adds named property to node.
+ */
+void Node_add_property(Node *, const char *, NodeProperty *);
+
+/**
+ * @brief Removes a named property.
+ */
+NodeProperty *Node_remove_property(Node *, const char *);
+
+/**
  * @brief Creates a new string node property.
  */
 NodeProperty *NodeProperty_new_string(const char *);

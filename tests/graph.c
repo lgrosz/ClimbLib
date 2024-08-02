@@ -180,6 +180,46 @@ START_TEST(test_node_str_props)
 }
 END_TEST
 
+START_TEST(test_add_node_property)
+{
+	Climb *climb;
+	Node *node;
+	NodeProperty *prop1, *prop2, *prop3;
+	const char key1[] = "key1";
+	const char key2[] = "key2";
+	const char key3[] = "key3";
+
+	climb = Climb_new();
+	node = Node_new_climb(climb);
+	prop1 = NodeProperty_new_string("value1");
+	prop2 = NodeProperty_new_string("value2");
+	prop3 = NodeProperty_new_string("value3");
+
+	ck_assert_ptr_null(Node_remove_property(node, key1));
+
+	Node_add_property(node, key1, prop1);
+	ck_assert_ptr_eq(Node_property(node, key1), prop1);
+
+	Node_add_property(node, key2, prop2);
+	ck_assert_ptr_eq(Node_property(node, key2), prop2);
+
+	Node_add_property(node, key3, prop3);
+	ck_assert_ptr_eq(Node_property(node, key3), prop3);
+
+	ck_assert_ptr_eq(Node_remove_property(node, key1), prop1);
+	ck_assert_ptr_null(Node_property(node, key1));
+
+	ck_assert_ptr_eq(Node_remove_property(node, key3), prop3);
+	ck_assert_ptr_null(Node_property(node, key3));
+
+	NodeProperty_free(prop1);
+	NodeProperty_free(prop2);
+	NodeProperty_free(prop3);
+	Node_free(node);
+	Climb_free(climb);
+}
+END_TEST
+
 static Suite *suite()
 {
 	Suite *s;
@@ -196,6 +236,7 @@ static Suite *suite()
 
 	tc_node_props = tcase_create("Node Properties");
 	tcase_add_test(tc_node_props, test_node_str_props);
+	tcase_add_test(tc_node_props, test_add_node_property);
 
 	suite_add_tcase(s, tc_core);
 	suite_add_tcase(s, tc_node_props);
