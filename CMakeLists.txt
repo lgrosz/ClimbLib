@@ -1,15 +1,20 @@
 cmake_minimum_required(VERSION 3.10)
-project(ClimbLib C)
+project(ClimbLib C CXX)
 
 set(CMAKE_C_STANDARD 11)
 
 option(BUILD_DOCS "Builds documentation" OFF)
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 option(BUILD_COVERAGE "Builds with coverage flags." OFF)
+option(BUILD_EXAMPLES "Builds examples" ON)
 
 include(CTest)
 if(BUILD_TESTING)
     add_subdirectory(tests)
+endif()
+
+if (BUILD_EXAMPLES)
+    add_subdirectory(examples)
 endif()
 
 add_library(ClimbLib
