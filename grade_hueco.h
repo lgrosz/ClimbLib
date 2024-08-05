@@ -11,26 +11,6 @@
 #include <stddef.h>
 
 /**
- * @brief Modifiers that granulate difficulty within a grade
- */
-typedef enum {
-	/**
-	 * @brief The "-" modifier
-	 */
-	GRADE_HUECO_MODIFIER_MINUS,
-
-	/**
-	 * @brief No modifier present
-	 */
-	GRADE_HUECO_MODIFIER_NONE,
-
-	/**
-	 * @brief The "+" modifier
-	 */
-	GRADE_HUECO_MODIFIER_PLUS,
-} GradeHuecoModifier;
-
-/**
  * @brief A Hueco grade.
  */
 typedef struct {
@@ -38,11 +18,6 @@ typedef struct {
 	 * @brief The value of the grade.
 	 */
 	unsigned int grade;
-
-        /**
-         * @brief A modifier to refine the grade.
-         */
-        GradeHuecoModifier modifier;
 } GradeHueco;
 
 /**

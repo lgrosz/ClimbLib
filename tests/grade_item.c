@@ -42,7 +42,7 @@ START_TEST(test_hueco)
 	GradeItem *item;
 	GradeHueco grade, result;
 
-	grade = (GradeHueco){ 7, GRADE_HUECO_MODIFIER_NONE };
+	grade = (GradeHueco){ 7 };
 
 	climblib_set_alloc(bad_malloc, NULL, NULL);
 	ck_assert_ptr_null(item = GradeItem_new_hueco(grade));
