@@ -4,6 +4,7 @@
 
 #include "graph.h"
 #include "climb.h"
+#include "area.h"
 #include "formation.h"
 #include "allocator.h"
 #include "more_allocators.h"
@@ -71,6 +72,26 @@ START_TEST(test_nodes)
 }
 END_TEST
 
+START_TEST(test_area_node)
+{
+	Area area;
+	Node *area_node;
+
+	climblib_set_alloc(bad_malloc, NULL, NULL);
+	area_node = Node_new_area(NULL);
+	ck_assert_ptr_null(area_node);
+	climblib_set_alloc(NULL, NULL, NULL);
+
+	ck_assert_ptr_nonnull(area_node = Node_new_area(&area));
+
+	ck_assert_int_eq(Node_get_type(area_node), NodeType_AREA);
+	ck_assert_ptr_eq(Node_get_area(area_node), &area);
+	ck_assert_ptr_null(Node_get_formation(area_node));
+	ck_assert_ptr_null(Node_get_climb(area_node));
+
+	Node_free(area_node);
+}
+
 START_TEST(test_formation_node)
 {
 	Formation *formation;
@@ -86,6 +107,7 @@ START_TEST(test_formation_node)
 
 	ck_assert_int_eq(Node_get_type(formation_node), NodeType_FORMATION);
 	ck_assert_ptr_eq(Node_get_formation(formation_node), formation);
+	ck_assert_ptr_null(Node_get_area(formation_node));
 	ck_assert_ptr_null(Node_get_climb(formation_node));
 
 	Node_free(formation_node);
@@ -108,6 +130,7 @@ START_TEST(test_climb_node)
 
 	ck_assert_int_eq(Node_get_type(climb_node), NodeType_CLIMB);
 	ck_assert_ptr_eq(Node_get_climb(climb_node), climb);
+	ck_assert_ptr_null(Node_get_formation(climb_node));
 	ck_assert_ptr_null(Node_get_formation(climb_node));
 
 	Node_free(climb_node);
@@ -230,6 +253,7 @@ static Suite *suite()
 	tc_core = tcase_create("Core");
 	tcase_add_test(tc_core, test_new);
 	tcase_add_test(tc_core, test_nodes);
+	tcase_add_test(tc_core, test_area_node);
 	tcase_add_test(tc_core, test_formation_node);
 	tcase_add_test(tc_core, test_climb_node);
 	tcase_add_test(tc_core, test_edges);

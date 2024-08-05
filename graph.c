@@ -12,6 +12,7 @@ struct Node {
 	NodeProperty *properties;
 	NodeType type;
 	union {
+		Area *area;
 		Formation *formation;
 		Climb *climb;
 	} data;
@@ -59,6 +60,18 @@ Node *Node_new()
 		node->edges = NULL;
 		node->properties = NULL;
 		node->type = NodeType_UNDEFINED;
+	}
+
+	return node;
+}
+
+Node *Node_new_area(Area *area)
+{
+	Node *node;
+
+	if ((node = Node_new())) {
+		node->type = NodeType_AREA;
+		node->data.area = area;
 	}
 
 	return node;
@@ -175,6 +188,15 @@ Edge *Node_get_edges(Node *node)
 NodeType Node_get_type(const Node *node)
 {
 	return node->type;
+}
+
+Area *Node_get_area(const Node *node)
+{
+	if (node->type == NodeType_AREA) {
+		return node->data.area;
+	} else {
+		return NULL;
+	}
 }
 
 Formation *Node_get_formation(const Node *node)

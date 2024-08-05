@@ -1,6 +1,7 @@
 #ifndef _CLIMBLIB_GRAPH_H_
 #define _CLIMBLIB_GRAPH_H_
 
+#include "area.h"
 #include "formation.h"
 #include "climb.h"
 
@@ -28,6 +29,7 @@ typedef struct Node Node;
  */
 typedef enum {
 	NodeType_UNDEFINED,
+	NodeType_AREA,
 	NodeType_FORMATION,
 	NodeType_CLIMB,
 } NodeType ;
@@ -65,6 +67,11 @@ void Graph_free(Graph *);
  * @brief Creates a new node
  */
 Node *Node_new();
+
+/**
+ * @brief Creates a new area
+ */
+Node *Node_new_area(Area *);
 
 /**
  * @brief Creates a new formation node
@@ -112,6 +119,11 @@ Edge *Node_get_edges(Node *);
  * @brief Returns @ref NodeType of node
  */
 NodeType Node_get_type(const Node *);
+
+/**
+ * @brief Returns node data as @ref Area.
+ */
+Area *Node_get_area(const Node *);
 
 /**
  * @brief Returns node data as @ref Formation.
